@@ -32,6 +32,9 @@
     .btn-gh:hover{border-color:#d6f345;color:#0b0b0c;background:#d6f345}
     .btn-gh:disabled{opacity:.5;pointer-events:none}
     .btn-sm{padding:.4rem .75rem;font-size:.78rem}
+    .kpi{transition:border-color .3s,box-shadow .3s,transform .3s var(--ease)}
+    .kpi:hover{border-color:rgba(0,0,0,.25);transform:translateY(-2px)}
+    .kpi.on{border-color:#0b0b0c;box-shadow:0 0 0 3px rgba(214,243,69,.6)}
     .box{border-radius:24px;background:#fff;border:1px solid var(--line);box-shadow:0 1px 2px rgba(0,0,0,.04),0 16px 36px -28px rgba(0,0,0,.25)}
     .fld{display:flex;flex-direction:column;gap:.35rem}
     .fld label{font-size:.78rem;color:#52525b}
@@ -196,11 +199,13 @@
       <div id="banner" class="fade mt-5"></div>
 
       <div class="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4">
-        <div class="box p-4"><p class="text-xs text-ink/70">En la web</p><p id="sPub" class="mt-1 font-display text-3xl font-bold text-pr">0</p></div>
-        <div class="box p-4"><p class="text-xs text-ink/70">Les faltan fotos</p><p id="sFot" class="mt-1 font-display text-3xl font-bold text-amber-700">0</p></div>
-        <div class="box p-4"><p class="text-xs text-ink/70">Sin publicar</p><p id="sBor" class="mt-1 font-display text-3xl font-bold text-zinc-950">0</p></div>
-        <div class="box p-4"><p class="text-xs text-ink/70">Vendidos</p><p id="sVen" class="mt-1 font-display text-3xl font-bold text-zinc-950">0</p></div>
+        <button type="button" class="kpi box p-4 text-left" data-f="web"><p class="flex items-center gap-1.5 text-xs font-semibold text-zinc-700"><span class="h-2 w-2 rounded-full bg-green-500"></span>En la web</p><p id="sPub" class="mt-1 font-display text-3xl font-bold text-zinc-950">0</p><p class="mt-1 text-[11px] leading-snug text-zinc-500">Publicados con 3 fotos o más: aparecen en las búsquedas.</p></button>
+        <button type="button" class="kpi box p-4 text-left" data-f="fotos"><p class="flex items-center gap-1.5 text-xs font-semibold text-zinc-700"><span class="h-2 w-2 rounded-full bg-amber-500"></span>Publicados sin fotos</p><p id="sFot" class="mt-1 font-display text-3xl font-bold text-zinc-950">0</p><p class="mt-1 text-[11px] leading-snug text-zinc-500">Publicados con menos de 3 fotos: todavía no aparecen.</p></button>
+        <button type="button" class="kpi box p-4 text-left" data-f="borrador"><p class="flex items-center gap-1.5 text-xs font-semibold text-zinc-700"><span class="h-2 w-2 rounded-full bg-zinc-400"></span>Sin publicar</p><p id="sBor" class="mt-1 font-display text-3xl font-bold text-zinc-950">0</p><p class="mt-1 text-[11px] leading-snug text-zinc-500">Borradores cargados que todavía no publicaste.</p></button>
+        <div class="box p-4"><p class="flex items-center gap-1.5 text-xs font-semibold text-zinc-700"><span class="h-2 w-2 rounded-full bg-zinc-950"></span>Vendidos</p><p id="sVen" class="mt-1 font-display text-3xl font-bold text-zinc-950">0</p><p class="mt-1 text-[11px] leading-snug text-zinc-500">Autos que marcaste como vendidos. Ya no figuran en tu stock.</p></div>
       </div>
+      <p id="sTotal" class="mt-3 text-xs text-zinc-500"></p>
+
 
       <nav class="mt-8 flex gap-1 overflow-x-auto rounded-full border border-line bg-bg2 p-1" id="tabs">
         <button class="tab on" data-t="stock"><i data-lucide="list" class="h-4 w-4"></i>Mi stock <span class="n" id="nStock">0</span></button>
@@ -214,7 +219,7 @@
         <div class="mb-4 flex flex-wrap items-center gap-2">
           <input id="fBuscar" class="inp max-w-xs py-2" placeholder="Buscar en mi stock…" />
           <select id="fEstado" class="inp max-w-[13rem] py-2">
-            <option value="">Todos</option><option value="web">En la web</option><option value="fotos">Faltan fotos</option>
+            <option value="">Todos</option><option value="web">En la web</option><option value="fotos">Publicados sin fotos</option>
             <option value="borrador">Sin publicar</option><option value="pausado">Pausados</option><option value="reservado">Reservados</option>
           </select>
           <button id="btnPubTodos" class="btn-pr ml-auto py-2 text-sm" hidden><i data-lucide="rocket" class="h-4 w-4"></i><span></span></button>
@@ -493,7 +498,7 @@
       ? `<div class="flex gap-3 rounded-2xl border border-amber-300/25 bg-amber-300/[.06] p-4 text-sm"><i data-lucide="hourglass" class="h-5 w-5 flex-none text-amber-700"></i><div><b class="text-zinc-950">Estamos verificando tu agencia.</b> Mientras tanto ya podés cargar tu stock y las fotos: se publican solos apenas te aprobemos. Te avisamos por WhatsApp.</div></div>`
       : v === 'rechazada'
       ? `<div class="flex flex-wrap items-center gap-3 rounded-2xl border border-red-400/25 bg-red-400/[.06] p-4 text-sm"><i data-lucide="alert-triangle" class="h-5 w-5 flex-none text-red-400"></i><div class="flex-1"><b class="text-zinc-950">No pudimos verificar tu agencia.</b> Revisá tus datos y la foto del local y volvé a enviarlos.</div><button class="btn-gh btn-sm" onclick="abrirPerfil(false)">Revisar mis datos</button></div>`
-      : `<div class="flex gap-3 rounded-2xl border border-pr/25 bg-pr/[.05] p-4 text-sm"><i data-lucide="badge-check" class="h-5 w-5 flex-none text-pr"></i><div><b class="text-zinc-950">Agencia verificada.</b> Tus autos con ${CONFIG.MIN_FOTOS} fotos o más aparecen en las búsquedas. Las ofertas te llegan por WhatsApp.</div></div>`;
+      : `<div class="flex items-start gap-3 rounded-2xl border border-[#0866FF]/20 bg-[#0866FF]/[.05] p-4 text-sm">${VERIF}<div><b class="text-zinc-950">Agencia verificada.</b> Tus autos con ${CONFIG.MIN_FOTOS} fotos o más aparecen en las búsquedas. Las ofertas te llegan por WhatsApp.</div></div>`;
     icons();
   }
 
@@ -546,6 +551,7 @@
     pintarStock();
   }
   const nFotos = (v) => v.fotos_publicas?.length ?? 0;
+  const VERIF = '<svg viewBox="0 0 24 24" class="verif h-5 w-5 flex-none" aria-hidden="true"><polygon points="12.00,1.60 13.78,3.07 15.98,2.39 17.06,4.43 19.35,4.65 19.57,6.94 21.61,8.02 20.93,10.22 22.40,12.00 20.93,13.78 21.61,15.98 19.57,17.06 19.35,19.35 17.06,19.57 15.98,21.61 13.78,20.93 12.00,22.40 10.22,20.93 8.02,21.61 6.94,19.57 4.65,19.35 4.43,17.06 2.39,15.98 3.07,13.78 1.60,12.00 3.07,10.22 2.39,8.02 4.43,6.94 4.65,4.65 6.94,4.43 8.02,2.39 10.22,3.07" fill="#0866FF" stroke="#0866FF" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.9 12.4l2.7 2.7 5.5-5.6" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   const enWeb = (v) => v.estado === 'disponible' && nFotos(v) >= CONFIG.MIN_FOTOS && S.yo.agencia.verificacion === 'aprobada';
   function estadoChip(v) {
     if (v.estado === 'borrador') return `<span class="chip c-mute"><i data-lucide="file-pen" class="h-3 w-3"></i>Sin publicar</span>`;
@@ -594,7 +600,7 @@
     const q = $('#fBuscar').value.trim().toLowerCase(), fe = $('#fEstado').value;
     let vs = S.autos.filter((v) => !q || `${v.marca} ${v.modelo} ${v.version} ${v.anio} ${v.color}`.toLowerCase().includes(q));
     if (fe === 'web') vs = vs.filter(enWeb);
-    else if (fe === 'fotos') vs = vs.filter((v) => ['disponible', 'borrador'].includes(v.estado) && nFotos(v) < CONFIG.MIN_FOTOS);
+    else if (fe === 'fotos') vs = vs.filter((v) => v.estado === 'disponible' && nFotos(v) < CONFIG.MIN_FOTOS);
     else if (fe) vs = vs.filter((v) => v.estado === fe);
     // Orden: nuevos/borradores primero, después faltan fotos, después el resto
     const peso = (v) => (S.nuevos.has(v.id) ? 0 : v.estado === 'borrador' ? 1 : nFotos(v) < CONFIG.MIN_FOTOS ? 2 : 3);
@@ -606,14 +612,25 @@
     const conPrecio = bor.filter((v) => v.precio != null);
     $('#btnPubTodos').hidden = !conPrecio.length;
     $('#btnPubTodos span').textContent = `Publicar ${conPrecio.length} auto${conPrecio.length > 1 ? 's' : ''}`;
-    $('#sPub').textContent = S.autos.filter(enWeb).length;
-    $('#sFot').textContent = S.autos.filter((v) => ['disponible', 'borrador'].includes(v.estado) && nFotos(v) < CONFIG.MIN_FOTOS).length;
+    const nWeb = S.autos.filter(enWeb).length;
+    const nSinFotos = S.autos.filter((v) => v.estado === 'disponible' && !enWeb(v)).length;
+    const nOtros = S.autos.filter((v) => ['pausado', 'reservado'].includes(v.estado)).length;
+    $('#sPub').textContent = nWeb;
+    $('#sFot').textContent = nSinFotos;
     $('#sBor').textContent = bor.length;
     $('#sVen').textContent = S.yo.resumen?.vendidos ?? 0;
+    $('#sTotal').textContent = S.autos.length
+      ? `Tu stock: ${S.autos.length} auto${S.autos.length > 1 ? 's' : ''} = ${nWeb} en la web + ${nSinFotos} publicados sin fotos + ${bor.length} sin publicar${nOtros ? ` + ${nOtros} pausados o reservados` : ''}. Tocá un recuadro para ver esos autos.`
+      : '';
+    $$('.kpi').forEach((k) => k.classList.toggle('on', k.dataset.f === fe));
     icons();
   }
   $('#fBuscar').addEventListener('input', pintarStock);
   $('#fEstado').addEventListener('change', pintarStock);
+  $$('.kpi').forEach((k) => k.addEventListener('click', () => {
+    $('#fEstado').value = $('#fEstado').value === k.dataset.f ? '' : k.dataset.f;
+    irTab('stock'); pintarStock(); $('#fEstado').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }));
 
   const autoPorId = (id) => S.autos.find((v) => v.id === id);
   function reemplazar(v) { const i = S.autos.findIndex((x) => x.id === v.id); if (i >= 0) S.autos[i] = { ...S.autos[i], ...v }; pintarStock(); }
