@@ -205,6 +205,7 @@
         <button class="tab on" data-t="stock"><i data-lucide="list" class="h-4 w-4"></i>Mi stock <span class="n" id="nStock">0</span></button>
         <button class="tab" data-t="excel"><i data-lucide="file-spreadsheet" class="h-4 w-4"></i>Subir Excel</button>
         <button class="tab" data-t="fotos"><i data-lucide="images" class="h-4 w-4"></i>Subir fotos</button>
+        <button class="tab" data-t="mercado"><i data-lucide="radar" class="h-4 w-4"></i>Lo que buscan</button>
       </nav>
 
       <!-- Mi stock -->
@@ -252,10 +253,50 @@
         </label>
         <div class="mt-4 grid gap-2 text-xs text-ink/70 md:grid-cols-2">
           <p class="flex gap-2"><i data-lucide="lightbulb" class="h-4 w-4 flex-none text-pr"></i>Tip: si nombrás los archivos con el modelo (ej. <b class="text-white">corolla-1.jpg</b>) acierta siempre.</p>
-          <p class="flex gap-2"><i data-lucide="eye-off" class="h-4 w-4 flex-none text-pr"></i>Las fotos con teléfono, logo o nombre de la agencia se rechazan: los compradores no deben ver tus datos.</p>
+          <p class="flex gap-2"><i data-lucide="eye-off" class="h-4 w-4 flex-none text-pr"></i>Fotos reales, sin texto ni precio agregado encima (no sirve el flyer). El logo, el cartel o el portapatentes de tu agencia no molestan.</p>
         </div>
         <div id="fotResumen" class="mt-5 text-sm" hidden></div>
         <div id="fotGrid" class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5"></div>
+      </div>
+
+      <!-- Lo que buscan en Tucumán -->
+      <div id="tMercado" class="mt-6" hidden>
+        <div class="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h2 class="font-display text-2xl font-bold text-white">Lo que buscan en Tucumán</h2>
+            <p class="text-sm text-ink/70">Búsquedas reales de compradores en los últimos 30 días. Usalo para saber qué salir a comprar.</p>
+          </div>
+          <button class="btn-gh btn-sm" id="mercRefresh"><i data-lucide="refresh-cw" class="h-4 w-4"></i>Actualizar</button>
+        </div>
+        <div id="mercCarga" class="grid place-items-center py-16"><span class="spin h-6 w-6 text-pr"></span></div>
+        <div id="mercBody" hidden>
+          <h3 class="mt-6 text-xs font-semibold uppercase tracking-widest text-ink/60">Tus resultados del mes</h3>
+          <div class="mt-3 grid grid-cols-2 gap-3 md:grid-cols-4">
+            <div class="box p-4"><p class="text-xs text-ink/70">Ofertas recibidas</p><p id="mOf" class="mt-1 font-display text-3xl font-bold text-white">0</p></div>
+            <div class="box p-4"><p class="text-xs text-ink/70">Visitas pedidas</p><p id="mVi" class="mt-1 font-display text-3xl font-bold text-white">0</p></div>
+            <div class="box p-4"><p class="text-xs text-ink/70">Contactos entregados</p><p id="mCo" class="mt-1 font-display text-3xl font-bold text-pr">0</p></div>
+            <div class="box p-4"><p class="text-xs text-ink/70">Búsquedas en la red</p><p id="mTot" class="mt-1 font-display text-3xl font-bold text-white">0</p></div>
+          </div>
+          <div class="mt-8 grid gap-6 lg:grid-cols-[1.6fr_1fr]">
+            <div class="box overflow-hidden">
+              <div class="border-b border-line px-5 py-4">
+                <h3 class="font-semibold text-white">Lo buscan y nadie lo tiene</h3>
+                <p class="text-xs text-ink/70">Si conseguís uno de estos, cargalo: le avisamos al comprador al instante.</p>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                  <thead class="text-left text-xs text-ink/60"><tr><th class="px-5 py-3 font-medium">Qué buscan</th><th class="hidden px-3 py-3 font-medium sm:table-cell">Años</th><th class="px-3 py-3 font-medium">Presupuesto</th><th class="px-3 py-3 text-right font-medium">Búsq.</th><th class="px-5 py-3 text-right font-medium">Alertas</th></tr></thead>
+                  <tbody id="mercSin"></tbody>
+                </table>
+              </div>
+            </div>
+            <div class="box p-5">
+              <h3 class="font-semibold text-white">Más buscados</h3>
+              <p class="text-xs text-ink/70">Todas las búsquedas, tengan o no resultado.</p>
+              <ol id="mercTop" class="mt-4 space-y-3"></ol>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -458,10 +499,44 @@
   // Tabs
   function irTab(t) {
     $$('#tabs .tab').forEach((b) => b.classList.toggle('on', b.dataset.t === t));
-    $('#tStock').hidden = t !== 'stock'; $('#tExcel').hidden = t !== 'excel'; $('#tFotos').hidden = t !== 'fotos';
+    $('#tStock').hidden = t !== 'stock'; $('#tExcel').hidden = t !== 'excel'; $('#tFotos').hidden = t !== 'fotos'; $('#tMercado').hidden = t !== 'mercado';
+    if (t === 'mercado') cargarMercado();
   }
   $$('#tabs .tab').forEach((b) => b.addEventListener('click', () => irTab(b.dataset.t)));
   document.addEventListener('click', (e) => { const g = e.target.closest('[data-goto]'); if (g) irTab(g.dataset.goto); });
+
+  // ===================== LO QUE BUSCAN =====================
+  let mercadoAt = 0;
+  const titulo = (t) => String(t || '').replace(/(^|\s)\S/g, (c) => c.toUpperCase());
+  async function cargarMercado(forzar = false) {
+    if (!forzar && Date.now() - mercadoAt < 120000) return;
+    $('#mercCarga').innerHTML = '<span class="spin h-6 w-6 text-pr"></span>'; $('#mercCarga').hidden = false; $('#mercBody').hidden = true;
+    try {
+      const d = await api('mercado');
+      mercadoAt = Date.now();
+      const r = d.tus_resultados || {};
+      $('#mOf').textContent = nf.format(r.ofertas || 0); $('#mVi').textContent = nf.format(r.visitas || 0);
+      $('#mCo').textContent = nf.format(r.contactos || 0); $('#mTot').textContent = nf.format(d.total_busquedas || 0);
+      const anios = (x) => x.anio_min && x.anio_max ? (x.anio_min === x.anio_max ? x.anio_min : `${x.anio_min}–${x.anio_max}`) : x.anio_min ? `${x.anio_min}+` : x.anio_max ? `hasta ${x.anio_max}` : '—';
+      const sin = d.sin_resultado || [];
+      $('#mercSin').innerHTML = sin.length ? sin.map((x) => `<tr class="border-t border-line">
+          <td class="px-5 py-3 font-medium text-white">${esc(titulo(x.que))}${x.tu_marca ? ' <span class="ml-1 rounded-full bg-pr/15 px-2 py-0.5 text-[10px] font-semibold normal-case text-pr">tu marca</span>' : ''}</td>
+          <td class="hidden px-3 py-3 text-ink sm:table-cell">${esc(anios(x))}</td>
+          <td class="whitespace-nowrap px-3 py-3 text-ink">${x.presupuesto_usd ? 'US$ ' + nf.format(x.presupuesto_usd) : '—'}</td>
+          <td class="px-3 py-3 text-right font-mono text-white">${nf.format(x.busquedas || 0)}</td>
+          <td class="px-5 py-3 text-right font-mono ${x.alertas ? 'text-pr' : 'text-ink/50'}">${nf.format(x.alertas || 0)}</td></tr>`).join('')
+        : '<tr><td colspan="5" class="px-5 py-8 text-center text-ink/60">Por ahora todas las búsquedas encontraron autos. ¡Bien ahí!</td></tr>';
+      const top = d.mas_buscados || [], max = Math.max(1, ...top.map((x) => x.busquedas || 0));
+      $('#mercTop').innerHTML = top.length ? top.map((x, i) => `<li>
+          <div class="flex items-center justify-between gap-3 text-sm"><span class="text-white"><span class="mr-2 font-mono text-ink/50">${i + 1}</span>${esc(titulo(x.que))}</span><span class="font-mono text-ink">${nf.format(x.busquedas || 0)}</span></div>
+          <div class="mt-1.5 h-1.5 rounded-full bg-white/5"><div class="h-full rounded-full bg-pr" style="width:${Math.round(100 * (x.busquedas || 0) / max)}%"></div></div></li>`).join('')
+        : '<li class="text-sm text-ink/60">Todavía no hay búsquedas este mes.</li>';
+      $('#mercCarga').hidden = true; $('#mercBody').hidden = false; icons();
+    } catch (e) {
+      $('#mercCarga').innerHTML = `<p class="text-sm text-ink/70">No pude cargar el informe. ${esc(e.message || '')}</p>`;
+    }
+  }
+  $('#mercRefresh').addEventListener('click', () => cargarMercado(true));
 
   // ===================== STOCK =====================
   async function cargarStock() {

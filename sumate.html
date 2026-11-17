@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Red de Autos para agencias · Vendé los usados que tenés parados</title>
+  <meta name="description" content="Para agencias de autos de Tucumán: cruzamos tu stock con compradores que ya dijeron qué auto quieren y cuánto pueden pagar, y te mandamos la oferta a tu WhatsApp. 30 días para probarlo, sin tarjeta." />
+  <meta name="theme-color" content="#0b0b0c" />
+  <meta property="og:title" content="Vendé los usados que tenés parados · Red de Autos" />
+  <meta property="og:description" content="Ofertas de compradores con intención real, directo a tu WhatsApp. Para agencias de Tucumán." />
+  <meta property="og:type" content="website" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&family=Mona+Sans:wght@500..900&family=Space+Grotesk:wght@500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11.1.14/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="sumate.css" />
+
+  <style>
+    :root{--pr:#3fe0c5;--bg:#0b0b0c;--ease:cubic-bezier(.6,0,.2,1)}
+    html{scroll-behavior:smooth}
+    html,body{overflow-x:clip}
+    body{background:var(--bg);color:#c4c4cc;font-family:Inter,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+    ::selection{background:var(--pr);color:#0b0b0c}
+    .aurora{position:absolute;inset:-25% -10% -10%;filter:blur(60px) saturate(140%);opacity:.85;pointer-events:none}
+    .aurora i{position:absolute;border-radius:50%;mix-blend-mode:screen;animation:auro 22s ease-in-out infinite alternate}
+    .aurora i:nth-child(1){left:0;top:5%;width:55%;height:55%;background:radial-gradient(closest-side,rgba(63,224,197,.7),transparent)}
+    .aurora i:nth-child(2){right:0;top:0;width:50%;height:60%;background:radial-gradient(closest-side,rgba(53,88,254,.5),transparent);animation-duration:26s;animation-delay:-8s}
+    .aurora i:nth-child(3){left:25%;top:30%;width:60%;height:45%;background:radial-gradient(closest-side,rgba(20,184,166,.45),transparent);animation-duration:30s;animation-delay:-4s}
+    @keyframes auro{to{transform:translate(6%,-5%) scale(1.15)}}
+    .fade-b{background:linear-gradient(to bottom,transparent 55%,var(--bg))}
+    .grad-text{background:linear-gradient(62deg,#3adfcc 0%,#8fb3ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .btn-cta{background:linear-gradient(62deg,#3adfcc 0%,#2fc7b0 100%);color:#06231f;box-shadow:0 10px 30px -10px rgba(63,224,197,.7);transition:transform .25s var(--ease),box-shadow .25s var(--ease)}
+    .btn-cta:hover{transform:translateY(-2px);box-shadow:0 16px 40px -12px rgba(63,224,197,.85)}
+    .btn-cta:active{transform:translateY(0)}
+    .pulse{position:relative}
+    .pulse:after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:0 0 0 0 rgba(63,224,197,.55);animation:pulse 2.4s infinite}
+    @keyframes pulse{70%{box-shadow:0 0 0 14px rgba(63,224,197,0)}100%{box-shadow:0 0 0 0 rgba(63,224,197,0)}}
+    .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015));border:1px solid rgba(255,255,255,.09)}
+    .field{width:100%;background:#0f1012;border:1px solid rgba(255,255,255,.14);border-radius:.85rem;padding:.85rem 1rem;color:#fff;font-size:16px;transition:border-color .2s,box-shadow .2s}
+    .field::placeholder{color:#6b6b74}
+    .field:focus{outline:none;border-color:var(--pr);box-shadow:0 0 0 3px rgba(63,224,197,.18)}
+    .field.err{border-color:#f87171}
+    select.field{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='none' stroke='%239a9aa3' stroke-width='2'%3E%3Cpath d='M5 8l5 5 5-5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .8rem center;padding-right:2.5rem}
+    .reveal{opacity:0;transform:translateY(24px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+    .reveal.in{opacity:1;transform:none}
+    .phone{border-radius:2.4rem;background:#0d0f10;border:1px solid rgba(255,255,255,.12);box-shadow:0 40px 80px -30px rgba(0,0,0,.8),0 0 0 8px #141618,0 0 0 9px rgba(255,255,255,.08)}
+    .wa-bg{background:#0b141a radial-gradient(rgba(255,255,255,.035) 1px,transparent 1px) 0 0/14px 14px}
+    .bubble{background:#1f2c33;border-radius:.9rem;border-top-left-radius:.25rem}
+    .chip{display:inline-flex;align-items:center;gap:.35rem;border-radius:999px;padding:.25rem .65rem;font-size:.72rem;font-weight:600}
+    details summary::-webkit-details-marker{display:none}
+    details[open] .chev{transform:rotate(180deg)}
+    .chev{transition:transform .3s var(--ease)}
+    .sticky-bar{transform:translateY(120%);transition:transform .35s var(--ease)}
+    .sticky-bar.show{transform:none}
+    .swiper-pagination-bullet{background:#fff;opacity:.3}
+    .swiper-pagination-bullet-active{background:var(--pr);opacity:1}
+    @media (prefers-reduced-motion:reduce){.aurora i,.pulse:after{animation:none}.reveal{opacity:1;transform:none}}
+  </style>
+</head>
+<body>
+
+<!-- ============ BARRA SUPERIOR (sin menú: la única salida es convertir) ============ -->
+<header class="absolute inset-x-0 top-0 z-30">
+  <div class="mx-auto flex max-w-6xl items-center justify-between px-5 py-5">
+    <a href="./" class="flex items-center gap-2 font-display text-lg font-extrabold tracking-tight text-white" aria-label="Red de Autos">
+      <span class="grid h-8 w-8 place-items-center rounded-lg bg-pr text-bg"><i data-lucide="car-front" class="h-5 w-5"></i></span>
+      Red de Autos
+    </a>
+    <a href="#form" data-cta="header" class="hidden rounded-full border border-white/15 px-4 py-2 text-sm font-semibold text-white transition hover:border-pr hover:text-pr sm:inline-flex">Sumar mi agencia</a>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="relative overflow-clip pt-28 sm:pt-32" id="top">
+  <div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+  <div class="fade-b absolute inset-0" aria-hidden="true"></div>
+
+  <div class="relative mx-auto grid max-w-6xl gap-12 px-5 pb-16 lg:grid-cols-[1.15fr_.85fr] lg:items-center lg:pb-24">
+    <div>
+      <p class="chip mb-5 border border-pr/30 bg-pr/10 text-pr"><i data-lucide="map-pin" class="h-3.5 w-3.5"></i> Para dueños y gerentes de agencias de autos en Tucumán</p>
+      <h1 class="font-display text-[2.15rem] font-extrabold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-[3.1rem]">
+        Vendé los usados que tenés parados: <span class="grad-text">recibí ofertas de compradores validados</span> sin quemar plata en redes.
+      </h1>
+      <p class="mt-6 max-w-xl text-lg leading-relaxed text-zinc-300">
+        Decile chau a pasarte el día contestando “¿cuánto vale?” y a tirar plata en avisos que no rinden. Cruzamos tu stock con compradores de verdad y te mandamos la oferta al WhatsApp, con la plata en la mano.
+      </p>
+      <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+        <a href="#form" data-cta="hero" class="btn-cta pulse inline-flex items-center justify-center gap-2 rounded-2xl px-7 py-4 text-base font-bold">
+          Quiero sumar mi agencia <i data-lucide="arrow-right" class="h-5 w-5"></i>
+        </a>
+        <a href="#" data-wa class="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/15 px-6 py-4 text-base font-semibold text-white transition hover:border-white/40">
+          <i data-lucide="message-circle" class="h-5 w-5 text-pr"></i> Consultar por WhatsApp
+        </a>
+      </div>
+      <ul class="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm text-zinc-400">
+        <li class="flex items-center gap-1.5"><i data-lucide="credit-card" class="h-4 w-4 text-pr"></i> Sin tarjeta de crédito</li>
+        <li class="flex items-center gap-1.5"><i data-lucide="file-spreadsheet" class="h-4 w-4 text-pr"></i> Carga masiva de stock en 2 minutos</li>
+        <li class="flex items-center gap-1.5"><i data-lucide="shield-check" class="h-4 w-4 text-pr"></i> 30 días para probarlo</li>
+      </ul>
+    </div>
+
+    <!-- Celular con lo que le llega a la agencia -->
+    <div class="relative mx-auto w-full max-w-[320px]">
+      <div class="absolute -inset-10 rounded-full bg-pr/20 blur-3xl" aria-hidden="true"></div>
+      <div class="phone relative overflow-hidden">
+        <div class="flex items-center gap-3 bg-[#1f2c33] px-4 pb-3 pt-5">
+          <span class="grid h-9 w-9 place-items-center rounded-full bg-pr text-bg"><i data-lucide="car-front" class="h-5 w-5"></i></span>
+          <div class="leading-tight"><p class="text-sm font-semibold text-white">Red de Autos</p><p class="text-[11px] text-zinc-400">cuenta de empresa</p></div>
+        </div>
+        <div class="wa-bg h-[400px] px-3 py-4">
+          <div class="swiper chat-swiper h-full">
+            <div class="swiper-wrapper">
+              <!-- 1: oferta -->
+              <div class="swiper-slide">
+                <div class="bubble p-3 text-[13px] leading-snug text-zinc-100">
+                  <p class="font-semibold text-pr">💰 Nueva oferta por tu auto</p>
+                  <p class="mt-1.5"><b>Toyota Etios XLS 2018</b> · 74.000 km</p>
+                  <p>Publicado: US$ 12.500</p>
+                  <p>Ofrecen: <b>US$ 11.900</b> contado</p>
+                  <p class="mt-2 flex items-center gap-1.5 text-[12px] text-emerald-300"><i data-lucide="gauge" class="h-3.5 w-3.5"></i> Termómetro: dentro de mercado</p>
+                  <p class="mt-2 text-right text-[10px] text-zinc-500">10:42</p>
+                </div>
+                <div class="mt-1.5 grid gap-1.5 text-center text-[13px] font-semibold text-sky-300">
+                  <span class="bubble rounded-lg py-2">✅ Aceptar</span>
+                  <span class="bubble rounded-lg py-2">Contraofertar</span>
+                  <span class="bubble rounded-lg py-2">No me sirve</span>
+                </div>
+              </div>
+              <!-- 2: radar -->
+              <div class="swiper-slide">
+                <div class="bubble p-3 text-[13px] leading-snug text-zinc-100">
+                  <p class="font-semibold text-pr">📡 Buscan un auto que no tenés</p>
+                  <p class="mt-1.5">Un comprador busca <b>Fiat Cronos 2021+</b>, hasta <b>$ 21.000.000</b>.</p>
+                  <p class="mt-1.5 text-zinc-400">Esta semana lo buscaron 7 personas en Tucumán.</p>
+                  <p class="mt-2 text-right text-[10px] text-zinc-500">16:05</p>
+                </div>
+                <div class="mt-1.5 grid gap-1.5 text-center text-[13px] font-semibold text-sky-300">
+                  <span class="bubble rounded-lg py-2">Tengo uno</span>
+                  <span class="bubble rounded-lg py-2">No tengo</span>
+                </div>
+              </div>
+              <!-- 3: vendido por audio -->
+              <div class="swiper-slide">
+                <div class="ml-auto w-[85%] rounded-[.9rem] rounded-tr-[.25rem] bg-[#005c4b] p-3 text-[13px] text-zinc-100">
+                  <p class="flex items-center gap-2"><i data-lucide="mic" class="h-4 w-4"></i><span class="h-1 flex-1 rounded bg-white/40"></span> 0:03</p>
+                  <p class="mt-1 text-[11px] italic text-emerald-100/80">“Se vendió el Onix gris”</p>
+                </div>
+                <div class="bubble mt-2 p-3 text-[13px] leading-snug text-zinc-100">
+                  <p>🔴 ¿Marco como <b>VENDIDO</b> el Chevrolet Onix LT 2019?</p>
+                </div>
+                <div class="mt-1.5 grid gap-1.5 text-center text-[13px] font-semibold text-sky-300">
+                  <span class="bubble rounded-lg py-2">Sí, confirmar</span>
+                </div>
+                <div class="bubble mt-2 p-3 text-[13px] text-zinc-100">Listo ✅ Lo bajé de la red. ¡Felicitaciones por la venta! 🎉</div>
+              </div>
+            </div>
+            <div class="swiper-pagination !bottom-0"></div>
+          </div>
+        </div>
+      </div>
+      <p class="mt-4 text-center text-xs text-zinc-500">Así te llegan las ofertas, las alertas y las bajas de stock</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DOLOR ============ -->
+<section class="relative py-20">
+  <div class="mx-auto max-w-5xl px-5">
+    <div class="reveal mx-auto max-w-3xl text-center">
+      <h2 class="font-display text-3xl font-extrabold leading-tight text-white sm:text-4xl">¿Tu agencia vende autos y te pasás el día haciendo malabares con curiosos que solo dan vueltas?</h2>
+      <p class="mt-4 text-lg text-zinc-400">Si tenés una agencia o concesionario, ya te la conocés de memoria:</p>
+    </div>
+    <div class="mt-12 grid gap-4 sm:grid-cols-2">
+      <article class="reveal card rounded-3xl p-6">
+        <span class="grid h-11 w-11 place-items-center rounded-xl bg-red-500/10 text-red-400"><i data-lucide="messages-square" class="h-5 w-5"></i></span>
+        <h3 class="mt-4 font-display text-xl font-bold text-white">El desfile de curiosos en el chat</h3>
+        <p class="mt-2 leading-relaxed text-zinc-400">Horas mandando fotos, fichas técnicas y audios a perfiles que preguntan “¿precio?” en Marketplace y jamás pisan el salón.</p>
+      </article>
+      <article class="reveal card rounded-3xl p-6">
+        <span class="grid h-11 w-11 place-items-center rounded-xl bg-red-500/10 text-red-400"><i data-lucide="flame" class="h-5 w-5"></i></span>
+        <h3 class="mt-4 font-display text-xl font-bold text-white">Pauta que se quema en el aire</h3>
+        <p class="mt-2 leading-relaxed text-zinc-400">Invertís un dineral en anuncios y portales que te traen clics vacíos. De cerrar operaciones, ni hablemos.</p>
+      </article>
+      <article class="reveal card rounded-3xl p-6">
+        <span class="grid h-11 w-11 place-items-center rounded-xl bg-red-500/10 text-red-400"><i data-lucide="trending-down" class="h-5 w-5"></i></span>
+        <h3 class="mt-4 font-display text-xl font-bold text-white">Usados parados que comen margen</h3>
+        <p class="mt-2 leading-relaxed text-zinc-400">Un auto estacionado 60 días en el salón te quema capital de trabajo y te arruina la caja.</p>
+      </article>
+      <article class="reveal card rounded-3xl p-6">
+        <span class="grid h-11 w-11 place-items-center rounded-xl bg-red-500/10 text-red-400"><i data-lucide="clipboard-x" class="h-5 w-5"></i></span>
+        <h3 class="mt-4 font-display text-xl font-bold text-white">La pesadilla del inventario</h3>
+        <p class="mt-2 leading-relaxed text-zinc-400">Actualizar precios y bajar de las redes los autos vendidos, renegando con planillas que nunca están al día.</p>
+      </article>
+    </div>
+    <p class="reveal mt-10 text-center font-display text-xl font-bold text-white sm:text-2xl">Seguir operando así no es hacer negocio: <span class="text-red-400">es apagar incendios todos los días.</span></p>
+  </div>
+</section>
+
+<!-- ============ SOLUCIÓN: 3 PASOS ============ -->
+<section class="relative overflow-clip py-20">
+  <div class="absolute left-1/2 top-0 h-px w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-pr/50 to-transparent" aria-hidden="true"></div>
+  <div class="mx-auto max-w-6xl px-5">
+    <div class="reveal mx-auto max-w-3xl text-center">
+      <p class="chip border border-pr/30 bg-pr/10 text-pr">La solución</p>
+      <h2 class="mt-4 font-display text-3xl font-extrabold leading-tight text-white sm:text-4xl">La solución no es meterle más plata a los mismos avisos de siempre.</h2>
+      <p class="mt-4 text-lg text-zinc-400">Es cambiar de sistema: dejar de publicar para ver quién chusmea y empezar a trabajar con <b class="text-white">intención de compra real</b>. Así tu agencia recibe clientes listos para cerrar, en 3 pasos:</p>
+    </div>
+
+    <ol class="mt-14 grid gap-5 lg:grid-cols-3">
+      <li class="reveal card relative rounded-3xl p-7">
+        <span class="font-display text-6xl font-black text-white/5">01</span>
+        <span class="absolute right-6 top-6 grid h-12 w-12 place-items-center rounded-2xl bg-pr/15 text-pr"><i data-lucide="upload" class="h-6 w-6"></i></span>
+        <h3 class="mt-2 font-display text-xl font-bold text-white">Subís tu stock en 2 minutos</h3>
+        <p class="mt-3 leading-relaxed text-zinc-400">Mandás tu listado en Excel una sola vez. ¿Se vendió un auto en la playa? Le mandás un audio de dos segundos al bot por WhatsApp y el sistema lo baja solo. No tenés que hacer nada más.</p>
+      </li>
+      <li class="reveal card relative rounded-3xl p-7">
+        <span class="font-display text-6xl font-black text-white/5">02</span>
+        <span class="absolute right-6 top-6 grid h-12 w-12 place-items-center rounded-2xl bg-pr/15 text-pr"><i data-lucide="search" class="h-6 w-6"></i></span>
+        <h3 class="mt-2 font-display text-xl font-bold text-white">El comprador busca por intención</h3>
+        <p class="mt-3 leading-relaxed text-zinc-400">No hay catálogos muertos. El comprador escribe exactamente lo que quiere y lo que puede pagar:</p>
+        <p class="mt-3 rounded-xl border border-white/10 bg-black/40 px-4 py-3 font-mono text-sm text-pr">“Toyota Etios 2018 con hasta 14 millones”</p>
+      </li>
+      <li class="reveal card relative rounded-3xl p-7">
+        <span class="font-display text-6xl font-black text-white/5">03</span>
+        <span class="absolute right-6 top-6 grid h-12 w-12 place-items-center rounded-2xl bg-pr/15 text-pr"><i data-lucide="smartphone" class="h-6 w-6"></i></span>
+        <h3 class="mt-2 font-display text-xl font-bold text-white">Recibís la oferta validada en el celu</h3>
+        <p class="mt-3 leading-relaxed text-zinc-400">Si tu auto encaja, el termómetro comercial filtra a los curiosos y te llega la oferta limpia a tu WhatsApp. Aceptás o contraofertás, y se arma el contacto con el cliente para cerrar en la agencia.</p>
+      </li>
+    </ol>
+
+    <div class="reveal mt-12 rounded-3xl border border-pr/25 bg-pr/[.06] p-6 text-center sm:p-8">
+      <p class="font-display text-xl font-bold text-white sm:text-2xl">No es otro clasificado más. Es un canal de compradores con la plata en la mano e intención de compra.</p>
+      <a href="#form" data-cta="solucion" class="btn-cta mt-6 inline-flex items-center gap-2 rounded-2xl px-7 py-4 font-bold">Quiero sumar mi agencia <i data-lucide="arrow-right" class="h-5 w-5"></i></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BENEFICIOS ============ -->
+<section class="py-20">
+  <div class="mx-auto max-w-6xl px-5">
+    <div class="reveal mx-auto max-w-3xl text-center">
+      <h2 class="font-display text-3xl font-extrabold leading-tight text-white sm:text-4xl">Todo está pensado para una sola cosa</h2>
+      <p class="mt-4 text-lg text-zinc-400">Que operes con menos fricción, más tiempo y más rentabilidad.</p>
+    </div>
+    <div class="mt-12 grid gap-5 md:grid-cols-2">
+      <article class="reveal card flex gap-5 rounded-3xl p-7">
+        <span class="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-pr/15 text-pr"><i data-lucide="timer" class="h-6 w-6"></i></span>
+        <div><h3 class="font-display text-xl font-bold text-white">Recuperá horas de tus vendedores</h3>
+        <p class="mt-2 leading-relaxed text-zinc-400">Tu equipo se dedica a cerrar operaciones en el salón en lugar de mandar fotos y audios a perfiles que nunca aparecen.</p></div>
+      </article>
+      <article class="reveal card flex gap-5 rounded-3xl p-7">
+        <span class="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-pr/15 text-pr"><i data-lucide="shield-check" class="h-6 w-6"></i></span>
+        <div><h3 class="font-display text-xl font-bold text-white">Filtro anticuriosos por termómetro comercial</h3>
+        <p class="mt-2 leading-relaxed text-zinc-400">El sistema frena las ofertas absurdas o fuera de mercado. Solo te llega lo que es viable para tu stock.</p></div>
+      </article>
+      <article class="reveal card flex gap-5 rounded-3xl p-7">
+        <span class="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-pr/15 text-pr"><i data-lucide="refresh-cw" class="h-6 w-6"></i></span>
+        <div><h3 class="font-display text-xl font-bold text-white">Cero esfuerzo administrativo</h3>
+        <p class="mt-2 leading-relaxed text-zinc-400">Olvidate de editar avisos en diez páginas distintas. El stock se actualiza con un mensaje de WhatsApp cuando vendés el auto.</p></div>
+      </article>
+      <article class="reveal card flex gap-5 rounded-3xl p-7">
+        <span class="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-pr/15 text-pr"><i data-lucide="radar" class="h-6 w-6"></i></span>
+        <div><h3 class="font-display text-xl font-bold text-white">Radar de demanda real en Tucumán</h3>
+        <p class="mt-2 leading-relaxed text-zinc-400">Si un comprador busca un modelo que hoy no tenés en la playa, te avisamos al instante. Sabés qué auto salir a comprar y no comprás a ciegas.</p></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRUEBA / AUTORIDAD ============ -->
+<section class="py-16">
+  <div class="mx-auto max-w-6xl px-5">
+    <div class="reveal card grid gap-8 rounded-[2rem] p-8 sm:p-10 md:grid-cols-[1.2fr_1fr] md:items-center">
+      <div>
+        <p class="chip border border-white/10 bg-white/5 text-zinc-300"><i data-lucide="activity" class="h-3.5 w-3.5 text-pr"></i> Lo que ya está pasando en la provincia</p>
+        <h2 class="mt-4 font-display text-2xl font-extrabold leading-tight text-white sm:text-3xl" id="socialTitle">Agencias de San Miguel y Yerba Buena ya se están sumando a la red.</h2>
+        <p class="mt-3 leading-relaxed text-zinc-400" id="socialText">Concesionarios y playas multimarca ya cargaron su stock y están recibiendo las primeras alertas de demanda real.</p>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="rounded-2xl border border-white/10 bg-black/30 p-5" id="statAgBox" hidden>
+          <p class="font-display text-4xl font-black text-white"><span id="statAg">0</span></p>
+          <p class="mt-1 text-sm text-zinc-400">agencias verificadas en la red</p>
+        </div>
+        <div class="rounded-2xl border border-white/10 bg-black/30 p-5">
+          <p class="font-display text-4xl font-black text-white">5<span class="text-xl text-pr"> min</span></p>
+          <p class="mt-1 text-sm text-zinc-400">de cero a operativo, sin instalar nada</p>
+        </div>
+        <div class="rounded-2xl border border-white/10 bg-black/30 p-5" id="statBusBox" hidden>
+          <p class="font-display text-4xl font-black text-white"><span id="statBus">0</span></p>
+          <p class="mt-1 text-sm text-zinc-400">búsquedas de compradores en los últimos 30 días</p>
+        </div>
+        <div class="rounded-2xl border border-white/10 bg-black/30 p-5">
+          <p class="font-display text-4xl font-black text-white"><span class="text-pr">$</span>0</p>
+          <p class="mt-1 text-sm text-zinc-400">para empezar: sin tarjeta de crédito</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LO QUE INCLUYE (carrusel) ============ -->
+<section class="overflow-clip py-20">
+  <div class="mx-auto max-w-6xl px-5">
+    <div class="reveal flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <div class="max-w-2xl">
+        <h2 class="font-display text-3xl font-extrabold leading-tight text-white sm:text-4xl">Lo que te llevás al sumar tu agencia</h2>
+        <p class="mt-4 text-lg text-zinc-400">No es un software pasivo que te deja solo frente a la pantalla. Es el sistema completo, listo para operar.</p>
+      </div>
+      <div class="hidden gap-2 sm:flex">
+        <button class="inc-prev grid h-12 w-12 place-items-center rounded-full border border-white/15 text-white transition hover:border-pr hover:text-pr" aria-label="Anterior"><i data-lucide="arrow-left" class="h-5 w-5"></i></button>
+        <button class="inc-next grid h-12 w-12 place-items-center rounded-full border border-white/15 text-white transition hover:border-pr hover:text-pr" aria-label="Siguiente"><i data-lucide="arrow-right" class="h-5 w-5"></i></button>
+      </div>
+    </div>
+    <div class="swiper inc-swiper reveal mt-10 max-sm:!overflow-visible">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide !h-auto"><article class="card h-full rounded-3xl p-7">
+          <i data-lucide="sparkles" class="h-8 w-8 text-pr"></i>
+          <h3 class="mt-5 font-display text-xl font-bold text-white">Plataforma de intención de compra</h3>
+          <p class="mt-2 leading-relaxed text-zinc-400">Tu stock conectado a un buscador inteligente que entiende qué busca el comprador: modelo, año y presupuesto.</p>
+        </article></div>
+        <div class="swiper-slide !h-auto"><article class="card h-full rounded-3xl p-7">
+          <i data-lucide="bot" class="h-8 w-8 text-pr"></i>
+          <h3 class="mt-5 font-display text-xl font-bold text-white">Bot de WhatsApp automatizado</h3>
+          <p class="mt-2 leading-relaxed text-zinc-400">Filtra a los curiosos, aplica el termómetro comercial y te entrega la oferta limpia en tu celu.</p>
+        </article></div>
+        <div class="swiper-slide !h-auto"><article class="card h-full rounded-3xl p-7">
+          <i data-lucide="zap" class="h-8 w-8 text-pr"></i>
+          <h3 class="mt-5 font-display text-xl font-bold text-white">Migración y carga inicial asistida</h3>
+          <p class="mt-2 leading-relaxed text-zinc-400">Nos pasás tu listado como lo tengas (Excel, PDF o fotos) y te dejamos la playa andando en minutos.</p>
+        </article></div>
+        <div class="swiper-slide !h-auto"><article class="card h-full rounded-3xl p-7">
+          <i data-lucide="bar-chart-3" class="h-8 w-8 text-pr"></i>
+          <h3 class="mt-5 font-display text-xl font-bold text-white">Radar de demanda zonal</h3>
+          <p class="mt-2 leading-relaxed text-zinc-400">Qué modelos y presupuestos se están moviendo en Tucumán, para que no compres stock a ciegas.</p>
+        </article></div>
+        <div class="swiper-slide !h-auto"><article class="card h-full rounded-3xl p-7">
+          <i data-lucide="headset" class="h-8 w-8 text-pr"></i>
+          <h3 class="mt-5 font-display text-xl font-bold text-white">Soporte y acompañamiento local</h3>
+          <p class="mt-2 leading-relaxed text-zinc-400">Un canal directo con nuestro equipo para asistirte en cada detalle y optimizar el rendimiento de tu salón.</p>
+        </article></div>
+      </div>
+      <div class="swiper-pagination !relative mt-8 sm:hidden"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GARANTÍA ============ -->
+<section class="py-20">
+  <div class="mx-auto max-w-5xl px-5">
+    <div class="reveal relative overflow-hidden rounded-[2rem] border border-pr/30 bg-gradient-to-br from-pr/[.12] via-transparent to-[#3558FE]/[.12] p-8 sm:p-12">
+      <div class="grid gap-8 md:grid-cols-[auto_1fr] md:items-center">
+        <div class="mx-auto grid h-36 w-36 place-items-center rounded-full border-2 border-dashed border-pr/60 text-center">
+          <div><i data-lucide="badge-check" class="mx-auto h-10 w-10 text-pr"></i><p class="mt-1 font-display text-3xl font-black leading-none text-white">30</p><p class="text-xs font-semibold uppercase tracking-widest text-pr">días</p></div>
+        </div>
+        <div>
+          <h2 class="font-display text-3xl font-extrabold text-white">Nuestra garantía de confianza: cero riesgo para tu agencia</h2>
+          <p class="mt-4 leading-relaxed text-zinc-300">Sumás tu agencia, cargamos tu stock y operás los primeros 30 días con total libertad. Si en esas semanas el sistema no te demuestra cómo frena a los curiosos, agiliza tus chats y te acerca ofertas reales de compradores con presupuesto, te bajás sin dar explicaciones y sin poner un solo peso.</p>
+          <p class="mt-3 font-semibold text-white">El riesgo lo asumimos nosotros.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal mt-12 grid gap-8 md:grid-cols-2 md:items-start">
+      <div>
+        <h3 class="font-display text-2xl font-extrabold text-white">Construimos esto codo a codo, sin falsas promesas</h3>
+        <p class="mt-4 leading-relaxed text-zinc-400">Una red que conecta agencias con compradores necesita un período de tracción para encender los dos lados del mostrador. No te vamos a vender magia ni milagros en 48 horas. Lo que sí te garantizamos es compromiso total y cero riesgo operativo.</p>
+      </div>
+      <ul class="space-y-4">
+        <li class="flex gap-3"><i data-lucide="check-circle-2" class="mt-0.5 h-5 w-5 shrink-0 text-pr"></i><p><b class="text-white">Acceso y soporte prioritario</b> para que tu stock quede impecable desde el primer día.</p></li>
+        <li class="flex gap-3"><i data-lucide="check-circle-2" class="mt-0.5 h-5 w-5 shrink-0 text-pr"></i><p><b class="text-white">Acompañamiento cercano:</b> si las alertas todavía están tomando temperatura, tenés línea directa para ajustar precios y categorías.</p></li>
+        <li class="flex gap-3"><i data-lucide="check-circle-2" class="mt-0.5 h-5 w-5 shrink-0 text-pr"></i><p><b class="text-white">Libertad absoluta:</b> sin ataduras ni contratos abusivos. Si el ritmo no acompaña a tu agencia, te bajás cuando quieras.</p></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="py-20" id="faq">
+  <div class="mx-auto max-w-3xl px-5">
+    <h2 class="reveal text-center font-display text-3xl font-extrabold text-white sm:text-4xl">Preguntas frecuentes</h2>
+    <div class="mt-10 space-y-3">
+      <details class="reveal card group rounded-2xl px-6 py-5">
+        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-white">¿Tengo que cambiar el sistema de gestión que ya uso en la agencia?<i data-lucide="chevron-down" class="chev h-5 w-5 shrink-0 text-pr"></i></summary>
+        <p class="mt-3 leading-relaxed text-zinc-400">Para nada. No tocamos tu administración actual. La plataforma corre en paralelo como un canal de compradores, y el contacto final siempre te llega directo a WhatsApp.</p>
+      </details>
+      <details class="reveal card group rounded-2xl px-6 py-5">
+        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-white">¿Cómo se cargan los vehículos cuando arranco?<i data-lucide="chevron-down" class="chev h-5 w-5 shrink-0 text-pr"></i></summary>
+        <p class="mt-3 leading-relaxed text-zinc-400">No te consume tiempo. Nos pasás tu listado actual en el formato que lo tengas (Excel, PDF o fotos) y nuestro equipo deja todo tu stock subido y activo en minutos.</p>
+      </details>
+      <details class="reveal card group rounded-2xl px-6 py-5">
+        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-white">¿Qué pasa si un comprador manda una oferta que no me sirve?<i data-lucide="chevron-down" class="chev h-5 w-5 shrink-0 text-pr"></i></summary>
+        <p class="mt-3 leading-relaxed text-zinc-400">De eso se encarga el termómetro comercial: filtra los números fuera de mercado antes de que lleguen a tu celu. Vos solo recibís ofertas viables y el negocio se define cara a cara en tu salón.</p>
+      </details>
+      <details class="reveal card group rounded-2xl px-6 py-5">
+        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-white">¿Es difícil mantener el stock actualizado si vendo un auto en el salón?<i data-lucide="chevron-down" class="chev h-5 w-5 shrink-0 text-pr"></i></summary>
+        <p class="mt-3 leading-relaxed text-zinc-400">Es instantáneo. No tenés que entrar a ninguna PC. Le mandás un audio al bot por WhatsApp y el auto se da de baja al toque.</p>
+      </details>
+      <details class="reveal card group rounded-2xl px-6 py-5">
+        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-white">¿Hay contratos de permanencia o ataduras?<i data-lucide="chevron-down" class="chev h-5 w-5 shrink-0 text-pr"></i></summary>
+        <p class="mt-3 leading-relaxed text-zinc-400">Cero. Si probás el sistema y sentís que no rinde para tu tipo de agencia, te bajás cuando quieras, sin explicaciones ni multas.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA FINAL + FORMULARIO ============ -->
+<section class="relative overflow-clip py-20" id="form">
+  <div class="aurora opacity-60" aria-hidden="true"><i></i><i></i><i></i></div>
+  <div class="relative mx-auto grid max-w-6xl gap-10 px-5 lg:grid-cols-2 lg:items-center">
+    <div class="reveal">
+      <h2 class="font-display text-3xl font-extrabold leading-tight text-white sm:text-[2.6rem]">¿Querés dejar de quemar plata en avisos pasivos y llenar tu salón con compradores reales?</h2>
+      <p class="mt-5 text-lg text-zinc-300">Sumá tu agencia hoy a la red de intención de compra de Tucumán y empezá a recibir ofertas listas para cerrar.</p>
+      <div class="mt-8 flex gap-3 rounded-2xl border border-amber-400/30 bg-amber-400/[.07] p-5">
+        <i data-lucide="alert-triangle" class="mt-0.5 h-5 w-5 shrink-0 text-amber-300"></i>
+        <p class="text-sm leading-relaxed text-amber-100/90"><b>Aviso importante:</b> para garantizar un volumen de ofertas saludable y evitar la saturación en la plaza, habilitamos el acceso en etapas y con cupos limitados por zona. Cubiertos los lugares de esta tanda, las nuevas agencias esperan a la próxima apertura.</p>
+      </div>
+    </div>
+
+    <div class="reveal">
+      <div class="card rounded-[2rem] bg-[#0f1012]/90 p-6 shadow-2xl backdrop-blur sm:p-8">
+        <form id="leadForm" novalidate>
+          <h3 class="font-display text-2xl font-extrabold text-white">Reservá el lugar de tu agencia</h3>
+          <p class="mt-1 text-sm text-zinc-400">Te escribimos por WhatsApp para dejar tu stock andando.</p>
+          <div class="mt-6 grid gap-4">
+            <label class="block"><span class="mb-1.5 block text-sm font-medium text-zinc-300">Nombre de la agencia</span>
+              <input class="field" name="agencia" autocomplete="organization" placeholder="Ej. Autos del Norte" required maxlength="100" /></label>
+            <label class="block"><span class="mb-1.5 block text-sm font-medium text-zinc-300">Tu nombre</span>
+              <input class="field" name="nombre" autocomplete="name" placeholder="Ej. Martín" required maxlength="80" /></label>
+            <label class="block"><span class="mb-1.5 block text-sm font-medium text-zinc-300">WhatsApp</span>
+              <input class="field" name="whatsapp" type="tel" inputmode="tel" autocomplete="tel" placeholder="381 555 1234" required maxlength="20" /></label>
+            <div class="grid grid-cols-2 gap-3">
+              <label class="block"><span class="mb-1.5 block text-sm font-medium text-zinc-300">Zona</span>
+                <select class="field" name="zona">
+                  <option>San Miguel de Tucumán</option><option>Yerba Buena</option><option>Tafí Viejo</option>
+                  <option>Banda del Río Salí</option><option>Concepción</option><option>Otra</option>
+                </select></label>
+              <label class="block"><span class="mb-1.5 block text-sm font-medium text-zinc-300">Autos en stock</span>
+                <select class="field" name="autos">
+                  <option>1 a 10</option><option selected>11 a 30</option><option>31 a 60</option><option>Más de 60</option>
+                </select></label>
+            </div>
+            <input type="text" name="web" tabindex="-1" autocomplete="off" class="absolute -left-[9999px] h-0 w-0 opacity-0" aria-hidden="true" />
+          </div>
+          <p id="formErr" class="mt-4 hidden rounded-xl border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm text-red-300" role="alert"></p>
+          <button type="submit" id="formBtn" class="btn-cta mt-6 flex w-full items-center justify-center gap-2 rounded-2xl px-6 py-4 text-base font-extrabold uppercase tracking-wide">
+            Quiero sumar mi agencia ahora <i data-lucide="arrow-right" class="h-5 w-5"></i>
+          </button>
+          <p class="mt-4 text-center text-xs text-zinc-500">Sin tarjeta de crédito · Alta y carga asistida en 2 minutos · Cupos limitados para esta etapa</p>
+          <p class="mt-2 text-center text-[11px] text-zinc-600">Usamos tus datos solo para contactarte por tu alta. <a href="privacidad.html" class="underline hover:text-zinc-400">Privacidad</a></p>
+        </form>
+
+        <div id="formOk" class="hidden text-center" role="status">
+          <span class="mx-auto grid h-16 w-16 place-items-center rounded-full bg-pr/15 text-pr"><i data-lucide="check" class="h-8 w-8"></i></span>
+          <h3 class="mt-5 font-display text-2xl font-extrabold text-white">¡Listo, <span id="okName">gracias</span>! Tu lugar quedó reservado.</h3>
+          <p class="mt-3 text-zinc-400">Te escribimos por WhatsApp para dejar tu stock cargado. Si querés adelantar, escribinos ahora o registrá tu agencia vos mismo.</p>
+          <div class="mt-6 grid gap-3">
+            <a href="#" data-wa class="btn-cta inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-4 font-bold"><i data-lucide="message-circle" class="h-5 w-5"></i> Hablar ahora por WhatsApp</a>
+            <a href="agencias.html" class="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/15 px-6 py-3.5 font-semibold text-white hover:border-white/40">Registrar mi agencia en el panel</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="border-t border-white/10 py-8 pb-28 text-center text-sm text-zinc-500 sm:pb-8">
+  <p>© <span id="year"></span> Red de Autos · Tucumán, Argentina · <a href="privacidad.html" class="hover:text-zinc-300">Privacidad</a></p>
+</footer>
+
+<!-- Barra fija en el celular -->
+<div class="sticky-bar fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#0b0b0c]/95 p-3 backdrop-blur sm:hidden" id="stickyBar">
+  <div class="flex gap-2">
+    <a href="#form" data-cta="sticky" class="btn-cta flex flex-1 items-center justify-center gap-2 rounded-xl py-3.5 font-bold">Sumar mi agencia</a>
+    <a href="#" data-wa class="grid w-14 place-items-center rounded-xl bg-[#25D366] text-white" aria-label="Consultar por WhatsApp"><i data-lucide="message-circle" class="h-6 w-6"></i></a>
+  </div>
+</div>
+
+<!-- Botón flotante de WhatsApp (escritorio) -->
+<a href="#" data-wa class="fixed bottom-6 right-6 z-40 hidden h-14 w-14 place-items-center rounded-full bg-[#25D366] text-white shadow-xl shadow-black/40 transition hover:scale-105 sm:grid" aria-label="Consultar por WhatsApp">
+  <svg viewBox="0 0 24 24" class="h-7 w-7" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.4-.5c.2-.2.2-.3.3-.5.1-.2.1-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.4.2-.7.2-1.3.2-1.4-.1-.2-.3-.3-.6-.4zM12 21.8c-1.8 0-3.5-.5-5-1.4l-.4-.2-3.7 1 1-3.6-.2-.4c-1-1.6-1.5-3.4-1.5-5.2C2.2 6.6 6.6 2.2 12 2.2c2.6 0 5.1 1 6.9 2.9 1.8 1.8 2.9 4.3 2.9 6.9 0 5.4-4.4 9.8-9.8 9.8zm8.3-18.1C18.1 1.5 15.1.3 12 .3 5.5.3.3 5.5.3 12c0 2.1.5 4.1 1.6 5.9L.2 23.7l6-1.6c1.7.9 3.7 1.4 5.7 1.4 6.5 0 11.7-5.2 11.7-11.7 0-3.1-1.2-6.1-3.4-8.3z"/></svg>
+</a>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11.1.14/swiper-bundle.min.js" defer></script>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js" defer></script>
+<script>
+  // ================= CONFIGURACIÓN =================
+  const CONFIG = {
+    SUPABASE_URL: 'https://ytuecptdgtmrbiddyzht.supabase.co',
+    SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl0dWVjcHRkZ3RtcmJpZGR5emh0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ0MTMxNTMsImV4cCI6MjEwOTk4OTE1M30.H-Yi5dwDW8TvZfFWvP3dquHnCeQNtHTf8MO6i5v02VA',
+    WHATSAPP: '15551478965',                       // número del bot / consultas
+    WA_TEXTO: 'Hola! Tengo una agencia y quiero saber cómo sumarme a Red de Autos',
+    META_PIXEL_ID: '',                             // ej. '123456789012345'
+    GA4_ID: '',                                    // ej. 'G-XXXXXXXXXX'
+    MIN_AGENCIAS_VISIBLE: 10,                      // el número real se muestra a partir de este valor
+    MIN_BUSQUEDAS_VISIBLE: 50,
+  };
+</script>
+<script>
+(() => {
+  // ---------- Medición (solo se carga si hay ID) ----------
+  if (CONFIG.META_PIXEL_ID) {
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', CONFIG.META_PIXEL_ID); fbq('track', 'PageView');
+  }
+  if (CONFIG.GA4_ID) {
+    const s = document.createElement('script'); s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=' + CONFIG.GA4_ID; document.head.appendChild(s);
+    window.dataLayer = window.dataLayer || []; window.gtag = function(){ dataLayer.push(arguments) };
+    gtag('js', new Date()); gtag('config', CONFIG.GA4_ID);
+  }
+  const track = (fb, ga, params = {}) => {
+    try { window.fbq && fbq('track', fb, params) } catch {}
+    try { window.gtag && gtag('event', ga, params) } catch {}
+  };
+
+  // ---------- Origen del lead (primer toque, guardado 30 días) ----------
+  const KEYS = ['utm_source','utm_medium','utm_campaign','utm_content','utm_term','fbclid','gclid'];
+  const q = new URLSearchParams(location.search);
+  let utm = {};
+  try { const g = JSON.parse(localStorage.getItem('rda_utm') || 'null'); if (g && Date.now() - g.t < 30*864e5) utm = g.v } catch {}
+  const nuevos = Object.fromEntries(KEYS.filter(k => q.get(k)).map(k => [k, q.get(k)]));
+  if (Object.keys(nuevos).length) { utm = nuevos; try { localStorage.setItem('rda_utm', JSON.stringify({ t: Date.now(), v: utm })) } catch {} }
+
+  // ---------- WhatsApp de consultas ----------
+  const waUrl = `https://wa.me/${CONFIG.WHATSAPP}?text=${encodeURIComponent(CONFIG.WA_TEXTO)}`;
+  document.querySelectorAll('[data-wa]').forEach(a => {
+    a.href = waUrl; a.target = '_blank'; a.rel = 'noopener';
+    a.addEventListener('click', () => track('Contact', 'contact', { method: 'whatsapp' }));
+  });
+  document.querySelectorAll('[data-cta]').forEach(a => a.addEventListener('click', () => {
+    try { window.gtag && gtag('event', 'cta_click', { ubicacion: a.dataset.cta }) } catch {}
+    setTimeout(() => document.querySelector('#leadForm [name=agencia]')?.focus({ preventScroll: true }), 650);
+  }));
+
+  // ---------- Números reales de la red ----------
+  fetch(`${CONFIG.SUPABASE_URL}/rest/v1/rpc/estadisticas_publicas`, {
+    method: 'POST', headers: { apikey: CONFIG.SUPABASE_ANON_KEY, Authorization: `Bearer ${CONFIG.SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' }, body: '{}'
+  }).then(r => r.ok ? r.json() : null).then(d => {
+    if (!d) return;
+    if (d.agencias >= CONFIG.MIN_AGENCIAS_VISIBLE) {
+      document.getElementById('statAg').textContent = d.agencias;
+      document.getElementById('statAgBox').hidden = false;
+      document.getElementById('socialTitle').textContent = `Ya son ${d.agencias} agencias de Tucumán en la red.`;
+    }
+    if (d.busquedas_mes >= CONFIG.MIN_BUSQUEDAS_VISIBLE) {
+      document.getElementById('statBus').textContent = Number(d.busquedas_mes).toLocaleString('es-AR');
+      document.getElementById('statBusBox').hidden = false;
+    }
+  }).catch(() => {});
+
+  // ---------- Formulario ----------
+  const form = document.getElementById('leadForm'), err = document.getElementById('formErr'), btn = document.getElementById('formBtn');
+  const digitos = v => String(v || '').replace(/\D/g, '');
+  const telValido = v => { let d = digitos(v).replace(/^0+/, ''); if (d.startsWith('54')) d = d.slice(2); if (d.startsWith('9')) d = d.slice(1); return d.length === 10 || d.length === 12 };
+  const mostrarErr = (m, campo) => {
+    err.textContent = m; err.classList.remove('hidden');
+    if (campo) { campo.classList.add('err'); campo.focus() }
+  };
+  form.addEventListener('input', e => { e.target.classList.remove('err'); err.classList.add('hidden') });
+  let empezado = false;
+  form.addEventListener('focusin', () => { if (!empezado) { empezado = true; try { window.gtag && gtag('event', 'form_start') } catch {} } });
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const f = Object.fromEntries(new FormData(form));
+    if (!f.agencia.trim()) return mostrarErr('Escribí el nombre de tu agencia.', form.agencia);
+    if (!f.nombre.trim()) return mostrarErr('Escribí tu nombre.', form.nombre);
+    if (!telValido(f.whatsapp)) return mostrarErr('Revisá el WhatsApp: con código de área, ej. 381 555 1234.', form.whatsapp);
+    btn.disabled = true; btn.classList.add('opacity-70');
+    btn.innerHTML = '<svg class="h-5 w-5 animate-spin" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-opacity=".3" stroke-width="3"/><path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg> Enviando…';
+    try {
+      const r = await fetch(`${CONFIG.SUPABASE_URL}/functions/v1/lead`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...f, utm, referrer: document.referrer || null, pagina: location.href.split('#')[0] }),
+      });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok || !d.ok) throw new Error(d.error || 'No pudimos enviar tus datos.');
+      track('Lead', 'generate_lead', { content_name: 'alta_agencia', zona: f.zona });
+      document.getElementById('okName').textContent = f.nombre.trim().split(' ')[0];
+      form.classList.add('hidden'); document.getElementById('formOk').classList.remove('hidden');
+      document.getElementById('form').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } catch (ex) {
+      mostrarErr((ex.message || 'No pudimos enviar tus datos.') + ' Si sigue fallando, escribinos por WhatsApp.');
+      btn.disabled = false; btn.classList.remove('opacity-70');
+      btn.innerHTML = 'Quiero sumar mi agencia ahora <i data-lucide="arrow-right" class="h-5 w-5"></i>';
+      window.lucide && lucide.createIcons();
+    }
+  });
+
+  // ---------- Barra fija en celular: aparece al pasar el hero y se oculta en el formulario ----------
+  const bar = document.getElementById('stickyBar');
+  let pasoHero = false, enForm = false;
+  const upd = () => bar.classList.toggle('show', pasoHero && !enForm);
+  new IntersectionObserver(([e]) => { pasoHero = !e.isIntersecting; upd() }, { threshold: 0 }).observe(document.querySelector('#top h1'));
+  new IntersectionObserver(([e]) => { enForm = e.isIntersecting; upd() }, { threshold: .15 }).observe(document.getElementById('form'));
+
+  // ---------- Animaciones de entrada ----------
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target) } }), { threshold: .12, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  window.addEventListener('DOMContentLoaded', () => {
+    window.lucide && lucide.createIcons();
+    if (window.Swiper) {
+      new Swiper('.chat-swiper', { loop: true, speed: 700, autoplay: { delay: 4200, disableOnInteraction: false }, effect: 'fade', fadeEffect: { crossFade: true }, pagination: { el: '.chat-swiper .swiper-pagination', clickable: true } });
+      new Swiper('.inc-swiper', {
+        slidesPerView: 1.12, spaceBetween: 16, grabCursor: true,
+        navigation: { prevEl: '.inc-prev', nextEl: '.inc-next' },
+        pagination: { el: '.inc-swiper .swiper-pagination', clickable: true },
+        breakpoints: { 640: { slidesPerView: 2.1, spaceBetween: 20 }, 1024: { slidesPerView: 3, spaceBetween: 24 } },
+      });
+    }
+  });
+})();
+</script>
+</body>
+</html>
