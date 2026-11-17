@@ -1505,13 +1505,31 @@
     S.offerCur = cur; $$('#oCur button').forEach(b => b.classList.toggle('on', b.dataset.v === cur));
     $('#oSym').textContent = cur === 'USD' ? 'US$' : '$'; $('#oMonto').style.paddingLeft = cur === 'USD' ? '4.6rem' : '3.2rem';
   }
+  // Termómetro comercial (mismos cortes que el servidor: 85% / 92% / 98% del precio publicado)
+  const TERMO = { piso: .85 };
+  function termo(v, m) {
+    const mArs = S.offerCur === 'USD' ? m * API.dolar : m, r = v.precio_ars ? mArs / v.precio_ars : 1;
+    const nivel = r < TERMO.piso ? 'fuera' : r < .92 ? 'bajo' : r < .98 ? 'cerca' : 'en_precio';
+    const minArs = Math.ceil(v.precio_ars * TERMO.piso);
+    const minimo = S.offerCur === 'USD' ? Math.ceil(minArs / API.dolar / 100) * 100 : Math.ceil(minArs / 1e5) * 1e5;
+    return { r, nivel, minimo };
+  }
   function updateDiff() {
-    const v = S.current, m = parseMonto($('#oMonto').value);
-    const mArs = S.offerCur === 'USD' ? m * API.dolar : m, d = v.precio_ars ? (mArs - v.precio_ars) / v.precio_ars : 0;
-    const el = $('#oDiff');
-    if (!m) { el.innerHTML = ''; return }
-    el.innerHTML = d >= 0 ? '<span class="text-pr">Ofertás el precio publicado o más.</span>'
-      : `<span class="${d < -.15 ? 'text-amber-300' : 'text-ink'}">Ofertás un <b class="text-white">${Math.round(-d * 100)}%</b> menos que lo publicado${d < -.15 ? ' · es una oferta agresiva' : ''}.</span>`;
+    const v = S.current, m = parseMonto($('#oMonto').value), el = $('#oDiff');
+    if (!m || !v.precio_ars) { el.innerHTML = ''; return }
+    const t = termo(v, m);
+    const pos = Math.max(2, Math.min(98, (t.r - .7) / .35 * 100));
+    const txt = {
+      fuera: `<span class="text-red-300">Está fuera de mercado: la agencia no la va a recibir. Ofertá desde <b class="text-white">${money(t.minimo, S.offerCur)}</b>.</span>`,
+      bajo: `<span class="text-amber-300">Oferta baja, pero negociable: ${Math.round((1 - t.r) * 100)}% menos que lo publicado.</span>`,
+      cerca: `<span class="text-pr">Cerca del precio: buenas chances de que la acepten.</span>`,
+      en_precio: `<span class="text-pr">En el precio publicado: es la que más rápido se cierra.</span>`,
+    }[t.nivel];
+    el.innerHTML = `<span class="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-ink/70"><i data-lucide="gauge" class="h-4 w-4"></i>Termómetro comercial</span>
+      <span class="relative block h-2 rounded-full" style="background:linear-gradient(90deg,#f87171 0%,#f87171 43%,#fbbf24 43%,#fbbf24 63%,#3fe0c5 63%)">
+        <span class="absolute top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-bg bg-white shadow" style="left:${pos}%;transition:left .35s"></span></span>
+      <span class="mt-2 block">${txt}</span>`;
+    icons();
   }
   $('#oMonto').addEventListener('input', e => { const n = parseMonto(e.target.value); e.target.value = n ? nf.format(n) : ''; updateDiff() });
   $$('#oCur button').forEach(b => b.addEventListener('click', () => {
@@ -1563,6 +1581,7 @@
     if (!wa) { const f = $('#mWa'); f.classList.add('shake'); f.focus(); setTimeout(() => f.classList.remove('shake'), 600); return toast('Necesito tu WhatsApp para que la agencia te responda.', 'phone') }
     const monto = parseMonto($('#oMonto').value);
     if (S.mode === 'oferta' && !monto) return toast('Ingresá cuánto querés ofertar.', 'hand-coins');
+    if (S.mode === 'oferta' && v.precio_ars && termo(v, monto).nivel === 'fuera') { $('#oMonto').focus(); return toast(`Esa oferta está fuera de mercado. Probá desde ${money(termo(v, monto).minimo, S.offerCur)}.`, 'gauge') }
     const btn = $('#mSubmit'); btn.disabled = true; $('#mBtnTxt').textContent = 'Enviando…';
     try {
       let fecha = null;
@@ -1583,7 +1602,11 @@
       }
       gsap.from('#mOk > *', { y: 14, autoAlpha: 0, stagger: .08, duration: .6, ease: 'expo.out' });
       gsap.to('#mOk .check-draw path', { strokeDashoffset: 0, duration: .8, ease: 'power2.out', delay: .25 });
-    } catch (err) { console.error(err); toast(err.message || 'No se pudo enviar. Probá de nuevo.', 'triangle-alert') }
+    } catch (err) {
+      console.error(err);
+      const f = /TERMOMETRO_FUERA:(\d+):(\w+)/.exec(err.message || '');
+      toast(f ? `Esa oferta está fuera de mercado. Probá desde ${money(+f[1], f[2])}.` : (err.message || 'No se pudo enviar. Probá de nuevo.'), f ? 'gauge' : 'triangle-alert');
+    }
     finally { btn.disabled = false; $('#mBtnTxt').textContent = S.mode === 'visita' ? 'Confirmar visita' : 'Enviar oferta' }
   });
 
