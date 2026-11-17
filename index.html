@@ -167,6 +167,15 @@
     .send{display:grid;place-items:center;width:3rem;height:3rem;border-radius:999px;background:#0b0b0c;color:#fff;transition:transform .45s var(--ease),background .3s,color .3s}
     .send:hover{transform:rotate(-45deg) scale(1.05);background:#d6f345;color:#0b0b0c}
 
+    .gitem{display:inline-flex;align-items:center;gap:.4rem;padding:.35rem .7rem .35rem .4rem;border-radius:999px;border:1px dashed rgba(0,0,0,.2);font-size:.78rem;color:#71717a;transition:all .35s var(--ease)}
+    .gitem .ck{display:grid;place-items:center;width:1.15rem;height:1.15rem;border-radius:999px;border:1.5px solid rgba(0,0,0,.2);transition:all .35s var(--ease)}
+    .gitem .ck svg{opacity:0;transform:scale(.4);transition:all .3s var(--ease)}
+    .gitem.ok{border-style:solid;border-color:#0b0b0c;color:#0b0b0c;font-weight:600;background:#fff}
+    .gitem.ok .ck{background:#d6f345;border-color:#0b0b0c}
+    .gitem.ok .ck svg{opacity:1;transform:none}
+    .gitem.miss{border-color:#f59e0b;color:#92400e;background:#fffbeb}
+    #q{min-height:3.4em}
+    @media (max-width:767px){#q{min-height:5em}}
     .chip{display:inline-flex;align-items:center;gap:.4rem;padding:.45rem .8rem;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:.8rem;color:#3f3f46;white-space:nowrap;transition:all .35s var(--ease)}
     .chip:hover{border-color:#d6f345;background:#d6f345;color:#0b0b0c;transform:translateY(-2px)}
 
@@ -334,7 +343,7 @@
           <div id="shell" class="search-shell text-left">
             <div class="flex items-end gap-2 p-2.5 pl-5 md:gap-3">
               <div class="flex min-h-[3rem] flex-1 flex-col justify-center py-2">
-                <textarea id="q" rows="1" maxlength="400" aria-label="¿Qué auto buscás?" class="w-full text-[1.02rem] leading-relaxed text-zinc-950 md:text-lg" placeholder="Busco Toyota Etios 2016 hasta 14 millones"></textarea>
+                <textarea id="q" rows="1" maxlength="400" aria-label="¿Qué auto buscás?" class="w-full text-[1.02rem] leading-relaxed text-zinc-950 md:text-lg" placeholder="Busco Toyota Yaris automático, usado, modelo 2014 a 2020, en Tucumán, que no supere los 100.000 km. Tengo un presupuesto de $20.000.000 como máximo."></textarea>
                 <div class="wave mt-1" aria-hidden="true"><i></i><i style="animation-delay:.1s"></i><i style="animation-delay:.25s"></i><i style="animation-delay:.05s"></i><i style="animation-delay:.3s"></i><i style="animation-delay:.15s"></i><i style="animation-delay:.2s"></i><span class="ml-2 text-xs text-[#FFD9A0]">Escuchando…</span></div>
               </div>
               <button type="button" id="micBtn" class="mic shrink-0" aria-label="Dictar por voz"><span class="ring"></span><span class="ring"></span><i data-lucide="mic" class="h-5 w-5"></i></button>
@@ -343,11 +352,22 @@
           </div>
         </form>
 
-        <div class="hero-in mt-5 flex flex-wrap justify-center gap-2" id="examples">
-          <button class="chip" data-ex="Busco Toyota Etios 2016 hasta 14 millones en Tucumán"><i data-lucide="sparkles" class="h-3.5 w-3.5 text-pr"></i>Etios 2016 hasta $14M</button>
-          <button class="chip" data-ex="Una camioneta diesel automática de 2018 para arriba hasta 35 lucas verdes">Pickup diésel hasta US$35k</button>
-          <button class="chip" data-ex="Gol Trend con menos de 100 mil km, tengo 10 mil dólares y entrego mi Palio">Gol Trend · permuta</button>
-          <button class="chip" data-nostock data-ex="Busco Corolla 2020 en adelante hasta 22 mil dólares en Yerba Buena"><i data-lucide="bell-ring" class="h-3.5 w-3.5"></i>Probar sin stock</button>
+        <div class="hero-in mx-auto mt-4 max-w-3xl text-left" id="guia">
+          <div id="faltan" class="mb-3 hidden rounded-2xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900" role="alert">
+            <p class="flex items-start gap-2"><i data-lucide="info" class="mt-0.5 h-4 w-4 shrink-0"></i><span>Te falta: <b id="faltanTxt"></b>. Cuanto más completa la búsqueda, mejor filtra la IA.</span></p>
+            <div class="mt-3 flex flex-wrap gap-2 pl-6">
+              <button type="button" class="btn-gh !py-2 !text-sm" id="faltanAgregar"><i data-lucide="pencil" class="h-4 w-4"></i>Agregar datos</button>
+              <button type="button" class="btn-gh !py-2 !text-sm" id="faltanBuscar">Buscar igual<i data-lucide="arrow-right" class="h-4 w-4"></i></button>
+            </div>
+          </div>
+          <div class="rounded-2xl border border-line bg-white/80 p-4 backdrop-blur">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <p class="text-sm text-zinc-700"><b class="text-zinc-950">Una búsqueda completa encuentra mejor.</b> Incluí: <span class="font-mono text-xs text-ink">auto + caja + condición + años + ubicación + km + presupuesto</span></p>
+              <span class="font-mono text-xs text-ink"><b id="guiaN" class="text-zinc-950">0</b>/7</span>
+            </div>
+            <div class="mt-3 flex flex-wrap gap-2" id="guiaItems"></div>
+            <button type="button" id="verEjemplo" class="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-zinc-950 underline decoration-hl decoration-[3px] underline-offset-4 transition hover:decoration-zinc-950"><i data-lucide="sparkles" class="h-4 w-4"></i>Ver un ejemplo completo</button>
+          </div>
         </div>
         <p class="hero-in mt-6 flex items-center justify-center gap-2 font-mono text-xs text-ink/60"><i data-lucide="shield-check" class="h-3.5 w-3.5"></i>Tu WhatsApp solo se comparte si vos lo pedís.</p>
 
@@ -935,7 +955,7 @@
   /* ===================== Generador DEMO =====================
      Si el stock de ejemplo no tiene nada para tu búsqueda, el modo demo
      "fabrica" 3 autos que encajan (2 exactos + 1 cercano) para que puedas
-     probar todo el flujo. El chip "Probar sin stock" lo desactiva.
+     probar todo el flujo.
      En MODO REAL esto no existe: se muestra solo el stock real. */
   const DEMO_AGENCIAS = [['Norte Automotores', 'San Miguel de Tucumán'], ['Yerba Buena Autos', 'Yerba Buena'], ['Concesur Usados', 'San Miguel de Tucumán'], ['Autos del Jardín', 'Tafí Viejo']];
   const DEFAULTS = { pickup: ['Toyota', 'Hilux', 'SRV 2.8 4x4'], suv: ['Jeep', 'Renegade', 'Sport 1.8'], sedan: ['Fiat', 'Cronos', 'Drive 1.3'], hatchback: ['Volkswagen', 'Gol Trend', 'Trendline 1.6'], utilitario: ['Renault', 'Kangoo', 'Confort 1.6'] };
@@ -1201,22 +1221,54 @@
   q.addEventListener('blur', () => shell.classList.remove('is-focus'));
   q.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); form.requestSubmit() } });
 
-  // Placeholder que se escribe solo
+  // Placeholder: el ejemplo completo se escribe solo
+  const EJEMPLO = 'Busco Toyota Yaris automático, usado, modelo 2014 a 2020, en Tucumán, que no supere los 100.000 km. Tengo un presupuesto de $20.000.000 como máximo.';
   (() => {
-    const phrases = ['Busco Toyota Etios 2016 hasta 14 millones', 'Una camioneta diésel 4x4, tengo 30 lucas verdes', 'Gol Trend con GNC, entrego mi Palio', 'Cronos 2020 en adelante en Yerba Buena', 'Algo familiar automático hasta 25 palos'];
-    let p = 0, i = 0, del = false;
+    let i = 0, del = false;
     const tick = () => {
-      if (document.activeElement === q || q.value) { q.placeholder = phrases[0]; return setTimeout(tick, 1200) }
-      const s = phrases[p];
-      i += del ? -1 : 1; q.placeholder = s.slice(0, i) + (i % 2 ? '▍' : '');
-      if (!del && i >= s.length) { del = true; return setTimeout(tick, 1800) }
-      if (del && i <= 0) { del = false; p = (p + 1) % phrases.length }
-      setTimeout(tick, del ? 22 : 45);
+      if (document.activeElement === q || q.value) { q.placeholder = EJEMPLO; return setTimeout(tick, 1200) }
+      i += del ? -3 : 1; q.placeholder = EJEMPLO.slice(0, Math.max(0, i)) + (i % 2 ? '▍' : '');
+      if (!del && i >= EJEMPLO.length) { del = true; return setTimeout(tick, 3500) }
+      if (del && i <= 0) { del = false; i = 0 }
+      setTimeout(tick, del ? 12 : 38);
     };
     if (!reduce) setTimeout(tick, 2000);
   })();
 
-  $$('#examples [data-ex]').forEach(b => b.addEventListener('click', () => { q.value = b.dataset.ex; autosize(); S.canal = 'web_texto'; S.forceEmpty = b.hasAttribute('data-nostock'); form.requestSubmit() }));
+  // Guía de búsqueda completa: se tilda sola mientras escribís
+  const sinTilde = (t) => t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const G_MARCAS = 'toyota|volkswagen|vw|fiat|chevrolet|chevy|ford|renault|peugeot|citroen|nissan|honda|jeep|kia|hyundai|mercedes|bmw|audi|chery|suzuki|mitsubishi|ram|dodge|baic|byd|haval|dfsk|jac';
+  const G_MODELOS = 'etios|yaris|corolla|hilux|sw4|gol|trend|polo|virtus|vento|amarok|saveiro|tera|t-cross|taos|cronos|argo|mobi|palio|siena|uno|toro|strada|fiorino|onix|prisma|cruze|tracker|s10|spin|ka|fiesta|focus|ranger|ecosport|territory|sandero|logan|kangoo|duster|kwid|alaskan|208|2008|308|partner|c3|c4|berlingo|versa|kicks|frontier|march|sentra|fit|city|hr-v|civic|renegade|compass|rio|sportage|hb20|tucson|creta|tiggo|swift|l200';
+  const GUIA = [
+    ['auto', 'Auto', new RegExp(`\\b(${G_MARCAS}|${G_MODELOS}|camioneta|pick ?up|suv|sedan|hatch|auto|utilitario|furgon|rural|4x4)\\b`)],
+    ['caja', 'Caja', /\b(automatic[oa]s?|manual|mecanic[oa]|cvt|secuencial|caja)\b/],
+    ['condicion', 'Condición', /\b(usad[oa]s?|0 ?km|nuev[oa]|seminuev[oa])\b/],
+    ['anios', 'Años', /\b(19[6-9]\d|20[0-3]\d)\b|\bdel? ['']?\d{2}\b|\bmodelo\b/],
+    ['ubicacion', 'Ubicación', /\b(tucuman|yerba buena|tafi|banda del rio sali|concepcion|famailla|lules|san miguel|aguilares|monteros|alderetes|simoca|en el centro)\b/],
+    ['km', 'Kilometraje', /\b\d[\d.]*\s*(mil\s*)?(km|kms|kilometros?)\b|\bkilometraje\b|\b\d+\s*k\b/],
+    ['presupuesto', 'Presupuesto', /\$|\b(presupuesto|millones?|palos?|lucas?|usd|u\$s|us\$|dolares|verdes|pesos)\b|\bhasta \d|\btengo \d/],
+  ];
+  const CK = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#0b0b0c" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+  $('#guiaItems').innerHTML = GUIA.map(([k, l]) => `<span class="gitem" data-k="${k}"><span class="ck">${CK}</span>${l}</span>`).join('');
+  const faltantes = () => { const t = sinTilde(q.value); return GUIA.filter(([, , re]) => !re.test(t)) };
+  const pintarGuia = () => {
+    const f = new Set(faltantes().map(([k]) => k));
+    $$('#guiaItems .gitem').forEach((el) => { el.classList.toggle('ok', !f.has(el.dataset.k)); if (!f.has(el.dataset.k)) el.classList.remove('miss') });
+    $('#guiaN').textContent = GUIA.length - f.size;
+    if (!f.size) $('#faltan').classList.add('hidden');
+  };
+  q.addEventListener('input', pintarGuia);
+  $('#verEjemplo').addEventListener('click', async () => {
+    q.value = ''; q.focus(); $('#faltan').classList.add('hidden');
+    for (const ch of EJEMPLO) { q.value += ch; autosize(); pintarGuia(); await sleep(reduce ? 0 : 14) }
+    S.canal = 'web_texto';
+    toast('Cambiá los datos por los tuyos y tocá buscar.', 'pencil');
+  });
+  // Aviso si falta algo: deja agregar o buscar igual
+  S.buscarIgual = false;
+  $('#faltanAgregar').addEventListener('click', () => { $('#faltan').classList.add('hidden'); q.focus(); q.setSelectionRange(q.value.length, q.value.length) });
+  $('#faltanBuscar').addEventListener('click', () => { $('#faltan').classList.add('hidden'); S.buscarIgual = true; form.requestSubmit() });
+
   q.addEventListener('input', () => { S.forceEmpty = false });
 
   // Voz (Web Speech API, es-AR). Si el navegador no lo soporta, simula un dictado.
@@ -1253,7 +1305,15 @@
     e.preventDefault();
     const texto = q.value.trim();
     if (texto.length < 3) { shell.classList.remove('shake'); void shell.offsetWidth; shell.classList.add('shake'); q.focus(); return }
-    if (busy) return; busy = true; q.blur();
+    if (busy) return;
+    const falta = faltantes();
+    if (falta.length && !S.buscarIgual) {
+      $('#faltanTxt').textContent = falta.map(([, l]) => l.toLowerCase()).join(', ').replace(/, ([^,]*)$/, ' y $1');
+      $$('#guiaItems .gitem').forEach((el) => el.classList.toggle('miss', falta.some(([k]) => k === el.dataset.k)));
+      $('#faltan').classList.remove('hidden'); icons(); return;
+    }
+    S.buscarIgual = false; $('#faltan').classList.add('hidden');
+    busy = true; q.blur();
 
     wrap.classList.remove('hidden'); understood.classList.add('hidden'); alertBox.classList.add('hidden');
     thinking.classList.remove('hidden'); resetSteps();
