@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Red de Autos · Decí qué auto querés. Las agencias de Tucumán te buscan a vos.</title>
+  <meta name="description" content="Marketplace automotor inverso con IA en Tucumán. Escribí o dictá qué auto buscás y tu presupuesto: te mostramos opciones reales o activamos una alerta a la red de agencias por WhatsApp." />
+  <meta name="theme-color" content="#0b0b0c" />
+
+  <!-- Fuentes (mismas familias que Clutch!) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&family=Mona+Sans:wght@400..900&family=Space+Grotesk:wght@400..700&display=swap" rel="stylesheet" />
+
+  <!-- Swiper -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11.1.14/swiper-bundle.min.css" />
+
+  <!-- Tailwind (CDN para el MVP; en producción conviene compilarlo) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            bg: '#0b0b0c', bg2: '#131315', bg3: '#1a1a1d',
+            pr: '#3fe0c5', pr2: '#005aff', pr3: '#DC3DF1', sd3: '#3558FE',
+            ink: '#c4c4cc', line: 'rgba(255,255,255,.1)'
+          },
+          fontFamily: {
+            display: ['"Mona Sans"', 'Inter', 'sans-serif'],
+            sans: ['Inter', 'sans-serif'],
+            mono: ['"Space Grotesk"', 'monospace']
+          },
+          transitionTimingFunction: { brand: 'cubic-bezier(.6,0,.2,1)' }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root{
+      --pr:#3fe0c5; --pr-2:#005aff; --pr-3:#DC3DF1; --sd-3:#3558FE;
+      --gd-1:linear-gradient(62deg,#3adfcc 0%,#3943c1 100%);
+      --gd-3:linear-gradient(130deg,#e35ac0 21%,#5d6ecb 58%,#6fb4cc 100%);
+      --bg:#0b0b0c; --bg-2:#131315; --line:rgba(255,255,255,.1); --text:#c4c4cc;
+      --ease:cubic-bezier(.6,0,.2,1);
+    }
+    html.lenis, html.lenis body{height:auto}
+    .lenis.lenis-smooth{scroll-behavior:auto!important}
+    .lenis.lenis-stopped{overflow:hidden}
+    body{background:var(--bg);color:var(--text);font-family:Inter,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+    ::selection{background:var(--pr);color:#0b0b0c}
+    .font-display{font-variation-settings:"wdth" 100}
+    .grain:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:60;opacity:.035;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+    /* Orbes de fondo */
+    .orb{position:absolute;border-radius:50%;filter:blur(70px);opacity:.55;animation:morph 14s var(--ease) infinite alternate}
+    @keyframes morph{0%{transform:translate(0,0) scale(1)}50%{transform:translate(30px,-20px) scale(1.12)}100%{transform:translate(-25px,25px) scale(.92)}}
+    @keyframes gradmove{to{--ang:360deg}}
+    @property --ang{syntax:'<angle>';inherits:false;initial-value:0deg}
+    @keyframes marquee{to{transform:translateX(-50%)}}
+    @keyframes ping{75%,100%{transform:scale(2.2);opacity:0}}
+    @keyframes twinkle{0%,100%{opacity:.15}50%{opacity:.9}}
+    @keyframes bar{0%,100%{transform:scaleY(.25)}50%{transform:scaleY(1)}}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @keyframes shimmer{to{background-position:-200% 0}}
+    @keyframes radar{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+    @keyframes ripple{0%{transform:scale(.6);opacity:.7}100%{transform:scale(2.4);opacity:0}}
+    @keyframes drop{0%{transform:translateY(-100%)}100%{transform:translateY(200%)}}
+    @keyframes blink{0%,80%,100%{opacity:.2}40%{opacity:1}}
+
+    /* Etiqueta de sección estilo {01} */
+    .tag{display:inline-flex;align-items:center;gap:.5rem;font-family:"Space Grotesk";font-size:.8rem;letter-spacing:.02em;color:#e8e8ee}
+    .tag:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--pr);box-shadow:0 0 12px var(--pr)}
+
+    /* Split de títulos */
+    .split .w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.08em;margin-bottom:-.08em}
+    .split .w>span{display:inline-block;will-change:transform}
+
+    /* Texto que se "enciende" con el scroll */
+    .reveal-words .rw{color:rgba(255,255,255,.16);transition:color .2s}
+
+    /* Botón principal estilo Clutch */
+    .btn-pr{position:relative;display:inline-flex;align-items:center;gap:.75rem;padding:.4rem 1.25rem .4rem .4rem;border-radius:999px;background:var(--pr);color:#0b0b0c;font-weight:600;overflow:hidden;isolation:isolate;transition:transform .5s var(--ease)}
+    .btn-pr .ic{display:grid;place-items:center;width:2.25rem;height:2.25rem;border-radius:999px;background:#0b0b0c;color:var(--pr);transition:transform .5s var(--ease)}
+    .btn-pr:before{content:"";position:absolute;inset:0;background:#fff;transform:translateY(101%);transition:transform .5s var(--ease);z-index:-1;border-radius:inherit}
+    .btn-pr:hover:before{transform:translateY(0)}
+    .btn-pr:hover .ic{transform:rotate(-45deg)}
+    .btn-pr:disabled{opacity:.6;pointer-events:none}
+    .btn-gh{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.7rem 1.1rem;border-radius:999px;border:1px solid var(--line);color:#f2f2f5;font-weight:500;transition:all .4s var(--ease)}
+    .btn-gh:hover{border-color:rgba(63,224,197,.6);color:var(--pr);background:rgba(63,224,197,.06)}
+
+    /* Caja de búsqueda con borde animado */
+    .search-shell{position:relative;border-radius:28px;padding:1px;background:linear-gradient(var(--bg-2),var(--bg-2)) padding-box,conic-gradient(from var(--ang),rgba(255,255,255,.08),rgba(255,255,255,.08) 40%,var(--pr) 50%,var(--pr-3) 60%,rgba(255,255,255,.08) 70%) border-box;border:1px solid transparent;animation:gradmove 6s linear infinite;transition:box-shadow .5s var(--ease),transform .5s var(--ease)}
+    .search-shell.is-focus{box-shadow:0 0 0 6px rgba(63,224,197,.06),0 30px 80px -20px rgba(63,224,197,.25)}
+    .search-shell.is-listening{animation-duration:1.6s}
+    .search-shell textarea{resize:none;background:transparent;outline:none}
+    .search-shell textarea::placeholder{color:#6d6d78}
+
+    .mic{position:relative;display:grid;place-items:center;width:3rem;height:3rem;border-radius:999px;border:1px solid var(--line);color:#e8e8ee;transition:all .4s var(--ease)}
+    .mic:hover{border-color:var(--pr);color:var(--pr)}
+    .mic .ring{position:absolute;inset:0;border-radius:inherit;border:1.5px solid var(--pr-3);opacity:0}
+    .is-listening .mic{background:var(--pr-3);border-color:var(--pr-3);color:#fff}
+    .is-listening .mic .ring{animation:ripple 1.4s ease-out infinite}
+    .is-listening .mic .ring:nth-child(2){animation-delay:.45s}
+    .wave{display:none;align-items:center;gap:3px;height:22px}
+    .is-listening .wave{display:flex}
+    .wave i{display:block;width:3px;height:100%;border-radius:3px;background:var(--pr-3);animation:bar .9s ease-in-out infinite}
+    .send{display:grid;place-items:center;width:3rem;height:3rem;border-radius:999px;background:var(--pr);color:#0b0b0c;transition:transform .45s var(--ease),box-shadow .45s var(--ease)}
+    .send:hover{transform:rotate(-45deg) scale(1.05);box-shadow:0 0 30px rgba(63,224,197,.5)}
+
+    .chip{display:inline-flex;align-items:center;gap:.4rem;padding:.45rem .8rem;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.02);font-size:.8rem;color:#bdbdc6;white-space:nowrap;transition:all .35s var(--ease);backdrop-filter:blur(6px)}
+    .chip:hover{border-color:rgba(63,224,197,.5);color:#fff;transform:translateY(-2px)}
+
+    /* Pills de lo que entendió la IA */
+    .pill{display:inline-flex;align-items:center;gap:.45rem;padding:.5rem .55rem .5rem .8rem;border-radius:999px;background:rgba(63,224,197,.08);border:1px solid rgba(63,224,197,.35);color:#dafbf5;font-size:.85rem;font-weight:500}
+    .pill .x{display:grid;place-items:center;width:1.3rem;height:1.3rem;border-radius:999px;color:#7cc2b5;transition:all .3s var(--ease)}
+    .pill .x:hover{background:var(--pr);color:#0b0b0c;transform:rotate(90deg)}
+    .pill.static{padding-right:.8rem;background:rgba(255,255,255,.04);border-color:var(--line);color:#d8d8de}
+
+    /* Pasos "pensando" */
+    .step{display:flex;align-items:center;gap:.6rem;font-size:.9rem;color:#6d6d78;transition:color .3s}
+    .step.on{color:#e8e8ee}
+    .step.done{color:#9b9ba6}
+    .step .dot{width:1.2rem;height:1.2rem;display:grid;place-items:center}
+    .step .spin{animation:spin .8s linear infinite}
+
+    /* Tarjetas */
+    .card{position:relative;border-radius:24px;background:var(--bg-2);border:1px solid var(--line);overflow:hidden;transition:border-color .5s var(--ease),transform .6s var(--ease);transform-style:preserve-3d}
+    .card:before{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .4s;background:radial-gradient(420px circle at var(--mx,50%) var(--my,0%),rgba(63,224,197,.12),transparent 45%);z-index:1}
+    .card:hover{border-color:rgba(63,224,197,.35)}
+    .card:hover:before{opacity:1}
+    .card .media{position:relative;aspect-ratio:16/10;overflow:hidden}
+    .card .media img,.card .media .ph{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1s var(--ease)}
+    .card:hover .media img,.card:hover .media .ph{transform:scale(1.06)}
+    .ph{display:grid;place-items:center;background:radial-gradient(120% 90% at 20% 10%,hsla(var(--h),80%,55%,.55),transparent 55%),radial-gradient(90% 80% at 90% 100%,rgba(63,224,197,.25),transparent 50%),#121214}
+    .ph .ghost{position:absolute;bottom:-.18em;left:.15em;font-family:"Mona Sans";font-weight:900;font-size:5.2rem;line-height:1;letter-spacing:-.04em;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.14);white-space:nowrap}
+    .badge{display:inline-flex;align-items:center;gap:.35rem;padding:.3rem .6rem;border-radius:999px;font-size:.72rem;font-weight:600;letter-spacing:.01em;backdrop-filter:blur(10px)}
+    .badge.ok{background:rgba(63,224,197,.92);color:#0b0b0c}
+    .badge.near{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.18)}
+    .spec{display:flex;flex-direction:column;gap:.2rem;padding:.6rem .65rem;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05)}
+    .spec span{font-size:.68rem;color:#7c7c87}
+    .spec b{font-weight:600;color:#ededf2;font-size:.82rem}
+    .ring-score circle.val{transition:stroke-dashoffset 1.4s var(--ease)}
+
+    /* Swiper */
+    .results .swiper{overflow:visible}
+    .results .swiper-slide{width:86%;max-width:370px;height:auto}
+    .swiper-pagination-progressbar{position:relative!important;height:2px!important;background:rgba(255,255,255,.08)!important;border-radius:2px;margin-top:2rem}
+    .swiper-pagination-progressbar .swiper-pagination-progressbar-fill{background:var(--pr)!important}
+    .nav-btn{display:grid;place-items:center;width:2.75rem;height:2.75rem;border-radius:999px;border:1px solid var(--line);color:#fff;transition:all .4s var(--ease)}
+    .nav-btn:hover{background:var(--pr);color:#0b0b0c;border-color:var(--pr)}
+    .nav-btn.swiper-button-disabled{opacity:.3;pointer-events:none}
+
+    /* Alerta / radar */
+    .radar{position:relative;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(63,224,197,.08) 0,transparent 70%)}
+    .radar .r{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(63,224,197,.15)}
+    .radar .r:nth-child(2){inset:18%}
+    .radar .r:nth-child(3){inset:36%}
+    .radar .sweep{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,rgba(63,224,197,.35),transparent 25%);animation:radar 3.2s linear infinite;mask:radial-gradient(circle,#000 69%,transparent 70%)}
+    .radar .core{position:absolute;inset:44%;border-radius:50%;background:var(--pr);box-shadow:0 0 25px var(--pr)}
+    .radar .ag{position:absolute;width:9px;height:9px;margin:-4.5px;border-radius:50%;background:#3a3a40;transition:background .4s,box-shadow .4s}
+    .radar .ag.lit{background:var(--pr);box-shadow:0 0 14px var(--pr)}
+    .radar .ag.lit:after{content:"";position:absolute;inset:0;border-radius:50%;background:var(--pr);animation:ping 1.4s cubic-bezier(0,0,.2,1) infinite}
+
+    .field{width:100%;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:16px;padding:.85rem 1rem;color:#fff;outline:none;transition:border-color .3s,box-shadow .3s}
+    .field:focus{border-color:rgba(63,224,197,.6);box-shadow:0 0 0 4px rgba(63,224,197,.08)}
+    .field::placeholder{color:#5f5f69}
+    .seg{display:inline-flex;padding:4px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid var(--line)}
+    .seg button{padding:.4rem .9rem;border-radius:999px;font-size:.8rem;color:#9a9aa5;transition:all .35s var(--ease)}
+    .seg button.on{background:var(--pr);color:#0b0b0c;font-weight:600}
+    .opt{padding:.55rem .8rem;border-radius:14px;border:1px solid var(--line);font-size:.82rem;color:#c9c9d1;transition:all .3s var(--ease);text-align:center}
+    .opt:hover{border-color:rgba(63,224,197,.45)}
+    .opt.on{background:var(--pr);border-color:var(--pr);color:#0b0b0c;font-weight:600}
+
+    /* Modal / bottom-sheet */
+    .modal{position:fixed;inset:0;z-index:80;display:none}
+    .modal.open{display:block}
+    .modal .scrim{position:absolute;inset:0;background:rgba(5,5,6,.7);backdrop-filter:blur(6px)}
+    .modal .sheet{position:absolute;left:0;right:0;bottom:0;max-height:92vh;overflow:auto;background:#121214;border:1px solid var(--line);border-radius:28px 28px 0 0;padding:1.5rem 1.25rem calc(1.5rem + env(safe-area-inset-bottom))}
+    @media (min-width:768px){.modal .sheet{left:50%;right:auto;bottom:auto;top:50%;width:min(520px,92vw);border-radius:28px}}
+    .check-draw path{stroke-dasharray:60;stroke-dashoffset:60}
+
+    /* Chat del bot (sección agencias) */
+    .phone{border-radius:42px;border:1px solid var(--line);background:#0e0e10;padding:12px;box-shadow:0 40px 120px -30px rgba(0,90,255,.35)}
+    .phone .scr{border-radius:32px;overflow:hidden;background:#0b141a;min-height:520px;display:flex;flex-direction:column}
+    .bub{max-width:82%;padding:.55rem .75rem;border-radius:14px;font-size:.82rem;line-height:1.35;opacity:0;transform:translateY(10px) scale(.97)}
+    .bub.in{align-self:flex-end;background:#005c4b;color:#e9fdf5;border-bottom-right-radius:4px}
+    .bub.out{align-self:flex-start;background:#1f2c34;color:#e9edef;border-bottom-left-radius:4px}
+    .typing span{display:inline-block;width:6px;height:6px;margin:0 1px;border-radius:50%;background:#8696a0;animation:blink 1.2s infinite}
+    .typing span:nth-child(2){animation-delay:.2s}.typing span:nth-child(3){animation-delay:.4s}
+
+    /* Marquee */
+    .marquee{display:flex;width:max-content;animation:marquee 40s linear infinite}
+    .marquee:hover{animation-play-state:paused}
+
+    /* Toast */
+    #toast{position:fixed;left:50%;bottom:1.25rem;z-index:90;transform:translate(-50%,140%);transition:transform .6s var(--ease)}
+    #toast.show{transform:translate(-50%,0)}
+
+    /* Volver arriba con progreso */
+    #toTop{position:fixed;right:1rem;bottom:1rem;z-index:50;width:48px;height:48px;border-radius:999px;display:grid;place-items:center;background:#131315;border:1px solid var(--line);color:#fff;opacity:0;transform:translateY(20px);transition:all .5s var(--ease)}
+    #toTop.show{opacity:1;transform:none}
+    #toTop svg.prog{position:absolute;inset:-1px;transform:rotate(-90deg)}
+
+    .star{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;animation:twinkle 4s ease-in-out infinite}
+    .skeleton{background:linear-gradient(90deg,rgba(255,255,255,.03) 25%,rgba(255,255,255,.08) 50%,rgba(255,255,255,.03) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite}
+    .shake{animation:shake .5s var(--ease)}
+    @keyframes shake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+
+    @media (prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+  </style>
+</head>
+
+<body class="grain">
+
+  <!-- ============ HEADER ============ -->
+  <header id="hdr" class="fixed inset-x-0 top-0 z-40 transition-all duration-500">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 md:px-8">
+      <a href="#" class="font-display text-2xl font-black tracking-tight text-white">Red de Autos<span class="text-pr">.</span><span class="ml-2 hidden align-middle font-mono text-[10px] sm:inline font-medium uppercase tracking-[.2em] text-ink/60">tucumán</span></a>
+      <nav class="hidden items-center gap-8 text-sm md:flex">
+        <a href="#como" class="text-ink transition hover:text-white">Cómo funciona</a>
+        <a href="#agencias" class="text-ink transition hover:text-white">Para agencias</a>
+      </nav>
+      <a href="#agencias" class="btn-pr whitespace-nowrap text-sm" data-magnetic><span class="ic"><i data-lucide="store" class="h-4 w-4"></i></span>Soy agencia</a>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============ HERO + BUSCADOR ============ -->
+    <section id="hero" class="relative flex min-h-[100svh] items-center overflow-hidden pt-28 pb-16">
+      <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+        <div class="orb left-[-10%] top-[10%] h-[420px] w-[420px]" style="background:var(--gd-1)"></div>
+        <div class="orb right-[-12%] top-[30%] h-[460px] w-[460px]" style="background:var(--gd-3);animation-delay:-5s"></div>
+        <div id="stars" class="absolute inset-0"></div>
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,#0b0b0c_75%)]"></div>
+      </div>
+
+      <div class="relative z-10 mx-auto w-full max-w-3xl px-5 text-center">
+        <p class="tag hero-in mb-6 justify-center">{IA} Marketplace inverso · Tucumán</p>
+        <h1 class="split font-display text-[2.6rem] font-extrabold leading-[1.02] tracking-[-.035em] text-white sm:text-6xl md:text-7xl" data-split>
+          Decí qué auto querés.
+          <span class="bg-gradient-to-r from-pr via-[#a5f3e6] to-[#5ea8ff] bg-clip-text text-transparent">Las agencias te buscan a vos.</span>
+        </h1>
+        <p class="hero-in mx-auto mt-6 max-w-xl text-base text-ink md:text-lg">Sin catálogos ni filtros. Escribí o dictá lo que buscás y hasta cuánto querés gastar: te mostramos autos reales o activamos una alerta a la red de agencias por WhatsApp.</p>
+
+        <!-- Buscador -->
+        <form id="searchForm" class="hero-in mt-10" autocomplete="off">
+          <div id="shell" class="search-shell text-left">
+            <div class="flex items-end gap-2 p-2.5 pl-5 md:gap-3">
+              <div class="flex min-h-[3rem] flex-1 flex-col justify-center py-2">
+                <textarea id="q" rows="1" maxlength="400" aria-label="¿Qué auto buscás?" class="w-full text-[1.02rem] leading-relaxed text-white md:text-lg" placeholder="Busco Toyota Etios 2016 hasta 14 millones"></textarea>
+                <div class="wave mt-1" aria-hidden="true"><i></i><i style="animation-delay:.1s"></i><i style="animation-delay:.25s"></i><i style="animation-delay:.05s"></i><i style="animation-delay:.3s"></i><i style="animation-delay:.15s"></i><i style="animation-delay:.2s"></i><span class="ml-2 text-xs text-[#e9a7f5]">Escuchando…</span></div>
+              </div>
+              <button type="button" id="micBtn" class="mic shrink-0" aria-label="Dictar por voz"><span class="ring"></span><span class="ring"></span><i data-lucide="mic" class="h-5 w-5"></i></button>
+              <button type="submit" class="send shrink-0" aria-label="Buscar"><i data-lucide="arrow-up-right" class="h-5 w-5"></i></button>
+            </div>
+          </div>
+        </form>
+
+        <div class="hero-in mt-5 flex flex-wrap justify-center gap-2" id="examples">
+          <button class="chip" data-ex="Busco Toyota Etios 2016 hasta 14 millones en Tucumán"><i data-lucide="sparkles" class="h-3.5 w-3.5 text-pr"></i>Etios 2016 hasta $14M</button>
+          <button class="chip" data-ex="Una camioneta diesel automática de 2018 para arriba hasta 35 lucas verdes">Pickup diésel hasta US$35k</button>
+          <button class="chip" data-ex="Gol Trend con menos de 100 mil km, tengo 10 mil dólares y entrego mi Palio">Gol Trend · permuta</button>
+          <button class="chip" data-nostock data-ex="Busco Corolla 2020 en adelante hasta 22 mil dólares en Yerba Buena"><i data-lucide="bell-ring" class="h-3.5 w-3.5"></i>Probar sin stock</button>
+        </div>
+        <p class="hero-in mt-6 flex items-center justify-center gap-2 font-mono text-xs text-ink/60"><i data-lucide="shield-check" class="h-3.5 w-3.5"></i>Tu WhatsApp solo se comparte si vos lo pedís.</p>
+      </div>
+
+      <a href="#como" class="hero-in absolute bottom-6 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 font-mono text-[11px] text-ink/60 md:flex" aria-label="Seguir bajando">
+        <span>scroll</span><span class="block h-10 w-px overflow-hidden bg-white/10"><span class="block h-1/2 w-px bg-pr" style="animation:drop 1.6s var(--ease) infinite"></span></span>
+      </a>
+    </section>
+
+    <!-- ============ RESULTADOS (se muestra al buscar) ============ -->
+    <section id="resultsWrap" class="relative hidden scroll-mt-20 pb-10">
+      <div class="mx-auto max-w-7xl px-5 md:px-8">
+
+        <!-- Pensando -->
+        <div id="thinking" class="mx-auto max-w-md rounded-3xl border border-line bg-bg2/70 p-6 backdrop-blur">
+          <div class="mb-4 flex items-center gap-3">
+            <div class="relative grid h-9 w-9 place-items-center rounded-full bg-pr/10"><i data-lucide="sparkles" class="h-4 w-4 text-pr"></i><span class="absolute inset-0 rounded-full border border-pr/40 animate-ping"></span></div>
+            <p class="font-display text-lg font-semibold text-white">La IA está leyendo tu pedido…</p>
+          </div>
+          <div class="space-y-3" id="steps">
+            <div class="step" data-s="0"><span class="dot"><i data-lucide="circle" class="h-4 w-4"></i></span>Interpretando marca, modelo y año</div>
+            <div class="step" data-s="1"><span class="dot"><i data-lucide="circle" class="h-4 w-4"></i></span>Normalizando presupuesto ARS / USD</div>
+            <div class="step" data-s="2"><span class="dot"><i data-lucide="circle" class="h-4 w-4"></i></span>Buscando en el stock de las agencias</div>
+          </div>
+        </div>
+
+        <!-- Lo que entendió -->
+        <div id="understood" class="hidden">
+          <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div>
+              <p class="tag mb-3">Entendí esto</p>
+              <div id="pills" class="flex flex-wrap gap-2"></div>
+            </div>
+            <button id="editBtn" class="btn-gh self-start text-sm md:self-auto"><i data-lucide="pencil-line" class="h-4 w-4"></i>Editar búsqueda</button>
+          </div>
+
+          <div class="mt-12 flex items-end justify-between gap-4">
+            <h2 id="resTitle" class="font-display text-3xl font-bold tracking-tight text-white md:text-5xl"></h2>
+            <div class="hidden gap-2 md:flex" id="navBtns">
+              <button class="nav-btn" id="prevBtn" aria-label="Anterior"><i data-lucide="arrow-left" class="h-4 w-4"></i></button>
+              <button class="nav-btn" id="nextBtn" aria-label="Siguiente"><i data-lucide="arrow-right" class="h-4 w-4"></i></button>
+            </div>
+          </div>
+          <p id="resSub" class="mt-2 text-ink"></p>
+
+          <div class="results mt-8">
+            <div class="swiper" id="carSwiper">
+              <div class="swiper-wrapper" id="cards"></div>
+              <div class="swiper-pagination"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Alerta de compra -->
+        <div id="alertBox" class="mt-16 hidden">
+          <div class="relative overflow-hidden rounded-[32px] border border-line bg-bg2 p-6 md:p-12">
+            <div class="orb right-[-10%] top-[-30%] h-[360px] w-[360px] opacity-30" style="background:var(--gd-3)"></div>
+            <div class="relative grid items-center gap-10 md:grid-cols-[1.15fr_.85fr]">
+              <div>
+                <p class="tag mb-4" id="alertTag">Alerta de compra activa</p>
+                <h3 id="alertTitle" class="font-display text-3xl font-bold leading-tight tracking-tight text-white md:text-5xl"></h3>
+                <p id="alertText" class="mt-4 max-w-lg text-ink"></p>
+
+                <form id="alertForm" class="mt-8 space-y-3" novalidate>
+                  <div class="grid gap-3 sm:grid-cols-2">
+                    <input id="aNombre" class="field" placeholder="Tu nombre" autocomplete="given-name" />
+                    <div class="relative">
+                      <span class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 font-mono text-sm text-ink/60">+54 9</span>
+                      <input id="aWa" class="field" style="padding-left:4.25rem" inputmode="tel" placeholder="381 555 1234" autocomplete="tel-national" />
+                    </div>
+                  </div>
+                  <div class="flex flex-wrap items-center gap-3">
+                    <span class="text-sm text-ink/70">Que dure</span>
+                    <div class="seg" id="aDias">
+                      <button type="button" data-v="7">7 días</button>
+                      <button type="button" data-v="15" class="on">15 días</button>
+                      <button type="button" data-v="30">30 días</button>
+                    </div>
+                  </div>
+                  <button class="btn-pr mt-2" type="submit" data-magnetic><span class="ic"><i data-lucide="bell-ring" class="h-4 w-4"></i></span>Activar alerta por WhatsApp</button>
+                </form>
+
+                <div id="alertOk" class="mt-8 hidden">
+                  <div class="flex items-center gap-4 rounded-2xl border border-pr/30 bg-pr/5 p-4">
+                    <svg class="check-draw h-10 w-10 shrink-0" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="19" stroke="#3fe0c5" stroke-opacity=".35"/><path d="M12 20.5l5.5 5.5L28.5 14" stroke="#3fe0c5" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <div>
+                      <p class="font-semibold text-white">Alerta activa · <span id="okDias">15</span> días</p>
+                      <p class="text-sm text-ink">Avisando a <b id="okCount" class="text-pr">0</b> agencias. Cuando una tenga tu auto, te escribimos al WhatsApp.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex justify-center">
+                <div class="radar" id="radar"><span class="r"></span><span class="r"></span><span class="r"></span><span class="sweep"></span><span class="core"></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ MARQUEE MARCAS ============ -->
+    <section class="border-y border-line py-6" aria-hidden="true">
+      <div class="overflow-hidden">
+        <div class="marquee gap-10 font-display text-2xl font-bold tracking-tight text-white/20 md:text-4xl" id="marquee"></div>
+      </div>
+    </section>
+
+    <!-- ============ CÓMO FUNCIONA ============ -->
+    <section id="como" class="relative py-24 md:py-36">
+      <div class="mx-auto max-w-7xl px-5 md:px-8">
+        <p class="tag mb-6">{01} Cómo funciona</p>
+        <p class="reveal-words max-w-5xl font-display text-3xl font-bold leading-[1.12] tracking-tight md:text-6xl">No navegás catálogos. No llenás filtros. Decís lo que querés y el mercado de Tucumán se mueve hacia vos.</p>
+
+        <div class="mt-16 grid gap-4 md:grid-cols-3">
+          <article class="card fade-up p-7" data-spot>
+            <span class="font-mono text-xs text-pr">{01}</span>
+            <div class="mt-6 grid h-12 w-12 place-items-center rounded-2xl border border-line bg-white/5"><i data-lucide="audio-lines" class="h-5 w-5 text-pr"></i></div>
+            <h3 class="mt-6 font-display text-2xl font-semibold text-white">Lo pedís como hablás</h3>
+            <p class="mt-3 text-ink">"Un Gol Trend del 16, tengo 10 lucas verdes". La IA entiende jerga, pesos y dólares.</p>
+          </article>
+          <article class="card fade-up p-7" data-spot>
+            <span class="font-mono text-xs text-pr">{02}</span>
+            <div class="mt-6 grid h-12 w-12 place-items-center rounded-2xl border border-line bg-white/5"><i data-lucide="scan-search" class="h-5 w-5 text-pr"></i></div>
+            <h3 class="mt-6 font-display text-2xl font-semibold text-white">Ves solo lo que te sirve</h3>
+            <p class="mt-3 text-ink">Coincidencias exactas primero y alternativas cercanas con cuánto se pasan de tu tope.</p>
+          </article>
+          <article class="card fade-up p-7" data-spot>
+            <span class="font-mono text-xs text-pr">{03}</span>
+            <div class="mt-6 grid h-12 w-12 place-items-center rounded-2xl border border-line bg-white/5"><i data-lucide="radar" class="h-5 w-5 text-pr"></i></div>
+            <h3 class="mt-6 font-display text-2xl font-semibold text-white">Si no está, lo salimos a buscar</h3>
+            <p class="mt-3 text-ink">Tu pedido llega por WhatsApp a las agencias asociadas. La que lo tiene, te responde.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PARA AGENCIAS ============ -->
+    <section id="agencias" class="relative overflow-hidden py-24 md:py-36">
+      <div class="orb left-[-15%] top-[20%] h-[420px] w-[420px] opacity-25" style="background:var(--gd-1)"></div>
+      <div class="relative mx-auto grid max-w-7xl items-center gap-16 px-5 md:grid-cols-2 md:px-8">
+        <div>
+          <p class="tag mb-6">{02} Para agencias</p>
+          <h2 class="split font-display text-4xl font-extrabold leading-[1.02] tracking-[-.03em] text-white md:text-6xl" data-split>Cargás stock reenviando tu estado de WhatsApp.</h2>
+          <p class="fade-up mt-6 max-w-md text-lg text-ink">El mismo flyer que ya publicás. La IA lee marca, modelo, año, km y precio, y te pide confirmación. Sin paneles, sin formularios.</p>
+          <div class="mt-10 grid max-w-md grid-cols-3 gap-3">
+            <div class="fade-up rounded-2xl border border-line p-4"><p class="font-display text-4xl font-bold text-white" data-count="0">0</p><p class="mt-1 text-xs text-ink">paneles para aprender</p></div>
+            <div class="fade-up rounded-2xl border border-line p-4"><p class="font-display text-4xl font-bold text-white" data-count="1">0</p><p class="mt-1 text-xs text-ink">reenvío por auto</p></div>
+            <div class="fade-up rounded-2xl border border-line p-4"><p class="font-display text-4xl font-bold text-pr" data-count="24" data-suffix="/7">0</p><p class="mt-1 text-xs text-ink">alertas de compra activas</p></div>
+          </div>
+          <a id="joinBtn" href="#" class="btn-pr mt-10" data-magnetic><span class="ic"><i data-lucide="message-circle" class="h-4 w-4"></i></span>Sumar mi agencia por WhatsApp</a>
+        </div>
+
+        <div class="flex justify-center">
+          <div class="phone w-full max-w-[340px]" id="phone">
+            <div class="scr">
+              <div class="flex items-center gap-3 bg-[#1f2c34] px-4 py-3">
+                <div class="grid h-9 w-9 place-items-center rounded-full bg-pr font-display text-sm font-black text-bg">RA</div>
+                <div><p class="text-sm font-semibold text-white">Red de Autos · Bot</p><p class="text-[11px] text-[#8696a0]">en línea</p></div>
+              </div>
+              <div class="flex flex-1 flex-col gap-2 p-3" id="chat">
+                <div class="bub in" style="padding:4px">
+                  <div class="overflow-hidden rounded-xl">
+                    <div class="ph relative h-36" style="--h:200"><i data-lucide="car-front" class="h-12 w-12 text-white/80"></i><span class="ghost" style="font-size:3.2rem">ETIOS</span>
+                      <span class="absolute left-2 top-2 rounded-md bg-black/50 px-2 py-1 font-mono text-[10px] text-white">TOYOTA ETIOS XLS · 2016</span>
+                      <span class="absolute bottom-2 right-2 rounded-md bg-pr px-2 py-1 font-mono text-[11px] font-bold text-bg">U$S 11.500</span>
+                    </div>
+                  </div>
+                  <p class="px-2 pb-1 pt-2">Etios XLS 2016, 98 mil km, impecable. Tomo usado 🔥</p>
+                </div>
+                <div class="bub out typing" id="typing1"><span></span><span></span><span></span></div>
+                <div class="bub out">✅ <b>Toyota Etios XLS 1.5 5P</b> · 2016 · 98.000 km · US$ 11.500<br/>¿Lo publico? Respondé <b>SÍ</b> o corregime.</div>
+                <div class="bub in">SÍ</div>
+                <div class="bub out">🚀 Publicado. Hay <b>2 compradores</b> con alerta activa buscando un Etios así. Ya les avisé.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CTA FINAL ============ -->
+    <section class="relative py-24 md:py-32">
+      <div class="mx-auto max-w-4xl px-5 text-center">
+        <h2 class="split font-display text-4xl font-extrabold tracking-[-.03em] text-white md:text-7xl" data-split>¿Qué auto estás buscando?</h2>
+        <button id="ctaUp" class="btn-pr mt-10" data-magnetic><span class="ic"><i data-lucide="search" class="h-4 w-4"></i></span>Contale a la IA</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-line">
+    <div class="mx-auto flex max-w-7xl flex-col gap-4 px-5 py-8 text-sm text-ink/70 md:flex-row md:items-center md:justify-between md:px-8">
+      <p class="font-display text-lg font-black text-white">Red de Autos<span class="text-pr">.</span> <span class="font-sans text-sm font-normal text-ink/60">· San Miguel de Tucumán</span></p>
+      <p>Los precios los publica cada agencia. Las conversiones ARS/USD son orientativas. · <a href="/privacidad.html" class="underline decoration-white/20 underline-offset-4 transition hover:text-pr">Política de privacidad</a></p>
+    </div>
+  </footer>
+
+  <!-- ============ MODAL: VISITA / OFERTA ============ -->
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <div class="scrim" data-close></div>
+    <div class="sheet" data-lenis-prevent>
+      <div class="mx-auto mb-4 h-1 w-10 rounded-full bg-white/15 md:hidden"></div>
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <p class="tag mb-2" id="mTag">Agendar visita</p>
+          <h3 class="font-display text-2xl font-bold text-white" id="mTitle"></h3>
+          <p class="text-sm text-ink" id="mSub"></p>
+        </div>
+        <button class="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-line text-white transition hover:rotate-90 hover:border-pr hover:text-pr" data-close aria-label="Cerrar"><i data-lucide="x" class="h-4 w-4"></i></button>
+      </div>
+
+      <form id="mForm" class="mt-6 space-y-5" novalidate>
+        <!-- Visita -->
+        <div data-mode="visita" class="space-y-4">
+          <div>
+            <p class="mb-2 text-sm text-ink/80">¿Qué día?</p>
+            <div class="grid grid-cols-3 gap-2" id="days"></div>
+          </div>
+          <div>
+            <p class="mb-2 text-sm text-ink/80">¿A qué hora?</p>
+            <div class="grid grid-cols-3 gap-2" id="hours"></div>
+          </div>
+        </div>
+        <!-- Oferta -->
+        <div data-mode="oferta" class="space-y-4">
+          <div class="flex items-center justify-between">
+            <p class="text-sm text-ink/80">Tu oferta</p>
+            <div class="seg" id="oCur"><button type="button" data-v="ARS" class="on">ARS</button><button type="button" data-v="USD">USD</button></div>
+          </div>
+          <div class="relative">
+            <span class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 font-display text-2xl font-bold text-ink/60" id="oSym">$</span>
+            <input id="oMonto" class="field pl-14 font-display text-3xl font-bold" inputmode="numeric" placeholder="0" />
+          </div>
+          <div class="flex flex-wrap gap-2" id="oQuick"></div>
+          <p class="text-sm" id="oDiff"></p>
+        </div>
+
+        <div class="grid gap-3 sm:grid-cols-2">
+          <input id="mNombre" class="field" placeholder="Tu nombre" autocomplete="given-name" />
+          <div class="relative">
+            <span class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 font-mono text-sm text-ink/60">+54 9</span>
+            <input id="mWa" class="field" style="padding-left:4.25rem" inputmode="tel" placeholder="381 555 1234" autocomplete="tel-national" />
+          </div>
+        </div>
+        <button type="submit" class="btn-pr w-full justify-center" id="mSubmit"><span class="ic"><i data-lucide="send" class="h-4 w-4"></i></span><span id="mBtnTxt">Confirmar visita</span></button>
+        <p class="text-center text-xs text-ink/60">La agencia recibe tu pedido por WhatsApp a través de Red de Autos.</p>
+      </form>
+
+      <div id="mOk" class="hidden py-8 text-center">
+        <svg class="check-draw mx-auto h-16 w-16" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="19" stroke="#3fe0c5" stroke-opacity=".35"/><path d="M12 20.5l5.5 5.5L28.5 14" stroke="#3fe0c5" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <p class="mt-5 font-display text-2xl font-bold text-white" id="mOkTitle">¡Listo!</p>
+        <p class="mx-auto mt-2 max-w-sm text-ink" id="mOkText"></p>
+        <button class="btn-gh mt-6" data-close>Seguir viendo autos</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="flex items-center gap-3 rounded-full border border-line bg-[#18181b]/95 px-4 py-3 text-sm text-white shadow-2xl backdrop-blur"><i data-lucide="info" class="h-4 w-4 text-pr"></i><span id="toastTxt"></span></div>
+
+  <!-- Volver arriba -->
+  <button id="toTop" aria-label="Volver arriba">
+    <svg class="prog" width="50" height="50" viewBox="0 0 50 50"><circle cx="25" cy="25" r="23" fill="none" stroke="#3fe0c5" stroke-width="2" stroke-dasharray="144.5" stroke-dashoffset="144.5" id="progC" stroke-linecap="round"/></svg>
+    <i data-lucide="arrow-up" class="h-4 w-4"></i>
+  </button>
+
+  <!-- Librerías -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11.1.14/swiper-bundle.min.js"></script>
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+  <script>
+  /* =====================================================================
+     CONFIGURACIÓN
+     · Dejá SUPABASE_URL vacío para MODO DEMO (stock de ejemplo + parser local).
+     · Completalo para MODO REAL (Edge Function + RPCs del esquema SQL).
+     ===================================================================== */
+  const CONFIG = {
+    SUPABASE_URL: 'https://ytuecptdgtmrbiddyzht.supabase.co',
+    SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl0dWVjcHRkZ3RtcmJpZGR5emh0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ0MTMxNTMsImV4cCI6MjEwOTk4OTE1M30.H-Yi5dwDW8TvZfFWvP3dquHnCeQNtHTf8MO6i5v02VA', // anon key: es pública, va en el front
+    EDGE_FUNCTION: 'interpretar-busqueda',
+    WHATSAPP_AGENCIAS: '5493816335234', // número al que escriben las agencias para sumarse
+    DEMO_DOLAR: 1420,                 // solo modo demo
+    DEMO_AGENCIAS_RED: 12             // solo modo demo
+  };
+  const LIVE = !!(CONFIG.SUPABASE_URL && CONFIG.SUPABASE_ANON_KEY);
+  const sb = LIVE && window.supabase ? window.supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY) : null;
+
+  /* ===================== Utilidades ===================== */
+  const $ = (s, el = document) => el.querySelector(s);
+  const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+  const nf = new Intl.NumberFormat('es-AR', { maximumFractionDigits: 0 });
+  const money = (n, cur) => n == null ? 'Consultar' : (cur === 'USD' ? 'US$ ' : '$ ') + nf.format(Math.round(n));
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fine = matchMedia('(pointer:fine)').matches;
+  const store = {
+    get(k) { try { return JSON.parse(localStorage.getItem(k)) } catch { return null } },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)) } catch {} }
+  };
+  const sessionId = store.get('busco_sid') || (() => { const id = (crypto.randomUUID?.() || String(Date.now())); store.set('busco_sid', id); return id })();
+  const icons = () => window.lucide && lucide.createIcons();
+
+  let toastT;
+  function toast(msg, icon = 'info') {
+    const t = $('#toast');
+    t.querySelector('i,svg').outerHTML = `<i data-lucide="${icon}" class="h-4 w-4 text-pr"></i>`;
+    $('#toastTxt').textContent = msg; icons();
+    t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 3600);
+  }
+  const cleanWa = v => {
+    let d = String(v || '').replace(/\D/g, '').replace(/^0+/, '');
+    if (d.startsWith('549')) d = d.slice(3); else if (d.startsWith('54')) d = d.slice(2);
+    return d.length >= 10 ? d : null;
+  };
+
+  /* ===================== Datos DEMO ===================== */
+  const DEMO_STOCK = [
+    { vehiculo_id: 'd1', agencia_nombre: 'Norte Automotores', agencia_ciudad: 'San Miguel de Tucumán', marca: 'Toyota', modelo: 'Etios', version: 'XLS 1.5 5P', anio: 2016, km: 98000, combustible: 'nafta', transmision: 'manual', carroceria: 'hatchback', precio: 13800000, moneda: 'ARS', acepta_permuta: true, financiacion: true, fotos: [] },
+    { vehiculo_id: 'd2', agencia_nombre: 'Yerba Buena Autos', agencia_ciudad: 'Yerba Buena', marca: 'Toyota', modelo: 'Etios', version: 'XS 1.5 Sedán', anio: 2017, km: 85000, combustible: 'nafta', transmision: 'manual', carroceria: 'sedan', precio: 10200, moneda: 'USD', acepta_permuta: true, financiacion: false, fotos: [] },
+    { vehiculo_id: 'd3', agencia_nombre: 'Concesur Usados', agencia_ciudad: 'San Miguel de Tucumán', marca: 'Toyota', modelo: 'Etios', version: 'X 1.5 5P', anio: 2015, km: 120000, combustible: 'nafta', transmision: 'manual', carroceria: 'hatchback', precio: 12500000, moneda: 'ARS', acepta_permuta: false, financiacion: true, fotos: [] },
+    { vehiculo_id: 'd4', agencia_nombre: 'Autos del Jardín', agencia_ciudad: 'Tafí Viejo', marca: 'Toyota', modelo: 'Etios', version: 'XLS 1.5 Sedán AT', anio: 2016, km: 74000, combustible: 'nafta', transmision: 'automatica', carroceria: 'sedan', precio: 9600, moneda: 'USD', acepta_permuta: true, financiacion: true, fotos: [] },
+    { vehiculo_id: 'd5', agencia_nombre: 'Norte Automotores', agencia_ciudad: 'San Miguel de Tucumán', marca: 'Volkswagen', modelo: 'Gol Trend', version: 'Trendline 1.6', anio: 2018, km: 76000, combustible: 'nafta', transmision: 'manual', carroceria: 'hatchback', precio: 9500, moneda: 'USD', acepta_permuta: true, financiacion: true, fotos: [] },
+    { vehiculo_id: 'd6', agencia_nombre: 'Concesur Usados', agencia_ciudad: 'San Miguel de Tucumán', marca: 'Volkswagen', modelo: 'Gol Trend', version: 'Comfortline 1.6', anio: 2016, km: 112000, combustible: 'nafta_gnc', transmision: 'manual', carroceria: 'hatchback', precio: 12900000, moneda: 'ARS', acepta_permuta: true, financiacion: true, fotos: [] },
+    { vehiculo_id: 'd7', agencia_nombre: 'Concesur Usados', agencia_ciudad: 'San Miguel de Tucumán', marca: 'Fiat', modelo: 'Cronos', version: 'Drive 1.3 GSE', anio: 2021, km: 45000, combustible: 'nafta', transmision: 'manual', carroceria: 'sedan', precio: 21500000, moneda: 'ARS', acepta_permuta: true, financiacion: true, fotos: [] },
+    { vehiculo_id: 'd8', agencia_nombre: 'Yerba Buena Autos', agencia_ciudad: 'Yerba Buena', marca: 'Toyota', modelo: 'Hilux', version: 'SRV 2.8 4x4 AT', anio: 2019, km: 110000, combustible: 'diesel', transmision: 'automatica', carroceria: 'pickup', precio: 32000, moneda: 'USD', acepta_permuta: true, financiacion: false, fotos: [] },
+    { vehiculo_id: 'd9', agencia_nombre: 'Autos del Jardín', agencia_ciudad: 'Tafí Viejo', marca: 'Volkswagen', modelo: 'Amarok', version: 'Highline 2.0 TDI 4x4 AT', anio: 2018, km: 125000, combustible: 'diesel', transmision: 'automatica', carroceria: 'pickup', precio: 29500, moneda: 'USD', acepta_permuta: true, financiacion: true, fotos: [] },
+    { vehiculo_id: 'd10', agencia_nombre: 'Norte Automotores', agencia_ciudad: 'San Miguel de Tucumán', marca: 'Ford', modelo: 'Ranger', version: 'XLT 3.2 4x4 AT', anio: 2019, km: 98000, combustible: 'diesel', transmision: 'automatica', carroceria: 'pickup', precio: 36500, moneda: 'USD', acepta_permuta: false, financiacion: true, fotos: [] },
+    { vehiculo_id: 'd11', agencia_nombre: 'Concesur Usados', agencia_ciudad: 'San Miguel de Tucumán', marca: 'Chevrolet', modelo: 'Onix', version: 'LT 1.4', anio: 2017, km: 92000, combustible: 'nafta', transmision: 'manual', carroceria: 'hatchback', precio: 11900000, moneda: 'ARS', acepta_permuta: true, financiacion: true, fotos: [] },
+    { vehiculo_id: 'd12', agencia_nombre: 'Norte Automotores', agencia_ciudad: 'San Miguel de Tucumán', marca: 'Renault', modelo: 'Sandero', version: 'Stepway 1.6', anio: 2016, km: 105000, combustible: 'nafta_gnc', transmision: 'manual', carroceria: 'hatchback', precio: 10800000, moneda: 'ARS', acepta_permuta: true, financiacion: true, fotos: [] }
+  ];
+
+  /* ===================== Parser local (MODO DEMO) =====================
+     Imita al Prompt A para poder probar la interfaz sin backend.
+     En MODO REAL esto lo hace GPT-4o-mini en la Edge Function. */
+  const MODELOS = {
+    'etios': ['Toyota', 'Etios'], 'yaris': ['Toyota', 'Yaris'], 'corolla cross': ['Toyota', 'Corolla Cross'], 'corolla': ['Toyota', 'Corolla'], 'hilux': ['Toyota', 'Hilux'], 'sw4': ['Toyota', 'SW4'],
+    'gol trend': ['Volkswagen', 'Gol Trend'], 'gol': ['Volkswagen', 'Gol'], 'voyage': ['Volkswagen', 'Voyage'], 'suran': ['Volkswagen', 'Suran'], 'fox': ['Volkswagen', 'Fox'], 'polo': ['Volkswagen', 'Polo'], 'virtus': ['Volkswagen', 'Virtus'], 'vento': ['Volkswagen', 'Vento'], 't-cross': ['Volkswagen', 'T-Cross'], 'taos': ['Volkswagen', 'Taos'], 'amarok': ['Volkswagen', 'Amarok'], 'saveiro': ['Volkswagen', 'Saveiro'],
+    'palio': ['Fiat', 'Palio'], 'siena': ['Fiat', 'Siena'], 'fiat uno': ['Fiat', 'Uno'], 'punto': ['Fiat', 'Punto'], 'argo': ['Fiat', 'Argo'], 'cronos': ['Fiat', 'Cronos'], 'mobi': ['Fiat', 'Mobi'], 'strada': ['Fiat', 'Strada'], 'toro': ['Fiat', 'Toro'], 'fiorino': ['Fiat', 'Fiorino'],
+    'corsa': ['Chevrolet', 'Corsa'], 'classic': ['Chevrolet', 'Classic'], 'agile': ['Chevrolet', 'Agile'], 'prisma': ['Chevrolet', 'Prisma'], 'onix': ['Chevrolet', 'Onix'], 'cruze': ['Chevrolet', 'Cruze'], 'tracker': ['Chevrolet', 'Tracker'], 's10': ['Chevrolet', 'S10'], 'spin': ['Chevrolet', 'Spin'],
+    'ka': ['Ford', 'Ka'], 'fiesta': ['Ford', 'Fiesta'], 'focus': ['Ford', 'Focus'], 'ecosport': ['Ford', 'EcoSport'], 'ranger': ['Ford', 'Ranger'],
+    'clio': ['Renault', 'Clio'], 'sandero': ['Renault', 'Sandero'], 'logan': ['Renault', 'Logan'], 'kangoo': ['Renault', 'Kangoo'], 'duster': ['Renault', 'Duster'], 'kwid': ['Renault', 'Kwid'], 'fluence': ['Renault', 'Fluence'], 'captur': ['Renault', 'Captur'],
+    '208': ['Peugeot', '208'], '207': ['Peugeot', '207'], '206': ['Peugeot', '206'], '2008': ['Peugeot', '2008'], '308': ['Peugeot', '308'], '408': ['Peugeot', '408'], 'partner': ['Peugeot', 'Partner'],
+    'c3': ['Citroën', 'C3'], 'c4 lounge': ['Citroën', 'C4 Lounge'], 'c4': ['Citroën', 'C4'], 'berlingo': ['Citroën', 'Berlingo'],
+    'march': ['Nissan', 'March'], 'versa': ['Nissan', 'Versa'], 'kicks': ['Nissan', 'Kicks'], 'frontier': ['Nissan', 'Frontier'],
+    'fit': ['Honda', 'Fit'], 'city': ['Honda', 'City'], 'civic': ['Honda', 'Civic'], 'hr-v': ['Honda', 'HR-V'], 'renegade': ['Jeep', 'Renegade'], 'compass': ['Jeep', 'Compass']
+  };
+  const MARCAS = { toyota: 'Toyota', volkswagen: 'Volkswagen', vw: 'Volkswagen', fiat: 'Fiat', chevrolet: 'Chevrolet', chevy: 'Chevrolet', ford: 'Ford', renault: 'Renault', peugeot: 'Peugeot', citroen: 'Citroën', nissan: 'Nissan', honda: 'Honda', jeep: 'Jeep', kia: 'Kia', hyundai: 'Hyundai', 'mercedes benz': 'Mercedes-Benz', mercedes: 'Mercedes-Benz', bmw: 'BMW', audi: 'Audi', chery: 'Chery', suzuki: 'Suzuki', mitsubishi: 'Mitsubishi', ram: 'RAM', dodge: 'Dodge' };
+  const STOP = new Set(['de', 'del', 'con', 'hasta', 'que', 'en', 'modelo', 'ano', 'tengo', 'y', 'o', 'a', 'un', 'una', 'mas', 'menos', 'para', 'por', 'el', 'la', 'km', 'mil', 'nafta', 'diesel', 'gnc', 'automatico', 'automatica', 'manual', 'full', 'usado', 'usada']);
+  const CIUDADES = ['yerba buena', 'tafi viejo', 'banda del rio sali', 'alderetes', 'las talitas', 'lules', 'famailla', 'monteros', 'concepcion', 'aguilares', 'simoca', 'tafi del valle'];
+  const titleCase = s => s.replace(/\b\w/g, c => c.toUpperCase());
+  const wordRe = k => new RegExp('(^|[^a-z0-9])' + k.replace(/[-]/g, '\\-') + '(?=[^a-z0-9]|$)');
+
+  function findModel(t) {
+    let best = null;
+    for (const k of Object.keys(MODELOS)) {
+      const m = wordRe(k).exec(t);
+      if (m) { const i = m.index + m[1].length; if (!best || i < best.i || (i === best.i && k.length > best.k.length)) best = { k, i } }
+    }
+    return best;
+  }
+
+  function parseLocal(raw) {
+    const now = new Date().getFullYear();
+    let t = ' ' + raw.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '') + ' ';
+    [[/\bet ios\b|\bethios\b|\betio\b/g, 'etios'], [/\bkronos\b/g, 'cronos'], [/\b(jilux|hailux|hi lux)\b/g, 'hilux'], [/\bgol tren\b(?!d)/g, 'gol trend'], [/\bamarock\b/g, 'amarok'], [/\beco sport\b/g, 'ecosport'], [/\bpick ?up\b/g, 'pickup']]
+      .forEach(([re, s]) => t = t.replace(re, s));
+
+    const it = { es_busqueda_vehiculo: true, marca: null, modelo: null, version: null, carroceria: null, anio_min: null, anio_max: null, km_max: null, combustible: null, transmision: null, presupuesto_min: null, presupuesto_max: null, moneda: null, moneda_inferida: false, acepta_permuta: null, permuta_detalle: null, ciudad: 'San Miguel de Tucumán', provincia: 'Tucumán', confianza: .6, pregunta_aclaratoria: null };
+
+    // Permuta (se saca del texto para no confundir el modelo buscado)
+    const pm = /(entrego|permuto|tomo en parte de pago|doy en parte de pago|para permutar)\s+(?:mi\s+|un\s+|una\s+)?([a-z0-9-]+(?:\s+[a-z0-9-]+)?)/.exec(t);
+    if (pm) {
+      it.acepta_permuta = true;
+      const f = findModel(' ' + pm[2] + ' ');
+      it.permuta_detalle = f ? MODELOS[f.k].join(' ') : titleCase(pm[2]);
+      t = t.replace(pm[0], ' ');
+    }
+
+    // 0 km
+    if (/\b0 ?km\b|cero kilometro/.test(t)) { it.km_max = 0; it.anio_min = now; t = t.replace(/\b0 ?km\b|cero kilometros?/g, ' ') }
+
+    // Modelo / marca
+    const f = findModel(t);
+    if (f) { [it.marca, it.modelo] = MODELOS[f.k]; t = t.replace(wordRe(f.k), '$1 ') }
+    else {
+      for (const k in MARCAS) {
+        const mm = wordRe(k).exec(t);
+        if (mm) {
+          it.marca = MARCAS[k];
+          const after = t.slice(mm.index + mm[0].length).trim().split(/\s+/)[0] || '';
+          if (/^[a-z][a-z0-9-]{1,14}$/.test(after) && !STOP.has(after)) { it.modelo = /\d/.test(after) ? after.toUpperCase() : titleCase(after); t = t.replace(after, ' ') }
+          break;
+        }
+      }
+    }
+
+    // Km
+    const km = /(\d{1,3}(?:\.\d{3})+|\d+(?:[.,]\d+)?)\s*(mil|k)?\s*(km|kms|kilometros?)\b/.exec(t);
+    if (km) { let n = parseFloat(km[1].includes('.') && /\.\d{3}/.test(km[1]) ? km[1].replace(/\./g, '') : km[1].replace(',', '.')); if (km[2]) n *= 1000; it.km_max = Math.round(n); t = t.replace(km[0], ' ') }
+
+    // Año
+    const yrs = [...t.matchAll(/\b(19[89]\d|20[0-3]\d)\b/g)].map(m => +m[1]);
+    const short = /\b(?:modelo|del|ano|mod)\s+(\d{2})\b/.exec(t);
+    if (short) yrs.push(2000 + +short[1]);
+    if (yrs.length) {
+      const sorted = [...yrs].sort((a, b) => a - b);
+      if (sorted.length > 1) { it.anio_min = sorted[0]; it.anio_max = sorted.at(-1) }
+      else if (/en adelante|para arriba|o mas nuevo|\+|desde/.test(t)) it.anio_min = sorted[0];
+      else if (/hasta (?:el )?(?:19|20)\d\d|o mas viejo/.test(t)) it.anio_max = sorted[0];
+      else { it.anio_min = sorted[0]; it.anio_max = sorted[0] }
+      t = t.replace(/\b(19[89]\d|20[0-3]\d)\b/g, ' ').replace(/\b(?:modelo|del|ano|mod)\s+\d{2}\b/, ' ');
+    }
+
+    // Presupuesto
+    const vals = [];
+    for (const m of t.matchAll(/(\d{1,3}(?:\.\d{3})+|\d+(?:[.,]\d+)?)\s*(palos?|millones|millon|mill|m|lucas?|mil|k)?\b/g)) {
+      let n = parseFloat(/\.\d{3}/.test(m[1]) ? m[1].replace(/\./g, '') : m[1].replace(',', '.'));
+      const u = m[2] || '';
+      if (/^(palo|palos|millones|millon|mill|m)$/.test(u)) n *= 1e6; else if (/^(luca|lucas|mil|k)$/.test(u)) n *= 1e3;
+      if (n >= 1000) vals.push(n);
+    }
+    if (vals.length) {
+      if (vals.length > 1 && /\bentre\b/.test(t)) { it.presupuesto_min = Math.min(...vals); it.presupuesto_max = Math.max(...vals) }
+      else it.presupuesto_max = Math.max(...vals);
+      if (/verdes|dolar|usd|u\$s|us\$|u\$d/.test(t)) it.moneda = 'USD';
+      else if (/pesos|\$|palos?\b/.test(t)) it.moneda = 'ARS';
+      else { it.moneda = it.presupuesto_max < 1e6 ? 'USD' : 'ARS'; it.moneda_inferida = true }
+    }
+
+    // Tipo, combustible, caja
+    if (/camioneta|pickup|chata/.test(t)) it.carroceria = 'pickup';
+    else if (/\bsuv\b|todoterreno/.test(t)) it.carroceria = 'suv';
+    else if (/sedan|familiar/.test(t)) it.carroceria = 'sedan';
+    else if (/hatch|5 puertas/.test(t)) it.carroceria = 'hatchback';
+    if (/diesel|gasoil/.test(t)) it.combustible = 'diesel'; else if (/\bgnc\b|a gas/.test(t)) it.combustible = 'nafta_gnc'; else if (/nafta/.test(t)) it.combustible = 'nafta';
+    if (/automatic|caja automatica|\bcvt\b|\bat\b/.test(t)) it.transmision = 'automatica'; else if (/\bmanual\b/.test(t)) it.transmision = 'manual';
+    if (/4x4/.test(t)) it.version = '4x4';
+
+    for (const c of CIUDADES) if (t.includes(c)) { it.ciudad = titleCase(c).replace('Rio', 'Río').replace('Tafi', 'Tafí').replace('Famailla', 'Famaillá').replace('Concepcion', 'Concepción'); break }
+
+    if (!it.marca && !it.modelo && !it.carroceria && !it.presupuesto_max) {
+      it.es_busqueda_vehiculo = false; it.confianza = 0;
+      it.pregunta_aclaratoria = '¿Qué auto estás buscando y hasta cuánto querés gastar?';
+    } else it.confianza = (it.modelo ? .45 : .2) + (it.presupuesto_max ? .35 : 0) + (it.moneda_inferida ? 0 : .1) + (it.anio_min ? .07 : 0);
+    return it;
+  }
+
+  /* ===================== Motor de búsqueda DEMO (espejo de buscar_vehiculos) ===================== */
+  function searchLocal(it, dolar, stock = DEMO_STOCK) {
+    const tope = it.presupuesto_max == null ? null : (it.moneda === 'USD' ? it.presupuesto_max * dolar : it.presupuesto_max);
+    const n = s => (s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+    return stock.map(v => {
+      const precio_ars = v.moneda === 'USD' ? v.precio * dolar : v.precio;
+      return { ...v, precio_ars, precio_usd: v.moneda === 'USD' ? v.precio : Math.round(v.precio / dolar) };
+    }).filter(v =>
+      (!it.marca || n(v.marca) === n(it.marca)) &&
+      (!it.modelo || (' ' + n(v.modelo + ' ' + v.version) + ' ').includes(' ' + n(it.modelo) + ' ')) &&
+      (!it.carroceria || v.carroceria === it.carroceria) &&
+      (it.anio_min == null || v.anio >= it.anio_min - 1) && (it.anio_max == null || v.anio <= it.anio_max + 1) &&
+      (it.km_max == null || v.km <= it.km_max * 1.2) &&
+      (!it.combustible || v.combustible === it.combustible) && (!it.transmision || v.transmision === it.transmision) &&
+      (tope == null || v.precio_ars <= tope * 1.10)
+    ).map(v => {
+      const precio_ok = tope == null || v.precio_ars <= tope;
+      const anio_ok = (it.anio_min == null || v.anio >= it.anio_min) && (it.anio_max == null || v.anio <= it.anio_max);
+      const km_ok = it.km_max == null || v.km <= it.km_max;
+      let score = 100 - (!precio_ok ? (v.precio_ars / tope - 1) * 200 : 0) - (!anio_ok ? 15 : 0) - (!km_ok ? 10 : 0) - Math.min(v.km / 20000, 10);
+      return { ...v, tipo_match: precio_ok && anio_ok && km_ok ? 'exacto' : 'cercano', score: Math.max(0, Math.round(score * 10) / 10) };
+    }).sort((a, b) => (b.tipo_match === 'exacto') - (a.tipo_match === 'exacto') || b.score - a.score || a.precio_ars - b.precio_ars).slice(0, 12);
+  }
+
+
+  /* ===================== Generador DEMO =====================
+     Si el stock de ejemplo no tiene nada para tu búsqueda, el modo demo
+     "fabrica" 3 autos que encajan (2 exactos + 1 cercano) para que puedas
+     probar todo el flujo. El chip "Probar sin stock" lo desactiva.
+     En MODO REAL esto no existe: se muestra solo el stock real. */
+  const DEMO_AGENCIAS = [['Norte Automotores', 'San Miguel de Tucumán'], ['Yerba Buena Autos', 'Yerba Buena'], ['Concesur Usados', 'San Miguel de Tucumán'], ['Autos del Jardín', 'Tafí Viejo']];
+  const DEFAULTS = { pickup: ['Toyota', 'Hilux', 'SRV 2.8 4x4'], suv: ['Jeep', 'Renegade', 'Sport 1.8'], sedan: ['Fiat', 'Cronos', 'Drive 1.3'], hatchback: ['Volkswagen', 'Gol Trend', 'Trendline 1.6'], utilitario: ['Renault', 'Kangoo', 'Confort 1.6'] };
+  function generateDemo(it, dolar) {
+    const now = new Date().getFullYear();
+    const [dMarca, dModelo, dVer] = DEFAULTS[it.carroceria] || ['Chevrolet', 'Onix', 'LT 1.4'];
+    const BRAND_DEFAULT = { Toyota: 'Etios', Volkswagen: 'Gol Trend', Fiat: 'Cronos', Chevrolet: 'Onix', Ford: 'Ka', Renault: 'Sandero', Peugeot: '208', 'Citroën': 'C3', Nissan: 'Versa', Honda: 'Fit', Jeep: 'Renegade', Kia: 'Rio', Hyundai: 'HB20', 'Mercedes-Benz': 'Clase A', BMW: 'Serie 1', Audi: 'A3', Chery: 'Tiggo 2', Suzuki: 'Swift', Mitsubishi: 'L200', RAM: '1500', Dodge: 'Journey' };
+    const marca = it.marca || dMarca, modelo = it.modelo || (it.marca ? BRAND_DEFAULT[it.marca] || 'Sedán' : dModelo);
+    const anio = it.anio_min && it.anio_max ? Math.round((it.anio_min + it.anio_max) / 2) : it.anio_min ? Math.min(now, it.anio_min + 1) : it.anio_max ? it.anio_max : now - 6;
+    const kmFor = a => it.km_max === 0 ? 0 : Math.round(Math.min(it.km_max ?? Infinity, Math.max(8000, (now - a) * 14000)) * .85 / 1000) * 1000;
+    // Precio en ARS de referencia
+    const tope = it.presupuesto_max == null ? null : (it.moneda === 'USD' ? it.presupuesto_max * dolar : it.presupuesto_max);
+    const base = tope ?? Math.max(4e6, (20000 - (now - anio) * 1100) * dolar);
+    const round = (n, cur) => cur === 'USD' ? Math.round(n / dolar / 100) * 100 : Math.round(n / 1e5) * 1e5;
+    const buyerCur = it.moneda || 'ARS', other = buyerCur === 'USD' ? 'ARS' : 'USD';
+    const comb = it.combustible || (it.carroceria === 'pickup' ? 'diesel' : 'nafta');
+    const trans = it.transmision || (it.carroceria === 'pickup' ? 'automatica' : 'manual');
+    const ver = it.version || (it.marca && it.marca !== dMarca ? 'Full' : dVer);
+    const mk = (i, a, factor, cur, extra = {}) => {
+      const [ag, city] = DEMO_AGENCIAS[i % DEMO_AGENCIAS.length];
+      const precio = round(base * factor, cur);
+      return { vehiculo_id: 'gen' + i + '-' + Date.now(), demo: true, agencia_nombre: ag, agencia_ciudad: city, marca, modelo, version: ver, anio: a, km: kmFor(a), combustible: comb, transmision: trans, carroceria: it.carroceria || 'hatchback', precio, moneda: cur, acepta_permuta: i !== 1, financiacion: i !== 2, fotos: [], ...extra };
+    };
+    const aNear = it.anio_max && it.anio_min === it.anio_max ? Math.max(1990, anio - 1) : anio;
+    return [
+      mk(0, anio, tope ? .94 : 1, buyerCur),
+      mk(1, Math.min(now, anio + (it.anio_max && it.anio_max >= anio + 1 ? 1 : 0)), tope ? .88 : .92, other),
+      mk(2, aNear, tope ? 1.06 : 1.05, buyerCur)
+    ];
+  }
+  function searchDemo(it, dolar) {
+    const r = searchLocal(it, dolar);
+    if (r.length || S.forceEmpty) return r;
+    return searchLocal(it, dolar, generateDemo(it, dolar));
+  }
+
+  /* ===================== API (demo o real) ===================== */
+  const API = {
+    dolar: CONFIG.DEMO_DOLAR,
+    async interpretarYBuscar(texto, canal) {
+      if (!LIVE) {
+        await sleep(650);
+        const intencion = parseLocal(texto);
+        await sleep(450);
+        const resultados = intencion.es_busqueda_vehiculo ? searchDemo(intencion, this.dolar) : [];
+        await sleep(400);
+        return { busqueda_id: 'demo-' + Date.now(), intencion, resultados, dolar: this.dolar };
+      }
+      const r = await fetch(`${CONFIG.SUPABASE_URL}/functions/v1/${CONFIG.EDGE_FUNCTION}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', apikey: CONFIG.SUPABASE_ANON_KEY, Authorization: `Bearer ${CONFIG.SUPABASE_ANON_KEY}` },
+        body: JSON.stringify({ texto, canal, session_id: sessionId })
+      });
+      const data = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(data.error || 'No pudimos procesar la búsqueda (' + r.status + ')');
+      if (data.dolar) this.dolar = data.dolar;
+      return data;
+    },
+    async rebuscar(it) {
+      if (!LIVE) { await sleep(500); return searchDemo(it, this.dolar) }
+      const { data, error } = await sb.rpc('buscar_vehiculos', {
+        p_marca: it.marca, p_modelo: it.modelo, p_anio_min: it.anio_min, p_anio_max: it.anio_max,
+        p_presupuesto_max: it.presupuesto_max, p_moneda: it.moneda || 'ARS', p_km_max: it.km_max,
+        p_combustible: it.combustible, p_transmision: it.transmision
+      });
+      if (error) throw error; return data;
+    },
+    async activarAlerta(busqueda_id, nombre, wa, dias) {
+      if (!LIVE) { await sleep(900); return { ok: true, agencias_a_notificar: CONFIG.DEMO_AGENCIAS_RED } }
+      const { data, error } = await sb.rpc('activar_alerta', { p_busqueda_id: busqueda_id, p_nombre: nombre, p_whatsapp: wa, p_dias: dias });
+      if (error) throw new Error(error.message); return data;
+    },
+    async registrarInteres(p) {
+      if (!LIVE) { await sleep(900); return 'demo' }
+      const { data, error } = await sb.rpc('registrar_interes', p);
+      if (error) throw error; return data;
+    }
+  };
+
+  /* ===================== Estado ===================== */
+  const S = { busquedaId: null, intent: null, results: [], canal: 'web_texto', current: null, mode: 'visita', visit: {}, offerCur: 'ARS', dias: 15 };
+
+  /* ===================== Animaciones globales ===================== */
+  gsap.registerPlugin(ScrollTrigger);
+  let lenis = null;
+  if (!reduce && window.Lenis) {
+    lenis = new Lenis({ lerp: .1, smoothWheel: true });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(t => lenis.raf(t * 1000)); gsap.ticker.lagSmoothing(0);
+  }
+  const scrollTo = (el, off = -90) => lenis ? lenis.scrollTo(el, { offset: off, duration: 1.2 }) : el.scrollIntoView({ behavior: 'smooth' });
+
+  // Estrellas
+  (() => {
+    const box = $('#stars'); const n = innerWidth < 768 ? 40 : 90; let h = '';
+    for (let i = 0; i < n; i++) h += `<span class="star" style="left:${Math.random() * 100}%;top:${Math.random() * 100}%;animation-delay:${-Math.random() * 4}s;opacity:${Math.random()}"></span>`;
+    box.innerHTML = h;
+  })();
+
+  // Split de títulos por palabra
+  $$('[data-split]').forEach(el => {
+    const walk = node => {
+      [...node.childNodes].forEach(c => {
+        if (c.nodeType === 3) {
+          const frag = document.createDocumentFragment();
+          c.textContent.split(/(\s+)/).forEach(p => {
+            if (!p) return;
+            if (/^\s+$/.test(p)) frag.append(' ');
+            else { const w = document.createElement('span'); w.className = 'w'; w.innerHTML = `<span>${esc(p)}</span>`; frag.append(w) }
+          });
+          c.replaceWith(frag);
+        } else if (c.nodeType === 1) {
+          // Mantener gradiente: aplicar la clase al span interno
+          const cls = c.className; [...c.childNodes].forEach(cc => {
+            if (cc.nodeType === 3) {
+              const frag = document.createDocumentFragment();
+              cc.textContent.split(/(\s+)/).forEach(p => {
+                if (!p) return;
+                if (/^\s+$/.test(p)) frag.append(' ');
+                else { const w = document.createElement('span'); w.className = 'w'; w.innerHTML = `<span class="${cls}">${esc(p)}</span>`; frag.append(w) }
+              });
+              cc.replaceWith(frag);
+            }
+          });
+          c.replaceWith(...c.childNodes);
+        }
+      });
+    };
+    walk(el);
+  });
+
+  // Entrada del hero
+  const heroTl = gsap.timeline({ defaults: { ease: 'expo.out' } });
+  heroTl.from('#hero [data-split] .w > span', { yPercent: 115, rotate: 4, duration: 1.3, stagger: .06 })
+    .from('.hero-in', { y: 24, autoAlpha: 0, duration: 1, stagger: .08 }, '-=1');
+
+  // Splits fuera del hero, al entrar en pantalla
+  $$('[data-split]').forEach(el => {
+    if (el.closest('#hero')) return;
+    gsap.from(el.querySelectorAll('.w > span'), { yPercent: 115, duration: 1.1, ease: 'expo.out', stagger: .05, scrollTrigger: { trigger: el, start: 'top 85%' } });
+  });
+
+  // Fade-up
+  $$('.fade-up').forEach(el => gsap.from(el, { y: 40, autoAlpha: 0, duration: 1, ease: 'expo.out', scrollTrigger: { trigger: el, start: 'top 88%' } }));
+
+  // Texto que se enciende palabra por palabra (scrub)
+  $$('.reveal-words').forEach(el => {
+    el.innerHTML = el.textContent.trim().split(/\s+/).map(w => `<span class="rw">${esc(w)}</span>`).join(' ');
+    gsap.to(el.querySelectorAll('.rw'), { color: '#ffffff', stagger: .1, ease: 'none', scrollTrigger: { trigger: el, start: 'top 80%', end: 'bottom 45%', scrub: true } });
+  });
+
+  // Contadores
+  $$('[data-count]').forEach(el => {
+    const to = +el.dataset.count, suf = el.dataset.suffix || '';
+    ScrollTrigger.create({ trigger: el, start: 'top 90%', once: true, onEnter: () => { const o = { v: 0 }; gsap.to(o, { v: to, duration: 1.6, ease: 'power3.out', onUpdate: () => el.textContent = Math.round(o.v) + suf }) } });
+  });
+
+  // Marquee de marcas
+  (() => {
+    const list = ['Toyota', 'Volkswagen', 'Fiat', 'Chevrolet', 'Ford', 'Renault', 'Peugeot', 'Citroën', 'Nissan', 'Honda', 'Jeep'];
+    const one = list.map(b => `<span class="flex items-center gap-10">${b}<i class="text-pr">✦</i></span>`).join('');
+    $('#marquee').innerHTML = one + one;
+  })();
+
+  // Chat del bot (agencias)
+  (() => {
+    const bubs = $$('#chat .bub'); const typing = $('#typing1');
+    gsap.set(typing, { display: 'none' });
+    const tl = gsap.timeline({ paused: true });
+    tl.to(bubs[0], { autoAlpha: 1, y: 0, scale: 1, duration: .6, ease: 'back.out(1.6)' })
+      .set(typing, { display: 'block' }, '+=.3').to(typing, { autoAlpha: 1, y: 0, scale: 1, duration: .3 })
+      .to(typing, { autoAlpha: 0, duration: .2 }, '+=1.1').set(typing, { display: 'none' })
+      .to(bubs[2], { autoAlpha: 1, y: 0, scale: 1, duration: .6, ease: 'back.out(1.6)' })
+      .to(bubs[3], { autoAlpha: 1, y: 0, scale: 1, duration: .5, ease: 'back.out(1.6)' }, '+=.9')
+      .to(bubs[4], { autoAlpha: 1, y: 0, scale: 1, duration: .6, ease: 'back.out(1.6)' }, '+=.8');
+    ScrollTrigger.create({ trigger: '#phone', start: 'top 70%', once: true, onEnter: () => tl.play() });
+    gsap.from('#phone', { y: 80, rotate: 3, autoAlpha: 0, duration: 1.4, ease: 'expo.out', scrollTrigger: { trigger: '#phone', start: 'top 90%' } });
+  })();
+
+  // Botones magnéticos
+  if (fine && !reduce) $$('[data-magnetic]').forEach(b => {
+    const xTo = gsap.quickTo(b, 'x', { duration: .6, ease: 'power3' }), yTo = gsap.quickTo(b, 'y', { duration: .6, ease: 'power3' });
+    b.addEventListener('mousemove', e => { const r = b.getBoundingClientRect(); xTo((e.clientX - r.left - r.width / 2) * .25); yTo((e.clientY - r.top - r.height / 2) * .35) });
+    b.addEventListener('mouseleave', () => { xTo(0); yTo(0) });
+  });
+
+  // Spotlight + tilt en tarjetas
+  function bindSpot(root = document) {
+    $$('[data-spot]', root).forEach(c => {
+      if (c._spot) return; c._spot = 1;
+      c.addEventListener('pointermove', e => {
+        const r = c.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+        c.style.setProperty('--mx', x + 'px'); c.style.setProperty('--my', y + 'px');
+        if (fine && !reduce && c.dataset.tilt !== undefined) gsap.to(c, { rotateY: (x / r.width - .5) * 6, rotateX: -(y / r.height - .5) * 6, transformPerspective: 900, duration: .6, ease: 'power2.out' });
+      });
+      c.addEventListener('pointerleave', () => gsap.to(c, { rotateX: 0, rotateY: 0, duration: .8, ease: 'expo.out' }));
+    });
+  }
+  bindSpot();
+
+  // Header al scrollear + barra de progreso del botón "arriba"
+  const hdr = $('#hdr'), toTop = $('#toTop'), progC = $('#progC');
+  const onScroll = () => {
+    const y = scrollY, max = document.documentElement.scrollHeight - innerHeight;
+    hdr.classList.toggle('backdrop-blur-xl', y > 30); hdr.style.background = y > 30 ? 'rgba(11,11,12,.72)' : 'transparent';
+    hdr.style.borderBottom = y > 30 ? '1px solid rgba(255,255,255,.06)' : '1px solid transparent';
+    toTop.classList.toggle('show', y > 600);
+    progC.style.strokeDashoffset = 144.5 * (1 - Math.min(1, y / Math.max(1, max)));
+  };
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+  toTop.onclick = () => lenis ? lenis.scrollTo(0, { duration: 1.4 }) : scrollTo(0, 0);
+  $$('a[href^="#"]').forEach(a => a.addEventListener('click', e => { const id = a.getAttribute('href'); if (id.length > 1 && $(id)) { e.preventDefault(); scrollTo($(id)) } }));
+  $('#joinBtn').href = `https://wa.me/${CONFIG.WHATSAPP_AGENCIAS}?text=${encodeURIComponent('Hola! Quiero sumar mi agencia a Red de Autos 🚗')}`;
+  $('#joinBtn').target = '_blank';
+  $('#ctaUp').onclick = () => { scrollTo($('#hero'), 0); setTimeout(() => q.focus(), 900) };
+
+  /* ===================== Buscador ===================== */
+  const q = $('#q'), shell = $('#shell'), form = $('#searchForm');
+  const autosize = () => { q.style.height = 'auto'; q.style.height = Math.min(q.scrollHeight, 160) + 'px' };
+  q.addEventListener('input', () => { autosize(); S.canal = 'web_texto' });
+  q.addEventListener('focus', () => shell.classList.add('is-focus'));
+  q.addEventListener('blur', () => shell.classList.remove('is-focus'));
+  q.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); form.requestSubmit() } });
+
+  // Placeholder que se escribe solo
+  (() => {
+    const phrases = ['Busco Toyota Etios 2016 hasta 14 millones', 'Una camioneta diésel 4x4, tengo 30 lucas verdes', 'Gol Trend con GNC, entrego mi Palio', 'Cronos 2020 en adelante en Yerba Buena', 'Algo familiar automático hasta 25 palos'];
+    let p = 0, i = 0, del = false;
+    const tick = () => {
+      if (document.activeElement === q || q.value) { q.placeholder = phrases[0]; return setTimeout(tick, 1200) }
+      const s = phrases[p];
+      i += del ? -1 : 1; q.placeholder = s.slice(0, i) + (i % 2 ? '▍' : '');
+      if (!del && i >= s.length) { del = true; return setTimeout(tick, 1800) }
+      if (del && i <= 0) { del = false; p = (p + 1) % phrases.length }
+      setTimeout(tick, del ? 22 : 45);
+    };
+    if (!reduce) setTimeout(tick, 2000);
+  })();
+
+  $$('#examples [data-ex]').forEach(b => b.addEventListener('click', () => { q.value = b.dataset.ex; autosize(); S.canal = 'web_texto'; S.forceEmpty = b.hasAttribute('data-nostock'); form.requestSubmit() }));
+  q.addEventListener('input', () => { S.forceEmpty = false });
+
+  // Voz (Web Speech API, es-AR). Si el navegador no lo soporta, simula un dictado.
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  let rec = null, listening = false;
+  $('#micBtn').addEventListener('click', async () => {
+    if (listening) { rec?.stop(); return }
+    if (!SR) {
+      toast('Tu navegador no soporta dictado. Te muestro una simulación.', 'mic-off');
+      shell.classList.add('is-listening'); listening = true; q.value = '';
+      const demo = 'busco un et ios del 16 hasta catorce palos';
+      for (const ch of demo) { q.value += ch; autosize(); await sleep(38) }
+      await sleep(400); shell.classList.remove('is-listening'); listening = false;
+      q.value = 'Busco un Etios del 16 hasta 14 palos'; S.canal = 'web_voz'; form.requestSubmit(); return;
+    }
+    rec = new SR(); rec.lang = 'es-AR'; rec.interimResults = true; rec.continuous = false; rec.maxAlternatives = 1;
+    let finalTxt = '';
+    rec.onstart = () => { listening = true; shell.classList.add('is-listening'); q.value = ''; q.placeholder = 'Te escucho…' };
+    rec.onresult = e => {
+      let interim = ''; finalTxt = '';
+      for (const r of e.results) (r.isFinal ? (finalTxt += r[0].transcript) : (interim += r[0].transcript));
+      q.value = (finalTxt + ' ' + interim).trim(); autosize();
+    };
+    rec.onerror = e => { if (e.error === 'not-allowed') toast('Necesito permiso de micrófono para dictar.', 'mic-off'); else if (e.error !== 'aborted' && e.error !== 'no-speech') toast('No te escuché bien, probá de nuevo.', 'mic-off') };
+    rec.onend = () => { listening = false; shell.classList.remove('is-listening'); if (q.value.trim()) { S.canal = 'web_voz'; setTimeout(() => form.requestSubmit(), 350) } };
+    try { rec.start() } catch { }
+  });
+
+  /* ===================== Flujo de búsqueda ===================== */
+  const wrap = $('#resultsWrap'), thinking = $('#thinking'), understood = $('#understood'), alertBox = $('#alertBox');
+  let busy = false;
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const texto = q.value.trim();
+    if (texto.length < 3) { shell.classList.remove('shake'); void shell.offsetWidth; shell.classList.add('shake'); q.focus(); return }
+    if (busy) return; busy = true; q.blur();
+
+    wrap.classList.remove('hidden'); understood.classList.add('hidden'); alertBox.classList.add('hidden');
+    thinking.classList.remove('hidden'); resetSteps();
+    gsap.fromTo(thinking, { y: 30, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .8, ease: 'expo.out' });
+    scrollTo(wrap, -110);
+
+    const stepper = runSteps();
+    try {
+      const data = await API.interpretarYBuscar(texto, S.canal);
+      await stepper.finish();
+      if (!data.intencion?.es_busqueda_vehiculo) {
+        gsap.to(thinking, { autoAlpha: 0, y: -10, duration: .4, onComplete: () => {
+          thinking.classList.add('hidden');
+          if (S.intent) { understood.classList.remove('hidden'); alertBox.classList.remove('hidden') } else wrap.classList.add('hidden');
+        } });
+        toast(data.intencion?.pregunta_aclaratoria || '¿Qué auto buscás y hasta cuánto?', 'message-circle-question');
+        scrollTo($('#hero'), 0); setTimeout(() => { shell.classList.add('shake'); q.focus(); setTimeout(() => shell.classList.remove('shake'), 600) }, 800);
+        return;
+      }
+      S.busquedaId = data.busqueda_id; S.intent = data.intencion; S.results = data.resultados || [];
+      await gsap.to(thinking, { autoAlpha: 0, y: -10, duration: .35 }); thinking.classList.add('hidden');
+      renderAll(true);
+    } catch (err) {
+      console.error(err); stepper.kill();
+      thinking.classList.add('hidden');
+      toast(err.message || 'Algo falló. Probá de nuevo.', 'triangle-alert');
+    } finally { busy = false }
+  });
+
+  function resetSteps() { $$('#steps .step').forEach(s => { s.className = 'step'; s.querySelector('.dot').innerHTML = '<i data-lucide="circle" class="h-4 w-4"></i>' }); icons() }
+  function runSteps() {
+    const steps = $$('#steps .step'); let i = 0, alive = true, timer;
+    const set = (k, st) => {
+      const s = steps[k]; if (!s) return;
+      s.className = 'step ' + st;
+      s.querySelector('.dot').innerHTML = st === 'on' ? '<i data-lucide="loader-circle" class="spin h-4 w-4 text-pr"></i>' : '<i data-lucide="circle-check" class="h-4 w-4 text-pr"></i>';
+      icons(); if (st === 'done') gsap.fromTo(s.querySelector('.dot'), { scale: .4 }, { scale: 1, duration: .5, ease: 'back.out(3)' });
+    };
+    set(0, 'on');
+    const next = () => { if (!alive || i >= steps.length - 1) return; set(i, 'done'); i++; set(i, 'on'); timer = setTimeout(next, 700) };
+    timer = setTimeout(next, 650);
+    return {
+      async finish() { alive = false; clearTimeout(timer); for (; i < steps.length; i++) { set(i, 'done'); await sleep(160) } await sleep(250) },
+      kill() { alive = false; clearTimeout(timer) }
+    };
+  }
+
+  /* ---------- Pills ---------- */
+  const COMB = { nafta: 'Nafta', diesel: 'Diésel', gnc: 'GNC', nafta_gnc: 'Nafta + GNC', hibrido: 'Híbrido', electrico: 'Eléctrico' };
+  const SHORT = { nafta: 'Nafta', diesel: 'Diésel', gnc: 'GNC', nafta_gnc: 'GNC', hibrido: 'Híbrido', electrico: 'Eléctr.' };
+  const CARR = { sedan: 'Sedán', hatchback: 'Hatchback', suv: 'SUV', pickup: 'Pickup', utilitario: 'Utilitario', coupe: 'Coupé', rural: 'Rural', monovolumen: 'Monovolumen' };
+  function pillsFrom(it) {
+    const P = [];
+    const veh = [it.marca, it.modelo].filter(Boolean).join(' ') || (it.carroceria ? CARR[it.carroceria] : null);
+    if (veh) P.push({ k: 'veh', icon: 'car-front', t: veh + (it.version ? ' · ' + it.version : '') });
+    if (it.anio_min || it.anio_max) P.push({ k: 'anio', icon: 'calendar', t: it.anio_min && it.anio_max ? (it.anio_min === it.anio_max ? String(it.anio_min) : `${it.anio_min}–${it.anio_max}`) : it.anio_min ? `${it.anio_min} en adelante` : `Hasta ${it.anio_max}` });
+    if (it.km_max != null) P.push({ k: 'km', icon: 'gauge', t: it.km_max === 0 ? '0 km' : `Hasta ${nf.format(it.km_max)} km` });
+    if (it.presupuesto_max) P.push({ k: 'precio', icon: 'wallet', t: (it.presupuesto_min ? `${money(it.presupuesto_min, it.moneda)} a ` : 'Hasta ') + money(it.presupuesto_max, it.moneda) + (it.moneda_inferida ? ' *' : '') });
+    if (it.combustible) P.push({ k: 'comb', icon: 'fuel', t: COMB[it.combustible] });
+    if (it.transmision) P.push({ k: 'trans', icon: 'cog', t: it.transmision === 'automatica' ? 'Automático' : 'Manual' });
+    if (it.acepta_permuta) P.push({ k: 'perm', icon: 'repeat-2', t: 'Permuta' + (it.permuta_detalle ? ': ' + it.permuta_detalle : '') });
+    P.push({ k: 'city', icon: 'map-pin', t: it.ciudad || 'Tucumán', fixed: true });
+    return P;
+  }
+  function renderPills() {
+    const box = $('#pills');
+    box.innerHTML = pillsFrom(S.intent).map(p => `
+      <span class="pill ${p.fixed ? 'static' : ''}" data-k="${p.k}">
+        <i data-lucide="${p.icon}" class="h-3.5 w-3.5 ${p.fixed ? 'text-ink' : 'text-pr'}"></i>${esc(p.t)}
+        ${p.fixed ? '' : `<button class="x" aria-label="Quitar ${esc(p.t)}" data-rm="${p.k}"><i data-lucide="x" class="h-3 w-3"></i></button>`}
+      </span>`).join('') + (S.intent.moneda_inferida ? `<span class="self-center pl-1 text-xs text-ink/60">* moneda deducida</span>` : '');
+    icons();
+    gsap.from(box.children, { y: 12, scale: .9, autoAlpha: 0, duration: .6, ease: 'back.out(1.8)', stagger: .07 });
+    $$('[data-rm]', box).forEach(b => b.addEventListener('click', () => removeCriterion(b.dataset.rm, b.closest('.pill'))));
+  }
+  async function removeCriterion(k, el) {
+    const it = S.intent;
+    ({ veh: () => { it.marca = it.modelo = it.version = it.carroceria = null }, anio: () => { it.anio_min = it.anio_max = null }, km: () => { it.km_max = null }, precio: () => { it.presupuesto_min = it.presupuesto_max = null }, comb: () => { it.combustible = null }, trans: () => { it.transmision = null }, perm: () => { it.acepta_permuta = null; it.permuta_detalle = null } })[k]?.();
+    await gsap.to(el, { scale: .6, autoAlpha: 0, width: 0, paddingLeft: 0, paddingRight: 0, marginRight: -8, duration: .4, ease: 'expo.in' });
+    $('#cards').style.opacity = .35;
+    try { S.results = await API.rebuscar(it) } catch (e) { toast('No pude actualizar los resultados.', 'triangle-alert') }
+    $('#cards').style.opacity = 1;
+    renderAll(false);
+  }
+  $('#editBtn').addEventListener('click', () => { scrollTo($('#hero'), 0); setTimeout(() => { q.focus(); q.select() }, 900) });
+
+  /* ---------- Tarjetas ---------- */
+  let swiper = null;
+  const hueOf = s => [...s].reduce((a, c) => a + c.charCodeAt(0), 0) % 360;
+  function topeArs() { const it = S.intent; return it?.presupuesto_max ? (it.moneda === 'USD' ? it.presupuesto_max * API.dolar : it.presupuesto_max) : null }
+  function deltaLabel(v) {
+    const tope = topeArs(); if (!tope || v.precio_ars == null) return '';
+    const d = v.precio_ars - tope;
+    if (d <= 0) {
+      const amt = S.intent.moneda === 'USD' ? money(-d / API.dolar, 'USD') : money(-d, 'ARS');
+      return `<span class="inline-flex items-center gap-1 text-xs font-medium text-pr"><i data-lucide="trending-down" class="h-3.5 w-3.5"></i>${amt} debajo de tu tope</span>`;
+    }
+    return `<span class="inline-flex items-center gap-1 text-xs font-medium text-amber-300"><i data-lucide="trending-up" class="h-3.5 w-3.5"></i>${Math.max(1, Math.round(d / tope * 100))}% sobre tu tope</span>`;
+  }
+  function cardHTML(v, i) {
+    const exact = v.tipo_match === 'exacto';
+    const C = 2 * Math.PI * 16, off = C * (1 - Math.min(100, v.score || 0) / 100);
+    const alt = v.moneda === 'USD' ? money(v.precio_ars, 'ARS') : money(v.precio_usd, 'USD');
+    const media = v.fotos?.[0]
+      ? `<img src="${esc(v.fotos[0])}" alt="${esc(v.marca + ' ' + v.modelo)}" loading="lazy" />`
+      : `<div class="ph" style="--h:${hueOf(v.modelo)}"><i data-lucide="car-front" class="h-16 w-16 text-white/85" stroke-width="1.2"></i><span class="ghost">${esc(v.modelo.toUpperCase())}</span></div>`;
+    return `
+    <div class="swiper-slide">
+      <article class="card flex h-full flex-col" data-spot data-tilt data-i="${i}">
+        <div class="media">${media}
+          <div class="absolute inset-x-0 top-0 z-[2] flex items-start justify-between p-3">
+            <span class="badge ${exact ? 'ok' : 'near'}"><i data-lucide="${exact ? 'badge-check' : 'shuffle'}" class="h-3.5 w-3.5"></i>${exact ? 'Coincidencia exacta' : 'Alternativa cercana'}</span>
+            <div class="ring-score relative grid h-11 w-11 place-items-center rounded-full bg-black/45 backdrop-blur" title="Afinidad con tu búsqueda">
+              <svg class="absolute inset-0 -rotate-90" viewBox="0 0 40 40"><circle cx="20" cy="20" r="16" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="3"/><circle class="val" cx="20" cy="20" r="16" fill="none" stroke="${exact ? '#3fe0c5' : '#fff'}" stroke-width="3" stroke-linecap="round" stroke-dasharray="${C.toFixed(2)}" stroke-dashoffset="${C.toFixed(2)}" data-off="${off.toFixed(2)}"/></svg>
+              <span class="font-mono text-[11px] font-bold text-white">${Math.round(v.score || 0)}</span>
+            </div>
+          </div>
+        </div>
+        <div class="relative z-[2] flex flex-1 flex-col p-5">
+          <p class="flex items-center gap-1.5 text-xs text-ink/70"><i data-lucide="store" class="h-3.5 w-3.5"></i>${esc(v.agencia_nombre || 'Agencia')} · ${esc(v.agencia_ciudad || '')}${v.demo ? '<span class="ml-auto shrink-0 whitespace-nowrap rounded-full border border-line px-2 py-0.5 font-mono text-[10px] text-ink/60">demo</span>' : ''}</p>
+          <h3 class="mt-2 font-display text-2xl font-bold leading-tight tracking-tight text-white">${esc(v.marca)} ${esc(v.modelo)}</h3>
+          <p class="text-sm text-ink">${esc(v.version || '')}</p>
+          <div class="mt-4 grid grid-cols-4 gap-1.5">
+            <div class="spec"><span>Año</span><b>${v.anio ?? '—'}</b></div>
+            <div class="spec"><span>Km</span><b>${v.km != null ? (v.km >= 1000 ? nf.format(Math.round(v.km / 1000)) + 'k' : v.km) : '—'}</b></div>
+            <div class="spec"><span>Motor</span><b>${v.combustible ? (SHORT[v.combustible] || v.combustible) : '—'}</b></div>
+            <div class="spec"><span>Caja</span><b>${v.transmision ? (v.transmision === 'automatica' ? 'Auto' : 'Manual') : '—'}</b></div>
+          </div>
+          <div class="mt-5 flex items-end justify-between gap-3">
+            <div>
+              <p class="font-display text-[1.7rem] font-bold leading-none text-white">${money(v.precio, v.moneda)}</p>
+              <p class="mt-1 font-mono text-xs text-ink/60">≈ ${alt}</p>
+            </div>
+            <div class="flex flex-col items-end gap-1 text-[11px] text-ink/80">
+              ${v.acepta_permuta ? '<span class="flex items-center gap-1"><i data-lucide="repeat-2" class="h-3 w-3"></i>Toma usado</span>' : ''}
+              ${v.financiacion ? '<span class="flex items-center gap-1"><i data-lucide="landmark" class="h-3 w-3"></i>Financia</span>' : ''}
+            </div>
+          </div>
+          <div class="mt-2 min-h-[1.25rem]">${deltaLabel(v)}</div>
+          <div class="mt-auto grid gap-2 pt-5">
+            <button class="btn-pr justify-center text-sm" data-act="visita" data-i="${i}"><span class="ic"><i data-lucide="calendar-check" class="h-4 w-4"></i></span>Agendar visita</button>
+            <button class="btn-gh text-sm" data-act="oferta" data-i="${i}"><i data-lucide="hand-coins" class="h-4 w-4"></i>Ofertar mi presupuesto</button>
+          </div>
+        </div>
+      </article>
+    </div>`;
+  }
+
+  function renderAll(first) {
+    const it = S.intent, R = S.results || [];
+    understood.classList.remove('hidden');
+    if (first) { renderPills(); gsap.fromTo(understood, { autoAlpha: 0, y: 30 }, { autoAlpha: 1, y: 0, duration: .9, ease: 'expo.out' }) }
+    const exact = R.filter(r => r.tipo_match === 'exacto').length, near = R.length - exact;
+    const nombre = [it.marca, it.modelo].filter(Boolean).join(' ') || (it.carroceria ? CARR[it.carroceria] : 'autos');
+
+    $('#resTitle').innerHTML = R.length
+      ? (exact ? `<span class="text-pr">${exact}</span> ${exact === 1 ? 'opción exacta' : 'opciones exactas'}` : 'Sin coincidencia exacta')
+      : `Hoy no hay ${esc(nombre)} así en stock`;
+    $('#resSub').textContent = R.length
+      ? (near ? `${exact ? '+ ' : ''}${near} ${near === 1 ? 'alternativa cercana' : 'alternativas cercanas'} (±1 año o hasta 10% sobre tu tope).` : 'Ordenadas por afinidad con tu búsqueda.')
+      : 'Pero no termina acá: activá una alerta y lo salimos a buscar.';
+
+    // Swiper
+    swiper?.destroy(true, true); swiper = null;
+    const cards = $('#cards');
+    cards.innerHTML = R.length ? R.map(cardHTML).join('') : `
+      <div class="swiper-slide !w-full !max-w-none">
+        <div class="flex items-center gap-4 rounded-3xl border border-dashed border-line p-6 text-ink"><i data-lucide="search-x" class="h-6 w-6 text-pr"></i>Ninguna agencia publicó todavía un ${esc(nombre)} con esas condiciones.</div>
+      </div>`;
+    icons(); bindSpot(cards);
+    $('#navBtns').style.display = R.length > 1 ? '' : 'none';
+    if (R.length) {
+      swiper = new Swiper('#carSwiper', {
+        slidesPerView: 'auto', spaceBetween: 16, grabCursor: true, speed: 700,
+        pagination: { el: '.swiper-pagination', type: 'progressbar' },
+        navigation: { prevEl: '#prevBtn', nextEl: '#nextBtn' },
+        breakpoints: { 768: { spaceBetween: 20 } }
+      });
+      gsap.from('#cards .card', { y: 60, autoAlpha: 0, rotate: 2, duration: 1, ease: 'expo.out', stagger: .09, onComplete: () => $$('#cards .ring-score .val').forEach(c => c.style.strokeDashoffset = c.dataset.off) });
+    }
+    $$('#cards [data-act]').forEach(b => b.addEventListener('click', () => openModal(b.dataset.act, S.results[+b.dataset.i])));
+
+    // Bloque de alerta: protagonista si no hay exactos, secundario si los hay
+    renderAlert(exact, nombre);
+    ScrollTrigger.refresh();
+  }
+
+  /* ---------- Alerta ---------- */
+  function renderAlert(exact, nombre) {
+    alertBox.classList.remove('hidden');
+    $('#alertForm').classList.remove('hidden'); $('#alertOk').classList.add('hidden');
+    const it = S.intent;
+    const cond = [it.anio_min && it.anio_max && it.anio_min === it.anio_max ? it.anio_min : it.anio_min ? it.anio_min + '+' : null, it.presupuesto_max ? 'hasta ' + money(it.presupuesto_max, it.moneda) : null].filter(Boolean).join(' ');
+    $('#alertTag').textContent = exact ? '¿Ninguno te cierra?' : 'Alerta de compra';
+    $('#alertTitle').innerHTML = exact
+      ? 'Dejá una alerta y te avisamos <span class="text-pr">cuando entre uno mejor.</span>'
+      : `Salimos a buscar tu <span class="text-pr">${esc(nombre)}</span>${cond ? ' ' + esc(cond) : ''}.`;
+    $('#alertText').textContent = exact
+      ? 'Si una agencia publica algo que encaje mejor con tu búsqueda, te llega directo al WhatsApp.'
+      : `Tu pedido llega por WhatsApp a las agencias asociadas de Tucumán. La que lo tenga, o lo consiga, te responde. Sin spam: solo ofertas que encajan.`;
+    const saved = store.get('busco_buyer');
+    if (saved) { $('#aNombre').value = saved.nombre || ''; $('#aWa').value = saved.wa || '' }
+    // Agencias en el radar
+    const radar = $('#radar'); $$('.ag', radar).forEach(a => a.remove());
+    for (let i = 0; i < 12; i++) { const a = document.createElement('span'); a.className = 'ag'; const ang = Math.random() * Math.PI * 2, r = 22 + Math.random() * 25; a.style.left = 50 + Math.cos(ang) * r + '%'; a.style.top = 50 + Math.sin(ang) * r + '%'; radar.append(a) }
+    gsap.fromTo(alertBox, { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 1, ease: 'expo.out', delay: .25 });
+  }
+  $$('#aDias button').forEach(b => b.addEventListener('click', () => { $$('#aDias button').forEach(x => x.classList.remove('on')); b.classList.add('on'); S.dias = +b.dataset.v }));
+  $('#alertForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const nombre = $('#aNombre').value.trim(), wa = cleanWa($('#aWa').value);
+    if (!wa) { const f = $('#aWa'); f.classList.add('shake'); f.focus(); setTimeout(() => f.classList.remove('shake'), 600); return toast('Revisá tu WhatsApp: código de área + número.', 'phone') }
+    const btn = $('#alertForm button[type=submit]'); btn.disabled = true;
+    btn.querySelector('.ic').innerHTML = '<i data-lucide="loader-circle" class="spin h-4 w-4"></i>'; icons(); btn.querySelector('.ic svg')?.classList.add('spin');
+    try {
+      const r = await API.activarAlerta(S.busquedaId, nombre, '549' + wa, S.dias);
+      store.set('busco_buyer', { nombre, wa });
+      await gsap.to('#alertForm', { autoAlpha: 0, y: -10, duration: .35 });
+      $('#alertForm').classList.add('hidden'); gsap.set('#alertForm', { autoAlpha: 1, y: 0 });
+      $('#alertOk').classList.remove('hidden'); $('#okDias').textContent = S.dias;
+      gsap.from('#alertOk', { y: 16, autoAlpha: 0, duration: .6, ease: 'expo.out' });
+      gsap.to('#alertOk .check-draw path', { strokeDashoffset: 0, duration: .8, ease: 'power2.out', delay: .2 });
+      const total = r?.agencias_a_notificar ?? CONFIG.DEMO_AGENCIAS_RED, ags = $$('#radar .ag'), o = { v: 0 };
+      gsap.to(o, { v: total, duration: 2.4, ease: 'power2.out', onUpdate: () => $('#okCount').textContent = Math.round(o.v) });
+      ags.forEach((a, i) => setTimeout(() => a.classList.add('lit'), 200 + i * 180));
+      toast('Alerta activada. Te avisamos por WhatsApp.', 'bell-ring');
+    } catch (err) { console.error(err); toast(err.message || 'No pude activar la alerta.', 'triangle-alert') }
+    finally { btn.disabled = false; btn.querySelector('.ic').innerHTML = '<i data-lucide="bell-ring" class="h-4 w-4"></i>'; icons() }
+  });
+
+  /* ===================== Modal visita / oferta ===================== */
+  const modal = $('#modal'), sheet = $('.sheet', modal);
+  const isDesk = () => innerWidth >= 768;
+  function buildDays() {
+    const fmt = new Intl.DateTimeFormat('es-AR', { weekday: 'short', day: 'numeric' });
+    const out = []; const d = new Date(); d.setHours(0, 0, 0, 0);
+    for (let k = 0; out.length < 6; k++) { const x = new Date(d); x.setDate(d.getDate() + k); if (x.getDay() === 0) continue; out.push({ x, label: k === 0 ? 'Hoy' : k === 1 ? 'Mañana' : fmt.format(x).replace('.', '') }) }
+    $('#days').innerHTML = out.map((o, i) => `<button type="button" class="opt capitalize ${i === 1 ? 'on' : ''}" data-d="${o.x.toISOString()}">${o.label}</button>`).join('');
+    S.visit.day = out[1].x.toISOString();
+    $('#hours').innerHTML = ['09:30', '11:00', '12:30', '16:30', '18:00', '19:30'].map((h, i) => `<button type="button" class="opt ${i === 3 ? 'on' : ''}" data-h="${h}">${h}</button>`).join('');
+    S.visit.hour = '16:30';
+    $$('#days .opt').forEach(b => b.onclick = () => { $$('#days .opt').forEach(x => x.classList.remove('on')); b.classList.add('on'); S.visit.day = b.dataset.d; gsap.fromTo(b, { scale: .92 }, { scale: 1, duration: .4, ease: 'back.out(3)' }) });
+    $$('#hours .opt').forEach(b => b.onclick = () => { $$('#hours .opt').forEach(x => x.classList.remove('on')); b.classList.add('on'); S.visit.hour = b.dataset.h; gsap.fromTo(b, { scale: .92 }, { scale: 1, duration: .4, ease: 'back.out(3)' }) });
+  }
+  const parseMonto = s => +String(s).replace(/\D/g, '') || 0;
+  function setOfferCur(cur) {
+    S.offerCur = cur; $$('#oCur button').forEach(b => b.classList.toggle('on', b.dataset.v === cur));
+    $('#oSym').textContent = cur === 'USD' ? 'US$' : '$'; $('#oMonto').style.paddingLeft = cur === 'USD' ? '4.6rem' : '3.2rem';
+  }
+  function updateDiff() {
+    const v = S.current, m = parseMonto($('#oMonto').value);
+    const mArs = S.offerCur === 'USD' ? m * API.dolar : m, d = v.precio_ars ? (mArs - v.precio_ars) / v.precio_ars : 0;
+    const el = $('#oDiff');
+    if (!m) { el.innerHTML = ''; return }
+    el.innerHTML = d >= 0 ? '<span class="text-pr">Ofertás el precio publicado o más.</span>'
+      : `<span class="${d < -.15 ? 'text-amber-300' : 'text-ink'}">Ofertás un <b class="text-white">${Math.round(-d * 100)}%</b> menos que lo publicado${d < -.15 ? ' · es una oferta agresiva' : ''}.</span>`;
+  }
+  $('#oMonto').addEventListener('input', e => { const n = parseMonto(e.target.value); e.target.value = n ? nf.format(n) : ''; updateDiff() });
+  $$('#oCur button').forEach(b => b.addEventListener('click', () => {
+    const prev = S.offerCur, m = parseMonto($('#oMonto').value); setOfferCur(b.dataset.v);
+    if (m && prev !== S.offerCur) $('#oMonto').value = nf.format(Math.round(S.offerCur === 'USD' ? m / API.dolar : m * API.dolar));
+    updateDiff();
+  }));
+
+  function openModal(mode, v) {
+    if (!v) return;
+    S.mode = mode; S.current = v;
+    $$('[data-mode]', modal).forEach(el => el.style.display = el.dataset.mode === mode ? '' : 'none');
+    $('#mForm').classList.remove('hidden'); $('#mOk').classList.add('hidden');
+    $('#mTag').textContent = mode === 'visita' ? 'Agendar visita' : 'Ofertar mi presupuesto';
+    $('#mTitle').textContent = `${v.marca} ${v.modelo} ${v.anio || ''}`;
+    $('#mSub').textContent = `${money(v.precio, v.moneda)} · ${v.agencia_nombre} · ${v.agencia_ciudad}`;
+    $('#mBtnTxt').textContent = mode === 'visita' ? 'Confirmar visita' : 'Enviar oferta';
+    const saved = store.get('busco_buyer'); $('#mNombre').value = saved?.nombre || $('#aNombre').value || ''; $('#mWa').value = saved?.wa || $('#aWa').value || '';
+    if (mode === 'visita') buildDays();
+    else {
+      const it = S.intent; const cur = it.moneda || v.moneda || 'ARS'; setOfferCur(cur);
+      const pub0 = cur === 'USD' ? v.precio_usd : v.precio_ars;
+      const base = it.presupuesto_max && it.moneda === cur ? Math.min(it.presupuesto_max, pub0 * .95) : pub0 * .95;
+      $('#oMonto').value = nf.format(Math.round(base));
+      const pub = cur === 'USD' ? v.precio_usd : v.precio_ars;
+      const quick = [['-5%', pub * .95], ['-10%', pub * .9]]; if (it.presupuesto_max && it.moneda === cur) quick.push(['Mi tope', it.presupuesto_max]);
+      $('#oQuick').innerHTML = quick.map(([l, n]) => `<button type="button" class="chip" data-n="${Math.round(n)}">${l} · ${money(n, cur)}</button>`).join('');
+      $$('#oQuick .chip').forEach(c => c.onclick = () => { setOfferCur(cur); $('#oMonto').value = nf.format(+c.dataset.n); updateDiff(); gsap.fromTo('#oMonto', { scale: .97 }, { scale: 1, duration: .4, ease: 'back.out(3)' }) });
+      updateDiff();
+    }
+    icons();
+    modal.classList.add('open'); lenis?.stop(); document.body.style.overflow = 'hidden';
+    gsap.fromTo($('.scrim', modal), { autoAlpha: 0 }, { autoAlpha: 1, duration: .4 });
+    if (isDesk()) gsap.fromTo(sheet, { autoAlpha: 0, scale: .94, xPercent: -50, yPercent: -46 }, { autoAlpha: 1, scale: 1, xPercent: -50, yPercent: -50, duration: .6, ease: 'expo.out' });
+    else gsap.fromTo(sheet, { yPercent: 100 }, { yPercent: 0, duration: .6, ease: 'expo.out' });
+  }
+  function closeModal() {
+    const done = () => { modal.classList.remove('open'); lenis?.start(); document.body.style.overflow = ''; gsap.set(sheet, { clearProps: 'all' }) };
+    gsap.to($('.scrim', modal), { autoAlpha: 0, duration: .3 });
+    if (isDesk()) gsap.to(sheet, { autoAlpha: 0, scale: .96, duration: .3, ease: 'power2.in', onComplete: done });
+    else gsap.to(sheet, { yPercent: 100, duration: .4, ease: 'expo.in', onComplete: done });
+  }
+  modal.addEventListener('click', e => { if (e.target.closest('[data-close]')) closeModal() });
+  addEventListener('keydown', e => { if (e.key === 'Escape' && modal.classList.contains('open')) closeModal() });
+
+  $('#mForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const nombre = $('#mNombre').value.trim(), wa = cleanWa($('#mWa').value), v = S.current;
+    if (!wa) { const f = $('#mWa'); f.classList.add('shake'); f.focus(); setTimeout(() => f.classList.remove('shake'), 600); return toast('Necesito tu WhatsApp para que la agencia te responda.', 'phone') }
+    const monto = parseMonto($('#oMonto').value);
+    if (S.mode === 'oferta' && !monto) return toast('Ingresá cuánto querés ofertar.', 'hand-coins');
+    const btn = $('#mSubmit'); btn.disabled = true; $('#mBtnTxt').textContent = 'Enviando…';
+    try {
+      let fecha = null;
+      if (S.mode === 'visita') { const d = new Date(S.visit.day); const [h, m] = S.visit.hour.split(':'); d.setHours(+h, +m, 0, 0); fecha = d.toISOString() }
+      await API.registrarInteres({
+        p_busqueda_id: S.busquedaId, p_vehiculo_id: v.vehiculo_id, p_accion: S.mode, p_nombre: nombre, p_whatsapp: '549' + wa,
+        p_monto: S.mode === 'oferta' ? monto : null, p_moneda: S.mode === 'oferta' ? S.offerCur : null, p_visita_fecha: fecha, p_mensaje: null
+      });
+      store.set('busco_buyer', { nombre, wa });
+      $('#mForm').classList.add('hidden'); $('#mOk').classList.remove('hidden');
+      if (S.mode === 'visita') {
+        const d = new Date(fecha);
+        $('#mOkTitle').textContent = '¡Visita pedida!';
+        $('#mOkText').textContent = `${v.agencia_nombre} recibe tu pedido para el ${d.toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' })} a las ${S.visit.hour}. Te confirman por WhatsApp.`;
+      } else {
+        $('#mOkTitle').textContent = '¡Oferta enviada!';
+        $('#mOkText').textContent = `Le llevamos tu oferta de ${money(monto, S.offerCur)} a ${v.agencia_nombre}. Si la acepta o contraoferta, te escribimos.`;
+      }
+      gsap.from('#mOk > *', { y: 14, autoAlpha: 0, stagger: .08, duration: .6, ease: 'expo.out' });
+      gsap.to('#mOk .check-draw path', { strokeDashoffset: 0, duration: .8, ease: 'power2.out', delay: .25 });
+    } catch (err) { console.error(err); toast(err.message || 'No se pudo enviar. Probá de nuevo.', 'triangle-alert') }
+    finally { btn.disabled = false; $('#mBtnTxt').textContent = S.mode === 'visita' ? 'Confirmar visita' : 'Enviar oferta' }
+  });
+
+  // Indicador de modo (arriba a la derecha del logo)
+  (() => {
+    const logo = document.querySelector('#hdr a');
+    const b = document.createElement('span');
+    b.className = 'ml-3 hidden items-center gap-1.5 rounded-full border px-2.5 py-1 align-middle font-mono text-[10px] font-medium uppercase tracking-wider sm:inline-flex';
+    b.style.cssText = LIVE ? 'border-color:rgba(63,224,197,.4);color:#3fe0c5' : 'border-color:rgba(251,191,36,.4);color:#fbbf24';
+    b.innerHTML = `<span style="width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 8px currentColor"></span>${LIVE ? 'Conectado' : 'Modo demo'}`;
+    logo.append(b);
+  })();
+  icons();
+  if (!LIVE) console.info('%cRed de Autos · MODO DEMO','color:#3fe0c5;font-weight:bold','· completá CONFIG.SUPABASE_URL y SUPABASE_ANON_KEY para usar datos reales.');
+  </script>
+</body>
+</html>
