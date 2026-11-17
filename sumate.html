@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Red de Autos para agencias · Vendé los usados que tenés parados</title>
   <meta name="description" content="Para agencias de autos de Tucumán: cruzamos tu stock con compradores que ya dijeron qué auto quieren y cuánto pueden pagar, y te mandamos la oferta a tu WhatsApp. 30 días para probarlo, sin tarjeta." />
-  <meta name="theme-color" content="#0b0b0c" />
+  <meta name="theme-color" content="#0B1F3A" />
   <meta property="og:title" content="Vendé los usados que tenés parados · Red de Autos" />
   <meta property="og:description" content="Ofertas de compradores con intención real, directo a tu WhatsApp. Para agencias de Tucumán." />
   <meta property="og:type" content="website" />
@@ -17,29 +17,29 @@
   <link rel="stylesheet" href="sumate.css" />
 
   <style>
-    :root{--pr:#3fe0c5;--bg:#0b0b0c;--ease:cubic-bezier(.6,0,.2,1)}
+    :root{--pr:#FF7A1A;--bg:#0B1F3A;--ease:cubic-bezier(.6,0,.2,1)}
     html{scroll-behavior:smooth}
     html,body{overflow-x:clip}
-    body{background:var(--bg);color:#c4c4cc;font-family:Inter,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-    ::selection{background:var(--pr);color:#0b0b0c}
+    body{background:var(--bg);color:#C6D1E1;font-family:Inter,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+    ::selection{background:var(--pr);color:#0B1F3A}
     .aurora{position:absolute;inset:-25% -10% -10%;filter:blur(60px) saturate(140%);opacity:.85;pointer-events:none}
     .aurora i{position:absolute;border-radius:50%;mix-blend-mode:screen;animation:auro 22s ease-in-out infinite alternate}
-    .aurora i:nth-child(1){left:0;top:5%;width:55%;height:55%;background:radial-gradient(closest-side,rgba(63,224,197,.7),transparent)}
-    .aurora i:nth-child(2){right:0;top:0;width:50%;height:60%;background:radial-gradient(closest-side,rgba(53,88,254,.5),transparent);animation-duration:26s;animation-delay:-8s}
-    .aurora i:nth-child(3){left:25%;top:30%;width:60%;height:45%;background:radial-gradient(closest-side,rgba(20,184,166,.45),transparent);animation-duration:30s;animation-delay:-4s}
+    .aurora i:nth-child(1){left:0;top:5%;width:55%;height:55%;background:radial-gradient(closest-side,rgba(59,130,246,.6),transparent)}
+    .aurora i:nth-child(2){right:0;top:0;width:50%;height:60%;background:radial-gradient(closest-side,rgba(59,130,246,.5),transparent);animation-duration:26s;animation-delay:-8s}
+    .aurora i:nth-child(3){left:25%;top:30%;width:60%;height:45%;background:radial-gradient(closest-side,rgba(255,122,26,.28),transparent);animation-duration:30s;animation-delay:-4s}
     @keyframes auro{to{transform:translate(6%,-5%) scale(1.15)}}
     .fade-b{background:linear-gradient(to bottom,transparent 55%,var(--bg))}
-    .grad-text{background:linear-gradient(62deg,#3adfcc 0%,#8fb3ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
-    .btn-cta{background:linear-gradient(62deg,#3adfcc 0%,#2fc7b0 100%);color:#06231f;box-shadow:0 10px 30px -10px rgba(63,224,197,.7);transition:transform .25s var(--ease),box-shadow .25s var(--ease)}
-    .btn-cta:hover{transform:translateY(-2px);box-shadow:0 16px 40px -12px rgba(63,224,197,.85)}
+    .grad-text{background:linear-gradient(62deg,#FF8A2B 0%,#FFC46B 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .btn-cta{background:linear-gradient(62deg,#FF8A2B 0%,#F2690B 100%);color:#0B1F3A;box-shadow:0 10px 30px -10px rgba(255,122,26,.7);transition:transform .25s var(--ease),box-shadow .25s var(--ease)}
+    .btn-cta:hover{transform:translateY(-2px);box-shadow:0 16px 40px -12px rgba(255,122,26,.85)}
     .btn-cta:active{transform:translateY(0)}
     .pulse{position:relative}
-    .pulse:after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:0 0 0 0 rgba(63,224,197,.55);animation:pulse 2.4s infinite}
-    @keyframes pulse{70%{box-shadow:0 0 0 14px rgba(63,224,197,0)}100%{box-shadow:0 0 0 0 rgba(63,224,197,0)}}
+    .pulse:after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:0 0 0 0 rgba(255,122,26,.55);animation:pulse 2.4s infinite}
+    @keyframes pulse{70%{box-shadow:0 0 0 14px rgba(255,122,26,0)}100%{box-shadow:0 0 0 0 rgba(255,122,26,0)}}
     .card{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015));border:1px solid rgba(255,255,255,.09)}
-    .field{width:100%;background:#0f1012;border:1px solid rgba(255,255,255,.14);border-radius:.85rem;padding:.85rem 1rem;color:#fff;font-size:16px;transition:border-color .2s,box-shadow .2s}
+    .field{width:100%;background:#0E2445;border:1px solid rgba(255,255,255,.14);border-radius:.85rem;padding:.85rem 1rem;color:#fff;font-size:16px;transition:border-color .2s,box-shadow .2s}
     .field::placeholder{color:#6b6b74}
-    .field:focus{outline:none;border-color:var(--pr);box-shadow:0 0 0 3px rgba(63,224,197,.18)}
+    .field:focus{outline:none;border-color:var(--pr);box-shadow:0 0 0 3px rgba(255,122,26,.18)}
     .field.err{border-color:#f87171}
     select.field{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='none' stroke='%239a9aa3' stroke-width='2'%3E%3Cpath d='M5 8l5 5 5-5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .8rem center;padding-right:2.5rem}
     .reveal{opacity:0;transform:translateY(24px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
@@ -56,14 +56,24 @@
     .swiper-pagination-bullet{background:#fff;opacity:.3}
     .swiper-pagination-bullet-active{background:var(--pr);opacity:1}
     @media (prefers-reduced-motion:reduce){.aurora i,.pulse:after{animation:none}.reveal{opacity:1;transform:none}}
+    /* ===== Hero con fotos ===== */
+    .hero-veil{background:linear-gradient(180deg,rgba(11,31,58,.55) 0%,rgba(11,31,58,.35) 35%,rgba(11,31,58,.92) 100%),linear-gradient(90deg,rgba(11,31,58,.85) 0%,rgba(11,31,58,.25) 70%)}
+    .hero-swiper .swiper-slide{overflow:hidden}
+    .hero-swiper img{width:100%;height:100%;object-fit:cover;transform:scale(1.02)}
+    .hero-swiper .swiper-slide-active img{animation:kb 7s ease-out forwards}
+    @keyframes kb{from{transform:scale(1.02)}to{transform:scale(1.12)}}
+    .hero-dot{width:28px;height:3px;border-radius:2px;background:rgba(255,255,255,.3);overflow:hidden}
+    .hero-dot.on:after{content:"";display:block;height:100%;background:#FF7A1A;animation:dotfill 5.5s linear forwards}
+    @keyframes dotfill{from{width:0}to{width:100%}}
+    .celu-item.on{box-shadow:0 0 0 2px #FF7A1A,0 14px 30px -18px rgba(11,31,58,.35)}
     /* ===== Cuerpo claro ===== */
-    @media (min-width:1024px){.step:not(:last-child):after{content:"";position:absolute;top:88px;left:calc(50% + 100px);width:calc(100% - 200px + 2rem);border-top:2px dashed #2dd4bf;opacity:.8}}
-    .light{background:#f7f8f6;color:#3f3f46}
-    .light .alt,.alt{background:#eaf6f3}
+    @media (min-width:1024px){.step:not(:last-child):after{content:"";position:absolute;top:88px;left:calc(50% + 100px);width:calc(100% - 200px + 2rem);border-top:2px dashed #60A5FA;opacity:.8}}
+    .light{background:#F5F7FA;color:#3f3f46}
+    .light .alt,.alt{background:#EAF1FB}
     .card-l{background:#fff;border:1px solid #e4e7e5;box-shadow:0 1px 2px rgba(15,23,42,.04),0 12px 30px -18px rgba(15,23,42,.18)}
     .chip-l{display:inline-flex;align-items:center;gap:.35rem;border-radius:999px;padding:.3rem .8rem;font-size:.75rem;font-weight:700}
-    .illu-bg{background:radial-gradient(circle at 50% 120%,#d5f5ee 0,#f2fbf9 60%,#fff 100%);border-bottom:1px solid #eef0ee}
-    .light ::selection{background:#0f766e;color:#fff}
+    .illu-bg{background:radial-gradient(circle at 50% 120%,#DBE7FB 0,#F3F7FD 60%,#fff 100%);border-bottom:1px solid #eef0ee}
+    .light ::selection{background:#1D4ED8;color:#fff}
     @keyframes flo{50%{transform:translateY(-5px)}}
     .float1{animation:flo 3.2s ease-in-out infinite}.float2{animation:flo 3.8s ease-in-out -1s infinite}.float3{animation:flo 4.2s ease-in-out -2s infinite}
     .flame{transform-origin:105px 48px;animation:flick 1.2s ease-in-out infinite alternate}
@@ -94,18 +104,22 @@
   </div>
 </header>
 
-<!-- ============ HERO ============ -->
-<section class="relative overflow-clip pt-28 sm:pt-32" id="top">
-  <div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
-  <div class="fade-b absolute inset-0" aria-hidden="true"></div>
+<!-- ============ HERO (galería de fotos) ============ -->
+<section class="relative isolate flex min-h-[640px] items-end overflow-clip pt-28 sm:min-h-[720px] sm:items-center sm:pt-32 lg:min-h-[86vh]" id="top">
+  <!-- Fondo: galería de fotos (CONFIG.HERO_FOTOS) o aurora si todavía no hay fotos -->
+  <div class="absolute inset-0 -z-10" aria-hidden="true">
+    <div class="aurora" id="heroAurora"><i></i><i></i><i></i></div>
+    <div class="swiper hero-swiper absolute inset-0 hidden" id="heroGal"><div class="swiper-wrapper"></div></div>
+    <div class="hero-veil absolute inset-0 z-[2]"></div>
+  </div>
 
-  <div class="relative mx-auto grid max-w-6xl gap-12 px-5 pb-16 lg:grid-cols-[1.15fr_.85fr] lg:items-center lg:pb-24">
-    <div>
+  <div class="relative mx-auto w-full max-w-6xl px-5 pb-14 sm:pb-20">
+    <div class="max-w-3xl">
       <p class="chip mb-5 border border-pr/30 bg-pr/10 text-pr"><i data-lucide="map-pin" class="h-3.5 w-3.5"></i> Para dueños y gerentes de agencias de autos en Tucumán</p>
-      <h1 class="font-display text-[2.15rem] font-extrabold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-[3.1rem]">
+      <h1 class="font-display text-[2.15rem] font-extrabold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-[3.6rem]">
         Vendé los usados que tenés parados: <span class="grad-text">recibí ofertas de compradores validados</span> sin quemar plata en redes.
       </h1>
-      <p class="mt-6 max-w-xl text-lg leading-relaxed text-zinc-300">
+      <p class="mt-6 max-w-2xl text-lg sm:text-xl leading-relaxed text-white/85">
         Decile chau a pasarte el día contestando “¿cuánto vale?” y a tirar plata en avisos que no rinden. Cruzamos tu stock con compradores de verdad y te mandamos la oferta al WhatsApp, con la plata en la mano.
       </p>
       <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -116,75 +130,14 @@
           <i data-lucide="message-circle" class="h-5 w-5 text-pr"></i> Consultar por WhatsApp
         </a>
       </div>
-      <ul class="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm text-zinc-400">
+      <ul class="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm text-white/75">
         <li class="flex items-center gap-1.5"><i data-lucide="credit-card" class="h-4 w-4 text-pr"></i> Sin tarjeta de crédito</li>
         <li class="flex items-center gap-1.5"><i data-lucide="file-spreadsheet" class="h-4 w-4 text-pr"></i> Carga masiva de stock en 2 minutos</li>
         <li class="flex items-center gap-1.5"><i data-lucide="shield-check" class="h-4 w-4 text-pr"></i> 30 días para probarlo</li>
       </ul>
     </div>
-
-    <!-- Celular con lo que le llega a la agencia -->
-    <div class="relative mx-auto w-full max-w-[320px]">
-      <div class="absolute -inset-10 rounded-full bg-pr/20 blur-3xl" aria-hidden="true"></div>
-      <div class="phone relative overflow-hidden">
-        <div class="flex items-center gap-3 bg-[#1f2c33] px-4 pb-3 pt-5">
-          <span class="grid h-9 w-9 place-items-center rounded-full bg-pr text-bg"><i data-lucide="car-front" class="h-5 w-5"></i></span>
-          <div class="leading-tight"><p class="text-sm font-semibold text-white">Red de Autos</p><p class="text-[11px] text-zinc-400">cuenta de empresa</p></div>
-        </div>
-        <div class="wa-bg h-[400px] px-3 py-4">
-          <div class="swiper chat-swiper h-full">
-            <div class="swiper-wrapper">
-              <!-- 1: oferta -->
-              <div class="swiper-slide">
-                <div class="bubble p-3 text-[13px] leading-snug text-zinc-100">
-                  <p class="font-semibold text-pr">💰 Nueva oferta por tu auto</p>
-                  <p class="mt-1.5"><b>Toyota Etios XLS 2018</b> · 74.000 km</p>
-                  <p>Publicado: US$ 12.500</p>
-                  <p>Ofrecen: <b>US$ 11.900</b> contado</p>
-                  <p class="mt-2 flex items-center gap-1.5 text-[12px] text-emerald-300"><i data-lucide="gauge" class="h-3.5 w-3.5"></i> Termómetro: dentro de mercado</p>
-                  <p class="mt-2 text-right text-[10px] text-zinc-500">10:42</p>
-                </div>
-                <div class="mt-1.5 grid gap-1.5 text-center text-[13px] font-semibold text-sky-300">
-                  <span class="bubble rounded-lg py-2">✅ Aceptar</span>
-                  <span class="bubble rounded-lg py-2">Contraofertar</span>
-                  <span class="bubble rounded-lg py-2">No me sirve</span>
-                </div>
-              </div>
-              <!-- 2: radar -->
-              <div class="swiper-slide">
-                <div class="bubble p-3 text-[13px] leading-snug text-zinc-100">
-                  <p class="font-semibold text-pr">📡 Buscan un auto que no tenés</p>
-                  <p class="mt-1.5">Un comprador busca <b>Fiat Cronos 2021+</b>, hasta <b>$ 21.000.000</b>.</p>
-                  <p class="mt-1.5 text-zinc-400">Esta semana lo buscaron 7 personas en Tucumán.</p>
-                  <p class="mt-2 text-right text-[10px] text-zinc-500">16:05</p>
-                </div>
-                <div class="mt-1.5 grid gap-1.5 text-center text-[13px] font-semibold text-sky-300">
-                  <span class="bubble rounded-lg py-2">Tengo uno</span>
-                  <span class="bubble rounded-lg py-2">No tengo</span>
-                </div>
-              </div>
-              <!-- 3: vendido por audio -->
-              <div class="swiper-slide">
-                <div class="ml-auto w-[85%] rounded-[.9rem] rounded-tr-[.25rem] bg-[#005c4b] p-3 text-[13px] text-zinc-100">
-                  <p class="flex items-center gap-2"><i data-lucide="mic" class="h-4 w-4"></i><span class="h-1 flex-1 rounded bg-white/40"></span> 0:03</p>
-                  <p class="mt-1 text-[11px] italic text-emerald-100/80">“Se vendió el Onix gris”</p>
-                </div>
-                <div class="bubble mt-2 p-3 text-[13px] leading-snug text-zinc-100">
-                  <p>🔴 ¿Marco como <b>VENDIDO</b> el Chevrolet Onix LT 2019?</p>
-                </div>
-                <div class="mt-1.5 grid gap-1.5 text-center text-[13px] font-semibold text-sky-300">
-                  <span class="bubble rounded-lg py-2">Sí, confirmar</span>
-                </div>
-                <div class="bubble mt-2 p-3 text-[13px] text-zinc-100">Listo ✅ Lo bajé de la red. ¡Felicitaciones por la venta! 🎉</div>
-              </div>
-            </div>
-            <div class="swiper-pagination !bottom-0"></div>
-          </div>
-        </div>
-      </div>
-      <p class="mt-4 text-center text-xs text-zinc-500">Así te llegan las ofertas, las alertas y las bajas de stock</p>
-    </div>
   </div>
+  <div class="absolute bottom-5 right-5 hidden gap-1.5 sm:flex" id="heroDots" aria-hidden="true"></div>
 </section>
 
 <!-- ============ CUERPO CLARO ============ -->
@@ -205,13 +158,13 @@
         <div class="illu-bg grid h-40 place-items-center">
           <svg viewBox="0 0 220 130" class="h-32" fill="none" aria-hidden="true">
             <rect x="80" y="12" width="60" height="108" rx="10" fill="#fff" stroke="#0f172a" stroke-width="2.5"/>
-            <rect x="88" y="26" width="44" height="80" rx="3" fill="#ecfdf9"/>
+            <rect x="88" y="26" width="44" height="80" rx="3" fill="#EFF6FF"/>
             <circle cx="110" cy="113" r="3" fill="#0f172a"/>
             <g class="float1"><rect x="8" y="20" width="70" height="26" rx="13" fill="#fff" stroke="#0f172a" stroke-width="2"/><text x="43" y="38" text-anchor="middle" font-family="Inter" font-weight="700" font-size="12" fill="#0f172a">¿precio?</text></g>
             <g class="float2"><rect x="144" y="34" width="70" height="26" rx="13" fill="#fff" stroke="#0f172a" stroke-width="2"/><text x="179" y="52" text-anchor="middle" font-family="Inter" font-weight="700" font-size="12" fill="#0f172a">¿precio?</text></g>
             <g class="float3"><rect x="14" y="74" width="60" height="26" rx="13" fill="#fecdd3" stroke="#0f172a" stroke-width="2"/><text x="44" y="92" text-anchor="middle" font-family="Inter" font-weight="700" font-size="12" fill="#0f172a">¿info?</text></g>
             <g class="float1"><rect x="150" y="82" width="56" height="26" rx="13" fill="#fff" stroke="#0f172a" stroke-width="2"/><text x="178" y="100" text-anchor="middle" font-family="Inter" font-weight="700" font-size="12" fill="#0f172a">¿km?</text></g>
-            <rect x="94" y="34" width="32" height="7" rx="3.5" fill="#3fe0c5"/><rect x="94" y="47" width="24" height="7" rx="3.5" fill="#cbd5e1"/><rect x="94" y="60" width="32" height="7" rx="3.5" fill="#3fe0c5"/><rect x="94" y="73" width="20" height="7" rx="3.5" fill="#cbd5e1"/>
+            <rect x="94" y="34" width="32" height="7" rx="3.5" fill="#FF7A1A"/><rect x="94" y="47" width="24" height="7" rx="3.5" fill="#cbd5e1"/><rect x="94" y="60" width="32" height="7" rx="3.5" fill="#FF7A1A"/><rect x="94" y="73" width="20" height="7" rx="3.5" fill="#cbd5e1"/>
           </svg>
         </div>
         <div class="p-6">
@@ -285,7 +238,7 @@
 <section class="alt py-20 sm:py-24">
   <div class="mx-auto max-w-6xl px-5">
     <div class="reveal mx-auto max-w-3xl text-center">
-      <p class="chip-l bg-teal-100 text-teal-800">La solución</p>
+      <p class="chip-l bg-blue-100 text-blue-800">La solución</p>
       <h2 class="mt-4 font-display text-3xl font-extrabold leading-tight text-zinc-900 sm:text-4xl">La solución no es meterle más plata a los mismos avisos de siempre.</h2>
       <p class="mt-4 text-lg text-zinc-600">Es cambiar de sistema: dejar de publicar para ver quién chusmea y empezar a trabajar con <b class="text-zinc-900">intención de compra real</b>.</p>
     </div>
@@ -310,22 +263,22 @@
         </ul>
       </div>
 
-      <div class="reveal relative rounded-3xl border-2 border-teal-400 bg-white p-7 shadow-xl shadow-teal-900/5">
-        <span class="absolute -top-3 right-6 rounded-full bg-teal-500 px-3 py-1 text-xs font-bold text-white">Red de Autos</span>
+      <div class="reveal relative rounded-3xl border-2 border-blue-400 bg-white p-7 shadow-xl shadow-blue-900/5">
+        <span class="absolute -top-3 right-6 rounded-full bg-blue-500 px-3 py-1 text-xs font-bold text-white">Red de Autos</span>
         <div class="flex items-center gap-4">
           <svg viewBox="0 0 120 90" class="h-20 w-28 shrink-0" fill="none" aria-hidden="true">
-            <path d="M8 8h104L72 50v26l-24 10V50z" fill="#ccfbf1" stroke="#0f766e" stroke-width="2.5" stroke-linejoin="round"/>
-            <g fill="#14b8a6"><circle cx="30" cy="18" r="4"/><circle cx="60" cy="18" r="4"/><circle cx="90" cy="18" r="4"/><circle cx="60" cy="34" r="4"/></g>
-            <circle cx="60" cy="68" r="9" fill="#3fe0c5" stroke="#0f766e" stroke-width="2"/><path d="M56 68l3 3 6-6" stroke="#0f172a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M8 8h104L72 50v26l-24 10V50z" fill="#DBEAFE" stroke="#1D4ED8" stroke-width="2.5" stroke-linejoin="round"/>
+            <g fill="#3B82F6"><circle cx="30" cy="18" r="4"/><circle cx="60" cy="18" r="4"/><circle cx="90" cy="18" r="4"/><circle cx="60" cy="34" r="4"/></g>
+            <circle cx="60" cy="68" r="9" fill="#FF7A1A" stroke="#1D4ED8" stroke-width="2"/><path d="M56 68l3 3 6-6" stroke="#0f172a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          <div><p class="text-xs font-semibold uppercase tracking-widest text-teal-700">Intención de compra</p><h3 class="font-display text-2xl font-bold text-zinc-900">Compradores que ya dijeron qué quieren</h3></div>
+          <div><p class="text-xs font-semibold uppercase tracking-widest text-blue-700">Intención de compra</p><h3 class="font-display text-2xl font-bold text-zinc-900">Compradores que ya dijeron qué quieren</h3></div>
         </div>
         <ul class="mt-6 divide-y divide-zinc-100">
-          <li class="flex gap-3 py-3.5"><i data-lucide="check-circle-2" class="mt-0.5 h-5 w-5 shrink-0 text-teal-600"></i><p class="text-zinc-600"><b class="text-zinc-800">Te llega quien busca tu auto,</b> con modelo, año y presupuesto.</p></li>
-          <li class="flex gap-3 py-3.5"><i data-lucide="check-circle-2" class="mt-0.5 h-5 w-5 shrink-0 text-teal-600"></i><p class="text-zinc-600"><b class="text-zinc-800">Un abono mensual fijo,</b> sin pagar por cada clic.</p></li>
-          <li class="flex gap-3 py-3.5"><i data-lucide="check-circle-2" class="mt-0.5 h-5 w-5 shrink-0 text-teal-600"></i><p class="text-zinc-600"><b class="text-zinc-800">El termómetro frena</b> las ofertas fuera de mercado antes de llegarte.</p></li>
-          <li class="flex gap-3 py-3.5"><i data-lucide="check-circle-2" class="mt-0.5 h-5 w-5 shrink-0 text-teal-600"></i><p class="text-zinc-600"><b class="text-zinc-800">Un audio al bot</b> y el auto vendido se baja solo.</p></li>
-          <li class="flex gap-3 py-3.5"><i data-lucide="check-circle-2" class="mt-0.5 h-5 w-5 shrink-0 text-teal-600"></i><p class="text-zinc-600"><b class="text-zinc-800">Ves qué se busca en Tucumán</b> antes de salir a comprar.</p></li>
+          <li class="flex gap-3 py-3.5"><i data-lucide="check-circle-2" class="mt-0.5 h-5 w-5 shrink-0 text-blue-600"></i><p class="text-zinc-600"><b class="text-zinc-800">Te llega quien busca tu auto,</b> con modelo, año y presupuesto.</p></li>
+          <li class="flex gap-3 py-3.5"><i data-lucide="check-circle-2" class="mt-0.5 h-5 w-5 shrink-0 text-blue-600"></i><p class="text-zinc-600"><b class="text-zinc-800">Un abono mensual fijo,</b> sin pagar por cada clic.</p></li>
+          <li class="flex gap-3 py-3.5"><i data-lucide="check-circle-2" class="mt-0.5 h-5 w-5 shrink-0 text-blue-600"></i><p class="text-zinc-600"><b class="text-zinc-800">El termómetro frena</b> las ofertas fuera de mercado antes de llegarte.</p></li>
+          <li class="flex gap-3 py-3.5"><i data-lucide="check-circle-2" class="mt-0.5 h-5 w-5 shrink-0 text-blue-600"></i><p class="text-zinc-600"><b class="text-zinc-800">Un audio al bot</b> y el auto vendido se baja solo.</p></li>
+          <li class="flex gap-3 py-3.5"><i data-lucide="check-circle-2" class="mt-0.5 h-5 w-5 shrink-0 text-blue-600"></i><p class="text-zinc-600"><b class="text-zinc-800">Ves qué se busca en Tucumán</b> antes de salir a comprar.</p></li>
         </ul>
       </div>
     </div>
@@ -344,59 +297,143 @@
 
       <ol class="relative grid gap-10 lg:grid-cols-3 lg:gap-8">
         <li class="reveal step relative text-center">
-          <div class="mx-auto grid h-44 w-44 place-items-center rounded-full border-2 border-teal-200 bg-white shadow-sm">
+          <div class="mx-auto grid h-44 w-44 place-items-center rounded-full border-2 border-blue-200 bg-white shadow-sm">
             <svg viewBox="0 0 120 120" class="h-28" fill="none" aria-hidden="true">
               <rect x="14" y="20" width="70" height="84" rx="6" fill="#fff" stroke="#0f172a" stroke-width="2.5"/>
               <rect x="14" y="20" width="70" height="16" rx="6" fill="#22c55e" stroke="#0f172a" stroke-width="2.5"/>
               <text x="49" y="32" text-anchor="middle" font-family="Inter" font-weight="800" font-size="9" fill="#fff">STOCK.xlsx</text>
               <g stroke="#e2e8f0" stroke-width="2"><path d="M22 50h54M22 64h54M22 78h54M22 92h54M42 40v60"/></g>
-              <rect x="46" y="46" width="24" height="6" rx="3" fill="#3fe0c5"/><rect x="46" y="60" width="18" height="6" rx="3" fill="#3fe0c5"/><rect x="46" y="74" width="24" height="6" rx="3" fill="#3fe0c5"/>
+              <rect x="46" y="46" width="24" height="6" rx="3" fill="#FF7A1A"/><rect x="46" y="60" width="18" height="6" rx="3" fill="#FF7A1A"/><rect x="46" y="74" width="24" height="6" rx="3" fill="#FF7A1A"/>
               <g class="float2"><circle cx="92" cy="80" r="20" fill="#25D366" stroke="#0f172a" stroke-width="2.5"/>
               <rect x="87" y="69" width="10" height="16" rx="5" fill="#fff"/><path d="M84 81c0 5 4 8 8 8s8-3 8-8M92 89v4" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/></g>
             </svg>
           </div>
-          <span class="mt-5 inline-grid h-9 w-9 place-items-center rounded-full bg-zinc-900 font-display font-bold text-white">1</span>
+          <span class="mt-5 inline-grid h-9 w-9 place-items-center rounded-full bg-[#0B1F3A] font-display font-bold text-white">1</span>
           <h3 class="mt-3 font-display text-xl font-bold text-zinc-900">Subís tu stock en 2 minutos</h3>
           <p class="mx-auto mt-2 max-w-sm leading-relaxed text-zinc-600">Mandás tu listado en Excel una sola vez. ¿Se vendió un auto? Un audio de dos segundos al bot y el sistema lo baja solo.</p>
         </li>
         <li class="reveal step relative text-center">
-          <div class="mx-auto grid h-44 w-44 place-items-center rounded-full border-2 border-teal-200 bg-white shadow-sm">
+          <div class="mx-auto grid h-44 w-44 place-items-center rounded-full border-2 border-blue-200 bg-white shadow-sm">
             <svg viewBox="0 0 120 120" class="h-28" fill="none" aria-hidden="true">
               <rect x="8" y="34" width="104" height="34" rx="17" fill="#fff" stroke="#0f172a" stroke-width="2.5"/>
               <circle cx="27" cy="51" r="7" stroke="#0f172a" stroke-width="2.5"/><path d="M32 56l5 5" stroke="#0f172a" stroke-width="2.5" stroke-linecap="round"/>
-              <rect x="42" y="47" width="54" height="8" rx="4" fill="#3fe0c5"/>
-              <rect x="22" y="80" width="76" height="26" rx="8" fill="#ecfdf9" stroke="#0f172a" stroke-width="2"/>
+              <rect x="42" y="47" width="54" height="8" rx="4" fill="#FF7A1A"/>
+              <rect x="22" y="80" width="76" height="26" rx="8" fill="#EFF6FF" stroke="#0f172a" stroke-width="2"/>
               <text x="60" y="91" text-anchor="middle" font-family="Inter" font-weight="700" font-size="7.5" fill="#0f172a">Etios 2018</text>
-              <text x="60" y="101" text-anchor="middle" font-family="Inter" font-weight="600" font-size="7.5" fill="#0f766e">hasta $14 millones</text>
+              <text x="60" y="101" text-anchor="middle" font-family="Inter" font-weight="600" font-size="7.5" fill="#1D4ED8">hasta $14 millones</text>
               <path class="spark" d="M96 14l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" fill="#fbbf24" stroke="#0f172a" stroke-width="1.5" stroke-linejoin="round"/>
-              <path class="spark2" d="M18 12l2 4 4 2-4 2-2 4-2-4-4-2 4-2z" fill="#3fe0c5" stroke="#0f172a" stroke-width="1.2" stroke-linejoin="round"/>
+              <path class="spark2" d="M18 12l2 4 4 2-4 2-2 4-2-4-4-2 4-2z" fill="#FF7A1A" stroke="#0f172a" stroke-width="1.2" stroke-linejoin="round"/>
             </svg>
           </div>
-          <span class="mt-5 inline-grid h-9 w-9 place-items-center rounded-full bg-zinc-900 font-display font-bold text-white">2</span>
+          <span class="mt-5 inline-grid h-9 w-9 place-items-center rounded-full bg-[#0B1F3A] font-display font-bold text-white">2</span>
           <h3 class="mt-3 font-display text-xl font-bold text-zinc-900">El comprador busca por intención</h3>
-          <p class="mx-auto mt-2 max-w-sm leading-relaxed text-zinc-600">No hay catálogos muertos: escribe qué quiere y cuánto puede pagar, por ejemplo <span class="font-semibold text-teal-700">“Toyota Etios 2018 con hasta 14 millones”</span>.</p>
+          <p class="mx-auto mt-2 max-w-sm leading-relaxed text-zinc-600">No hay catálogos muertos: escribe qué quiere y cuánto puede pagar, por ejemplo <span class="font-semibold text-blue-700">“Toyota Etios 2018 con hasta 14 millones”</span>.</p>
         </li>
         <li class="reveal step relative text-center">
-          <div class="mx-auto grid h-44 w-44 place-items-center rounded-full border-2 border-teal-400 bg-white shadow-md">
+          <div class="mx-auto grid h-44 w-44 place-items-center rounded-full border-2 border-blue-400 bg-white shadow-md">
             <svg viewBox="0 0 120 120" class="h-28" fill="none" aria-hidden="true">
               <rect x="30" y="8" width="60" height="104" rx="10" fill="#fff" stroke="#0f172a" stroke-width="2.5"/>
               <rect x="36" y="22" width="48" height="40" rx="6" fill="#1f2c33"/>
-              <rect x="41" y="28" width="30" height="5" rx="2.5" fill="#3fe0c5"/><rect x="41" y="38" width="36" height="4" rx="2" fill="#94a3b8"/><rect x="41" y="46" width="26" height="4" rx="2" fill="#94a3b8"/>
-              <rect x="36" y="66" width="48" height="11" rx="4" fill="#ccfbf1" stroke="#0f172a" stroke-width="1.5"/><text x="60" y="74" text-anchor="middle" font-family="Inter" font-weight="800" font-size="7" fill="#0f172a">Aceptar</text>
+              <rect x="41" y="28" width="30" height="5" rx="2.5" fill="#FF7A1A"/><rect x="41" y="38" width="36" height="4" rx="2" fill="#94a3b8"/><rect x="41" y="46" width="26" height="4" rx="2" fill="#94a3b8"/>
+              <rect x="36" y="66" width="48" height="11" rx="4" fill="#DBEAFE" stroke="#0f172a" stroke-width="1.5"/><text x="60" y="74" text-anchor="middle" font-family="Inter" font-weight="800" font-size="7" fill="#0f172a">Aceptar</text>
               <rect x="36" y="80" width="48" height="11" rx="4" fill="#fff" stroke="#0f172a" stroke-width="1.5"/><text x="60" y="88" text-anchor="middle" font-family="Inter" font-weight="700" font-size="7" fill="#0f172a">Contraofertar</text>
-              <g class="pop"><circle cx="92" cy="22" r="13" fill="#3fe0c5" stroke="#0f172a" stroke-width="2.5"/><path d="M86 22l4 4 7-8" stroke="#0f172a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></g>
+              <g class="pop"><circle cx="92" cy="22" r="13" fill="#FF7A1A" stroke="#0f172a" stroke-width="2.5"/><path d="M86 22l4 4 7-8" stroke="#0f172a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></g>
             </svg>
           </div>
-          <span class="mt-5 inline-grid h-9 w-9 place-items-center rounded-full bg-teal-500 font-display font-bold text-white">3</span>
+          <span class="mt-5 inline-grid h-9 w-9 place-items-center rounded-full bg-blue-500 font-display font-bold text-white">3</span>
           <h3 class="mt-3 font-display text-xl font-bold text-zinc-900">Recibís la oferta validada en el celu</h3>
           <p class="mx-auto mt-2 max-w-sm leading-relaxed text-zinc-600">Si tu auto encaja, el termómetro filtra a los curiosos y te llega la oferta limpia. Aceptás o contraofertás, y se arma el contacto para cerrar en la agencia.</p>
         </li>
       </ol>
     </div>
 
-    <div class="reveal mt-14 rounded-3xl bg-zinc-900 p-7 text-center sm:p-9">
+    <div class="reveal mt-14 rounded-3xl bg-[#0B1F3A] p-7 text-center sm:p-9">
       <p class="font-display text-xl font-bold text-white sm:text-2xl">No es otro clasificado más. Es un canal de compradores con la plata en la mano e intención de compra.</p>
       <a href="#form" data-cta="solucion" class="btn-cta mt-6 inline-flex items-center gap-2 rounded-2xl px-7 py-4 font-bold">Quiero sumar mi agencia <i data-lucide="arrow-right" class="h-5 w-5"></i></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ASÍ TE LLEGAN LAS OFERTAS (celular) ============ -->
+<section class="overflow-clip bg-white py-20 sm:py-24" id="celu">
+  <div class="mx-auto grid max-w-6xl gap-14 px-5 lg:grid-cols-[.9fr_1.1fr] lg:items-center">
+    <div class="reveal order-2 lg:order-1">
+    <div class="relative mx-auto w-full max-w-[320px]">
+      <div class="absolute -inset-10 rounded-full bg-blue-400/25 blur-3xl" aria-hidden="true"></div>
+      <div class="phone relative overflow-hidden">
+        <div class="flex items-center gap-3 bg-[#1f2c33] px-4 pb-3 pt-5">
+          <span class="grid h-9 w-9 place-items-center rounded-full bg-pr text-bg"><i data-lucide="car-front" class="h-5 w-5"></i></span>
+          <div class="leading-tight"><p class="text-sm font-semibold text-white">Red de Autos</p><p class="text-[11px] text-zinc-400">cuenta de empresa</p></div>
+        </div>
+        <div class="wa-bg h-[400px] px-3 py-4">
+          <div class="swiper chat-swiper h-full">
+            <div class="swiper-wrapper">
+              <!-- 1: oferta -->
+              <div class="swiper-slide">
+                <div class="bubble p-3 text-[13px] leading-snug text-zinc-100">
+                  <p class="font-semibold text-pr">💰 Nueva oferta por tu auto</p>
+                  <p class="mt-1.5"><b>Toyota Etios XLS 2018</b> · 74.000 km</p>
+                  <p>Publicado: US$ 12.500</p>
+                  <p>Ofrecen: <b>US$ 11.900</b> contado</p>
+                  <p class="mt-2 flex items-center gap-1.5 text-[12px] text-emerald-300"><i data-lucide="gauge" class="h-3.5 w-3.5"></i> Termómetro: cerca de tu precio</p>
+                  <p class="mt-2 text-right text-[10px] text-zinc-500">10:42</p>
+                </div>
+                <div class="mt-1.5 grid gap-1.5 text-center text-[13px] font-semibold text-sky-300">
+                  <span class="bubble rounded-lg py-2">✅ Aceptar</span>
+                  <span class="bubble rounded-lg py-2">Contraofertar</span>
+                  <span class="bubble rounded-lg py-2">No me sirve</span>
+                </div>
+              </div>
+              <!-- 2: radar -->
+              <div class="swiper-slide">
+                <div class="bubble p-3 text-[13px] leading-snug text-zinc-100">
+                  <p class="font-semibold text-pr">📡 Buscan un auto que no tenés</p>
+                  <p class="mt-1.5">Un comprador busca <b>Fiat Cronos 2021+</b>, hasta <b>$ 21.000.000</b>.</p>
+                  <p class="mt-1.5 text-zinc-400">Esta semana lo buscaron 7 personas en Tucumán.</p>
+                  <p class="mt-2 text-right text-[10px] text-zinc-500">16:05</p>
+                </div>
+                <div class="mt-1.5 grid gap-1.5 text-center text-[13px] font-semibold text-sky-300">
+                  <span class="bubble rounded-lg py-2">Tengo uno</span>
+                  <span class="bubble rounded-lg py-2">No tengo</span>
+                </div>
+              </div>
+              <!-- 3: vendido por audio -->
+              <div class="swiper-slide">
+                <div class="ml-auto w-[85%] rounded-[.9rem] rounded-tr-[.25rem] bg-[#005c4b] p-3 text-[13px] text-zinc-100">
+                  <p class="flex items-center gap-2"><i data-lucide="mic" class="h-4 w-4"></i><span class="h-1 flex-1 rounded bg-white/40"></span> 0:03</p>
+                  <p class="mt-1 text-[11px] italic text-emerald-100/80">“Se vendió el Onix gris”</p>
+                </div>
+                <div class="bubble mt-2 p-3 text-[13px] leading-snug text-zinc-100">
+                  <p>🔴 ¿Marco como <b>VENDIDO</b> el Chevrolet Onix LT 2019?</p>
+                </div>
+                <div class="mt-1.5 grid gap-1.5 text-center text-[13px] font-semibold text-sky-300">
+                  <span class="bubble rounded-lg py-2">Sí, confirmar</span>
+                </div>
+                <div class="bubble mt-2 p-3 text-[13px] text-zinc-100">Listo ✅ Lo bajé de la red. ¡Felicitaciones por la venta! 🎉</div>
+              </div>
+            </div>
+            <div class="swiper-pagination !bottom-0"></div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+    </div>
+    <div class="reveal order-1 lg:order-2">
+      <p class="chip-l bg-blue-100 text-blue-800"><i data-lucide="smartphone" class="h-3.5 w-3.5"></i> Todo pasa en tu WhatsApp</p>
+      <h2 class="mt-4 font-display text-3xl font-extrabold leading-tight text-zinc-900 sm:text-4xl">Así te llegan las ofertas</h2>
+      <p class="mt-4 text-lg text-zinc-600">No tenés que entrar a ninguna página. El bot te escribe y vos respondés con un botón.</p>
+      <ol class="mt-8 space-y-3" id="celuPasos">
+        <li><button type="button" data-slide="0" class="celu-item w-full rounded-2xl bg-white p-5 text-left ring-1 ring-zinc-200 transition">
+          <span class="flex items-center gap-3"><span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-orange-100 text-orange-600"><i data-lucide="hand-coins" class="h-5 w-5"></i></span><b class="font-display text-lg text-zinc-900">Una oferta por tu auto</b></span>
+          <span class="mt-2 block pl-[3.25rem] text-zinc-600">Con el precio que ofrecen y la lectura del termómetro. Aceptás, contraofertás o la rechazás.</span></button></li>
+        <li><button type="button" data-slide="1" class="celu-item w-full rounded-2xl bg-white p-5 text-left ring-1 ring-zinc-200 transition">
+          <span class="flex items-center gap-3"><span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-blue-100 text-blue-700"><i data-lucide="radar" class="h-5 w-5"></i></span><b class="font-display text-lg text-zinc-900">Un auto que buscan y no tenés</b></span>
+          <span class="mt-2 block pl-[3.25rem] text-zinc-600">Si lo conseguís, lo cargás y le avisamos al comprador al instante.</span></button></li>
+        <li><button type="button" data-slide="2" class="celu-item w-full rounded-2xl bg-white p-5 text-left ring-1 ring-zinc-200 transition">
+          <span class="flex items-center gap-3"><span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-green-100 text-green-700"><i data-lucide="mic" class="h-5 w-5"></i></span><b class="font-display text-lg text-zinc-900">Vendiste uno: un audio y listo</b></span>
+          <span class="mt-2 block pl-[3.25rem] text-zinc-600">“Se vendió el Onix gris”. El bot lo entiende, te pide confirmar y lo baja de la red.</span></button></li>
+      </ol>
     </div>
   </div>
 </section>
@@ -405,25 +442,25 @@
 <section class="alt py-20 sm:py-24">
   <div class="mx-auto grid max-w-6xl gap-12 px-5 lg:grid-cols-2 lg:items-center">
     <div class="reveal">
-      <p class="chip-l bg-teal-100 text-teal-800"><i data-lucide="gauge" class="h-3.5 w-3.5"></i> Filtro anticuriosos</p>
+      <p class="chip-l bg-blue-100 text-blue-800"><i data-lucide="gauge" class="h-3.5 w-3.5"></i> Filtro anticuriosos</p>
       <h2 class="mt-4 font-display text-3xl font-extrabold leading-tight text-zinc-900 sm:text-4xl">El termómetro comercial frena las ofertas que no te sirven</h2>
       <p class="mt-4 text-lg leading-relaxed text-zinc-600">Cada oferta se compara con tu precio publicado y con autos parecidos de la red. Las que están muy por debajo <b class="text-zinc-900">no te llegan</b>: al comprador le pedimos que mejore su número. Las demás te llegan con su lectura.</p>
       <ul class="mt-6 grid gap-3 sm:grid-cols-2">
         <li class="flex items-center gap-3 rounded-2xl bg-white p-4 ring-1 ring-zinc-200"><span class="h-3 w-3 rounded-full bg-rose-400"></span><p class="text-sm"><b class="text-zinc-900">Fuera de mercado</b><br><span class="text-zinc-500">Se frena antes de tu celu</span></p></li>
         <li class="flex items-center gap-3 rounded-2xl bg-white p-4 ring-1 ring-zinc-200"><span class="h-3 w-3 rounded-full bg-amber-400"></span><p class="text-sm"><b class="text-zinc-900">Baja, negociable</b><br><span class="text-zinc-500">Te llega para contraofertar</span></p></li>
-        <li class="flex items-center gap-3 rounded-2xl bg-white p-4 ring-1 ring-zinc-200"><span class="h-3 w-3 rounded-full bg-teal-400"></span><p class="text-sm"><b class="text-zinc-900">Cerca de tu precio</b><br><span class="text-zinc-500">Buenas chances de cierre</span></p></li>
-        <li class="flex items-center gap-3 rounded-2xl bg-white p-4 ring-1 ring-zinc-200"><span class="h-3 w-3 rounded-full bg-teal-600"></span><p class="text-sm"><b class="text-zinc-900">En tu precio</b><br><span class="text-zinc-500">La que más rápido se cierra</span></p></li>
+        <li class="flex items-center gap-3 rounded-2xl bg-white p-4 ring-1 ring-zinc-200"><span class="h-3 w-3 rounded-full bg-green-300"></span><p class="text-sm"><b class="text-zinc-900">Cerca de tu precio</b><br><span class="text-zinc-500">Buenas chances de cierre</span></p></li>
+        <li class="flex items-center gap-3 rounded-2xl bg-white p-4 ring-1 ring-zinc-200"><span class="h-3 w-3 rounded-full bg-green-500"></span><p class="text-sm"><b class="text-zinc-900">En tu precio</b><br><span class="text-zinc-500">La que más rápido se cierra</span></p></li>
       </ul>
     </div>
     <div class="reveal">
-      <div class="mx-auto max-w-md rounded-[2rem] bg-white p-8 shadow-xl shadow-teal-900/5 ring-1 ring-zinc-200">
+      <div class="mx-auto max-w-md rounded-[2rem] bg-white p-8 shadow-xl shadow-blue-900/5 ring-1 ring-zinc-200">
         <svg viewBox="0 0 300 180" class="w-full" fill="none" role="img" aria-label="Medidor del termómetro comercial">
           <path d="M40 160a110 110 0 0 1 78-105" stroke="#fb7185" stroke-width="26"/>
           <path d="M118 55a110 110 0 0 1 64 0" stroke="#fbbf24" stroke-width="26"/>
-          <path d="M182 55a110 110 0 0 1 50 34" stroke="#5eead4" stroke-width="26"/>
-          <path d="M232 89a110 110 0 0 1 28 71" stroke="#14b8a6" stroke-width="26"/>
+          <path d="M182 55a110 110 0 0 1 50 34" stroke="#86efac" stroke-width="26"/>
+          <path d="M232 89a110 110 0 0 1 28 71" stroke="#22c55e" stroke-width="26"/>
           <g class="needle" style="transform-origin:150px 160px"><path d="M150 160L214 74" stroke="#0f172a" stroke-width="6" stroke-linecap="round"/></g>
-          <circle cx="150" cy="160" r="13" fill="#0f172a"/><circle cx="150" cy="160" r="5" fill="#3fe0c5"/>
+          <circle cx="150" cy="160" r="13" fill="#0f172a"/><circle cx="150" cy="160" r="5" fill="#FF7A1A"/>
         </svg>
         <div class="mt-4 rounded-2xl bg-zinc-50 p-4 ring-1 ring-zinc-100">
           <p class="text-xs font-semibold uppercase tracking-wider text-zinc-500">Así te llega</p>
@@ -444,7 +481,7 @@
 
     <div class="mt-14 grid gap-6 lg:grid-cols-[1.05fr_.95fr]">
       <!-- Radar: mini panel -->
-      <div class="reveal rounded-[2rem] bg-zinc-900 p-7 text-white sm:p-8">
+      <div class="reveal rounded-[2rem] bg-[#0B1F3A] p-7 text-white sm:p-8">
         <div class="flex items-start justify-between gap-4">
           <div>
             <p class="flex items-center gap-2 text-sm font-semibold text-pr"><i data-lucide="radar" class="h-4 w-4"></i> Radar de demanda real en Tucumán</p>
@@ -452,9 +489,9 @@
             <p class="mt-2 text-sm leading-relaxed text-zinc-400">Si buscan un modelo que no tenés, te avisamos al instante. Y en tu panel ves lo que más se busca.</p>
           </div>
           <svg viewBox="0 0 80 80" class="h-20 w-20 shrink-0" fill="none" aria-hidden="true">
-            <circle cx="40" cy="40" r="36" stroke="#3fe0c5" stroke-opacity=".25" stroke-width="1.5"/><circle cx="40" cy="40" r="24" stroke="#3fe0c5" stroke-opacity=".35" stroke-width="1.5"/><circle cx="40" cy="40" r="12" stroke="#3fe0c5" stroke-opacity=".5" stroke-width="1.5"/>
-            <g class="sweep" style="transform-origin:40px 40px"><path d="M40 40L40 4A36 36 0 0 1 71 22z" fill="#3fe0c5" fill-opacity=".25"/></g>
-            <circle cx="56" cy="24" r="3" fill="#3fe0c5"/><circle cx="24" cy="52" r="3" fill="#3fe0c5"/><circle cx="50" cy="58" r="2.5" fill="#fbbf24"/>
+            <circle cx="40" cy="40" r="36" stroke="#FF7A1A" stroke-opacity=".25" stroke-width="1.5"/><circle cx="40" cy="40" r="24" stroke="#FF7A1A" stroke-opacity=".35" stroke-width="1.5"/><circle cx="40" cy="40" r="12" stroke="#FF7A1A" stroke-opacity=".5" stroke-width="1.5"/>
+            <g class="sweep" style="transform-origin:40px 40px"><path d="M40 40L40 4A36 36 0 0 1 71 22z" fill="#FF7A1A" fill-opacity=".25"/></g>
+            <circle cx="56" cy="24" r="3" fill="#FF7A1A"/><circle cx="24" cy="52" r="3" fill="#FF7A1A"/><circle cx="50" cy="58" r="2.5" fill="#fbbf24"/>
           </svg>
         </div>
         <div class="mt-6 rounded-2xl bg-white/5 p-5 ring-1 ring-white/10">
@@ -470,17 +507,17 @@
 
       <div class="grid gap-5">
         <article class="reveal card-l flex gap-5 rounded-3xl p-6">
-          <span class="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-teal-50 text-teal-700 ring-1 ring-teal-100"><i data-lucide="timer" class="h-6 w-6"></i></span>
+          <span class="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-blue-50 text-blue-700 ring-1 ring-blue-100"><i data-lucide="timer" class="h-6 w-6"></i></span>
           <div><h3 class="font-display text-lg font-bold text-zinc-900">Recuperá horas de tus vendedores</h3>
           <p class="mt-1.5 leading-relaxed text-zinc-600">Tu equipo se dedica a cerrar en el salón en lugar de mandar fotos y audios a perfiles que nunca aparecen.</p></div>
         </article>
         <article class="reveal card-l flex gap-5 rounded-3xl p-6">
-          <span class="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-teal-50 text-teal-700 ring-1 ring-teal-100"><i data-lucide="shield-check" class="h-6 w-6"></i></span>
+          <span class="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-blue-50 text-blue-700 ring-1 ring-blue-100"><i data-lucide="shield-check" class="h-6 w-6"></i></span>
           <div><h3 class="font-display text-lg font-bold text-zinc-900">Filtro anticuriosos</h3>
           <p class="mt-1.5 leading-relaxed text-zinc-600">El termómetro frena las ofertas fuera de mercado. Solo te llega lo que es viable para tu stock.</p></div>
         </article>
         <article class="reveal card-l flex gap-5 rounded-3xl p-6">
-          <span class="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-teal-50 text-teal-700 ring-1 ring-teal-100"><i data-lucide="refresh-cw" class="h-6 w-6"></i></span>
+          <span class="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-blue-50 text-blue-700 ring-1 ring-blue-100"><i data-lucide="refresh-cw" class="h-6 w-6"></i></span>
           <div><h3 class="font-display text-lg font-bold text-zinc-900">Cero esfuerzo administrativo</h3>
           <p class="mt-1.5 leading-relaxed text-zinc-600">Olvidate de editar avisos en diez páginas. El stock se actualiza con un mensaje de WhatsApp.</p></div>
         </article>
@@ -495,11 +532,11 @@
     <div class="reveal grid gap-8 rounded-[2rem] bg-white p-8 ring-1 ring-zinc-200 sm:p-10 md:grid-cols-[1.2fr_1fr] md:items-center">
       <div class="flex gap-5">
         <svg viewBox="0 0 90 90" class="hidden h-24 w-24 shrink-0 sm:block" fill="none" aria-hidden="true">
-          <path d="M45 8c-15 0-27 12-27 27 0 20 27 47 27 47s27-27 27-47C72 20 60 8 45 8z" fill="#ccfbf1" stroke="#0f172a" stroke-width="2.5"/>
-          <circle cx="45" cy="35" r="11" fill="#3fe0c5" stroke="#0f172a" stroke-width="2.5"/>
+          <path d="M45 8c-15 0-27 12-27 27 0 20 27 47 27 47s27-27 27-47C72 20 60 8 45 8z" fill="#DBEAFE" stroke="#0f172a" stroke-width="2.5"/>
+          <circle cx="45" cy="35" r="11" fill="#FF7A1A" stroke="#0f172a" stroke-width="2.5"/>
         </svg>
         <div>
-          <p class="chip-l bg-zinc-100 text-zinc-700"><i data-lucide="activity" class="h-3.5 w-3.5 text-teal-600"></i> Lo que ya está pasando en la provincia</p>
+          <p class="chip-l bg-zinc-100 text-zinc-700"><i data-lucide="activity" class="h-3.5 w-3.5 text-blue-600"></i> Lo que ya está pasando en la provincia</p>
           <h2 class="mt-4 font-display text-2xl font-extrabold leading-tight text-zinc-900 sm:text-3xl" id="socialTitle">Agencias de San Miguel y Yerba Buena ya se están sumando a la red.</h2>
           <p class="mt-3 leading-relaxed text-zinc-600" id="socialText">Concesionarios y playas multimarca ya cargaron su stock y están recibiendo las primeras alertas de demanda real.</p>
         </div>
@@ -510,7 +547,7 @@
           <p class="mt-1 text-sm text-zinc-500">agencias verificadas en la red</p>
         </div>
         <div class="rounded-2xl bg-zinc-50 p-5 ring-1 ring-zinc-100">
-          <p class="font-display text-4xl font-black text-zinc-900">5<span class="text-xl text-teal-600"> min</span></p>
+          <p class="font-display text-4xl font-black text-zinc-900">5<span class="text-xl text-blue-600"> min</span></p>
           <p class="mt-1 text-sm text-zinc-500">de cero a operativo, sin instalar nada</p>
         </div>
         <div class="rounded-2xl bg-zinc-50 p-5 ring-1 ring-zinc-100" id="statBusBox" hidden>
@@ -518,7 +555,7 @@
           <p class="mt-1 text-sm text-zinc-500">búsquedas de compradores en 30 días</p>
         </div>
         <div class="rounded-2xl bg-zinc-50 p-5 ring-1 ring-zinc-100">
-          <p class="font-display text-4xl font-black text-zinc-900"><span class="text-teal-600">$</span>0</p>
+          <p class="font-display text-4xl font-black text-zinc-900"><span class="text-blue-600">$</span>0</p>
           <p class="mt-1 text-sm text-zinc-500">para empezar: sin tarjeta de crédito</p>
         </div>
       </div>
@@ -535,14 +572,14 @@
         <p class="mt-4 text-lg text-zinc-600">No es un software pasivo que te deja solo frente a la pantalla. Es el sistema completo, listo para operar.</p>
       </div>
       <div class="hidden gap-2 sm:flex">
-        <button class="inc-prev grid h-12 w-12 place-items-center rounded-full border border-zinc-300 text-zinc-800 transition hover:border-teal-500 hover:text-teal-600" aria-label="Anterior"><i data-lucide="arrow-left" class="h-5 w-5"></i></button>
-        <button class="inc-next grid h-12 w-12 place-items-center rounded-full border border-zinc-300 text-zinc-800 transition hover:border-teal-500 hover:text-teal-600" aria-label="Siguiente"><i data-lucide="arrow-right" class="h-5 w-5"></i></button>
+        <button class="inc-prev grid h-12 w-12 place-items-center rounded-full border border-zinc-300 text-zinc-800 transition hover:border-blue-500 hover:text-blue-600" aria-label="Anterior"><i data-lucide="arrow-left" class="h-5 w-5"></i></button>
+        <button class="inc-next grid h-12 w-12 place-items-center rounded-full border border-zinc-300 text-zinc-800 transition hover:border-blue-500 hover:text-blue-600" aria-label="Siguiente"><i data-lucide="arrow-right" class="h-5 w-5"></i></button>
       </div>
     </div>
     <div class="swiper inc-swiper reveal mt-10 max-sm:!overflow-visible">
       <div class="swiper-wrapper">
         <div class="swiper-slide !h-auto"><article class="card-l h-full rounded-3xl p-7">
-          <span class="grid h-14 w-14 place-items-center rounded-2xl bg-teal-500 text-white"><i data-lucide="sparkles" class="h-7 w-7"></i></span>
+          <span class="grid h-14 w-14 place-items-center rounded-2xl bg-blue-500 text-white"><i data-lucide="sparkles" class="h-7 w-7"></i></span>
           <h3 class="mt-5 font-display text-xl font-bold text-zinc-900">Plataforma de intención de compra</h3>
           <p class="mt-2 leading-relaxed text-zinc-600">Tu stock conectado a un buscador inteligente que entiende qué busca el comprador: modelo, año y presupuesto.</p>
         </article></div>
@@ -557,7 +594,7 @@
           <p class="mt-2 leading-relaxed text-zinc-600">Nos pasás tu listado como lo tengas (Excel, PDF o fotos) y te dejamos la playa andando en minutos.</p>
         </article></div>
         <div class="swiper-slide !h-auto"><article class="card-l h-full rounded-3xl p-7">
-          <span class="grid h-14 w-14 place-items-center rounded-2xl bg-zinc-900 text-pr"><i data-lucide="bar-chart-3" class="h-7 w-7"></i></span>
+          <span class="grid h-14 w-14 place-items-center rounded-2xl bg-[#0B1F3A] text-pr"><i data-lucide="bar-chart-3" class="h-7 w-7"></i></span>
           <h3 class="mt-5 font-display text-xl font-bold text-zinc-900">Radar de demanda zonal</h3>
           <p class="mt-2 leading-relaxed text-zinc-600">Qué modelos y presupuestos se están moviendo en Tucumán, para que no compres stock a ciegas.</p>
         </article></div>
@@ -575,15 +612,15 @@
 </div><!-- /light -->
 
 <!-- ============ GARANTÍA (oscuro) ============ -->
-<section class="relative overflow-clip bg-[#0b0b0c] py-20 sm:py-24">
+<section class="relative overflow-clip bg-[#0B1F3A] py-20 sm:py-24">
   <div class="mx-auto max-w-5xl px-5">
-    <div class="reveal relative overflow-hidden rounded-[2rem] border border-pr/30 bg-gradient-to-br from-pr/[.12] via-transparent to-[#3558FE]/[.12] p-8 sm:p-12">
+    <div class="reveal relative overflow-hidden rounded-[2rem] border border-pr/30 bg-gradient-to-br from-pr/[.12] via-transparent to-[#3B82F6]/[.12] p-8 sm:p-12">
       <div class="grid gap-8 md:grid-cols-[auto_1fr] md:items-center">
         <svg viewBox="0 0 160 160" class="mx-auto h-40 w-40" fill="none" aria-hidden="true">
-          <g class="spin-slow" style="transform-origin:80px 80px"><circle cx="80" cy="80" r="72" stroke="#3fe0c5" stroke-width="2" stroke-dasharray="4 6"/></g>
-          <path d="M80 22l44 16v34c0 30-19 52-44 64-25-12-44-34-44-64V38z" fill="#3fe0c5" fill-opacity=".12" stroke="#3fe0c5" stroke-width="3" stroke-linejoin="round"/>
+          <g class="spin-slow" style="transform-origin:80px 80px"><circle cx="80" cy="80" r="72" stroke="#FF7A1A" stroke-width="2" stroke-dasharray="4 6"/></g>
+          <path d="M80 22l44 16v34c0 30-19 52-44 64-25-12-44-34-44-64V38z" fill="#FF7A1A" fill-opacity=".12" stroke="#FF7A1A" stroke-width="3" stroke-linejoin="round"/>
           <text x="80" y="88" text-anchor="middle" font-family="Mona Sans, Inter" font-weight="900" font-size="38" fill="#fff">30</text>
-          <text x="80" y="108" text-anchor="middle" font-family="Inter" font-weight="700" font-size="11" letter-spacing="3" fill="#3fe0c5">DÍAS</text>
+          <text x="80" y="108" text-anchor="middle" font-family="Inter" font-weight="700" font-size="11" letter-spacing="3" fill="#FF7A1A">DÍAS</text>
         </svg>
         <div>
           <h2 class="font-display text-3xl font-extrabold text-white">Nuestra garantía de confianza: cero riesgo para tu agencia</h2>
@@ -613,23 +650,23 @@
     <h2 class="reveal text-center font-display text-3xl font-extrabold text-zinc-900 sm:text-4xl">Preguntas frecuentes</h2>
     <div class="mt-10 space-y-3">
       <details class="reveal card-l group rounded-2xl px-6 py-5">
-        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-zinc-900">¿Tengo que cambiar el sistema de gestión que ya uso en la agencia?<i data-lucide="chevron-down" class="chev h-5 w-5 shrink-0 text-teal-600"></i></summary>
+        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-zinc-900">¿Tengo que cambiar el sistema de gestión que ya uso en la agencia?<i data-lucide="chevron-down" class="chev h-5 w-5 shrink-0 text-blue-600"></i></summary>
         <p class="mt-3 leading-relaxed text-zinc-600">Para nada. No tocamos tu administración actual. La plataforma corre en paralelo como un canal de compradores, y el contacto final siempre te llega directo a WhatsApp.</p>
       </details>
       <details class="reveal card-l group rounded-2xl px-6 py-5">
-        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-zinc-900">¿Cómo se cargan los vehículos cuando arranco?<i data-lucide="chevron-down" class="chev h-5 w-5 shrink-0 text-teal-600"></i></summary>
+        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-zinc-900">¿Cómo se cargan los vehículos cuando arranco?<i data-lucide="chevron-down" class="chev h-5 w-5 shrink-0 text-blue-600"></i></summary>
         <p class="mt-3 leading-relaxed text-zinc-600">No te consume tiempo. Nos pasás tu listado actual en el formato que lo tengas (Excel, PDF o fotos) y nuestro equipo deja todo tu stock subido y activo en minutos.</p>
       </details>
       <details class="reveal card-l group rounded-2xl px-6 py-5">
-        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-zinc-900">¿Qué pasa si un comprador manda una oferta que no me sirve?<i data-lucide="chevron-down" class="chev h-5 w-5 shrink-0 text-teal-600"></i></summary>
+        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-zinc-900">¿Qué pasa si un comprador manda una oferta que no me sirve?<i data-lucide="chevron-down" class="chev h-5 w-5 shrink-0 text-blue-600"></i></summary>
         <p class="mt-3 leading-relaxed text-zinc-600">De eso se encarga el termómetro comercial: las ofertas muy por debajo de tu precio se frenan antes de llegar a tu celu y al comprador le pedimos que mejore el número. Vos recibís ofertas viables y el negocio se define cara a cara en tu salón.</p>
       </details>
       <details class="reveal card-l group rounded-2xl px-6 py-5">
-        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-zinc-900">¿Es difícil mantener el stock actualizado si vendo un auto en el salón?<i data-lucide="chevron-down" class="chev h-5 w-5 shrink-0 text-teal-600"></i></summary>
+        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-zinc-900">¿Es difícil mantener el stock actualizado si vendo un auto en el salón?<i data-lucide="chevron-down" class="chev h-5 w-5 shrink-0 text-blue-600"></i></summary>
         <p class="mt-3 leading-relaxed text-zinc-600">Es instantáneo. No tenés que entrar a ninguna PC. Le mandás un audio al bot por WhatsApp y el auto se da de baja al toque.</p>
       </details>
       <details class="reveal card-l group rounded-2xl px-6 py-5">
-        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-zinc-900">¿Hay contratos de permanencia o ataduras?<i data-lucide="chevron-down" class="chev h-5 w-5 shrink-0 text-teal-600"></i></summary>
+        <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-zinc-900">¿Hay contratos de permanencia o ataduras?<i data-lucide="chevron-down" class="chev h-5 w-5 shrink-0 text-blue-600"></i></summary>
         <p class="mt-3 leading-relaxed text-zinc-600">Cero. Si probás el sistema y sentís que no rinde para tu tipo de agencia, te bajás cuando quieras, sin explicaciones ni multas.</p>
       </details>
     </div>
@@ -650,7 +687,7 @@
     </div>
 
     <div class="reveal">
-      <div class="card rounded-[2rem] bg-[#0f1012]/90 p-6 shadow-2xl backdrop-blur sm:p-8">
+      <div class="card rounded-[2rem] bg-[#0E2445]/90 p-6 shadow-2xl backdrop-blur sm:p-8">
         <form id="leadForm" novalidate>
           <h3 class="font-display text-2xl font-extrabold text-white">Reservá el lugar de tu agencia</h3>
           <p class="mt-1 text-sm text-zinc-400">Te escribimos por WhatsApp para dejar tu stock andando.</p>
@@ -701,7 +738,7 @@
 </footer>
 
 <!-- Barra fija en el celular -->
-<div class="sticky-bar fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#0b0b0c]/95 p-3 backdrop-blur sm:hidden" id="stickyBar">
+<div class="sticky-bar fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#0B1F3A]/95 p-3 backdrop-blur sm:hidden" id="stickyBar">
   <div class="flex gap-2">
     <a href="#form" data-cta="sticky" class="btn-cta flex flex-1 items-center justify-center gap-2 rounded-xl py-3.5 font-bold">Sumar mi agencia</a>
     <a href="#" data-wa class="grid w-14 place-items-center rounded-xl bg-[#25D366] text-white" aria-label="Consultar por WhatsApp"><i data-lucide="message-circle" class="h-6 w-6"></i></a>
@@ -726,6 +763,9 @@
     GA4_ID: '',                                    // ej. 'G-XXXXXXXXXX'
     MIN_AGENCIAS_VISIBLE: 10,                      // el número real se muestra a partir de este valor
     MIN_BUSQUEDAS_VISIBLE: 50,
+    // Fotos de la galería del hero (horizontales, comprimidas). Ej.: ['img/hero-1.jpg', 'img/hero-2.jpg']
+    // Si queda vacío, el hero muestra el fondo azul animado.
+    HERO_FOTOS: [],
   };
 </script>
 <script>
@@ -835,7 +875,24 @@
   window.addEventListener('DOMContentLoaded', () => {
     window.lucide && lucide.createIcons();
     if (window.Swiper) {
-      new Swiper('.chat-swiper', { loop: true, speed: 700, autoplay: { delay: 4200, disableOnInteraction: false }, effect: 'fade', fadeEffect: { crossFade: true }, pagination: { el: '.chat-swiper .swiper-pagination', clickable: true } });
+      const chat = new Swiper('.chat-swiper', { loop: true, speed: 700, autoplay: { delay: 4800, disableOnInteraction: false }, effect: 'fade', fadeEffect: { crossFade: true }, pagination: { el: '.chat-swiper .swiper-pagination', clickable: true } });
+      const marcar = () => document.querySelectorAll('.celu-item').forEach(b => b.classList.toggle('on', +b.dataset.slide === chat.realIndex));
+      chat.on('slideChange', marcar); marcar();
+      document.querySelectorAll('.celu-item').forEach(b => b.addEventListener('click', () => { chat.slideToLoop(+b.dataset.slide); chat.autoplay.start() }));
+
+      // Galería del hero
+      const fotos = (CONFIG.HERO_FOTOS || []).filter(Boolean);
+      if (fotos.length) {
+        const gal = document.getElementById('heroGal'), dots = document.getElementById('heroDots');
+        gal.querySelector('.swiper-wrapper').innerHTML = fotos.map((src, i) =>
+          `<div class="swiper-slide"><img src="${src}" alt="" ${i ? 'loading="lazy"' : 'fetchpriority="high"'} decoding="async"></div>`).join('');
+        dots.innerHTML = fotos.map(() => '<span class="hero-dot"></span>').join('');
+        gal.classList.remove('hidden'); document.getElementById('heroAurora').classList.add('hidden');
+        const hs = new Swiper('#heroGal', { loop: fotos.length > 1, speed: 1400, effect: 'fade', fadeEffect: { crossFade: true }, allowTouchMove: false,
+          autoplay: fotos.length > 1 ? { delay: 5500, disableOnInteraction: false } : false });
+        const d = () => [...dots.children].forEach((el, i) => { el.classList.remove('on'); void el.offsetWidth; el.classList.toggle('on', i === hs.realIndex) });
+        hs.on('slideChange', d); d();
+      }
       new Swiper('.inc-swiper', {
         slidesPerView: 1.12, spaceBetween: 16, grabCursor: true,
         navigation: { prevEl: '.inc-prev', nextEl: '.inc-next' },

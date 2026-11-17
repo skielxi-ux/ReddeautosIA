@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Red de Autos · Decí qué auto querés. Las agencias de Tucumán te buscan a vos.</title>
   <meta name="description" content="Marketplace automotor inverso con IA en Tucumán. Escribí o dictá qué auto buscás y tu presupuesto: te mostramos opciones reales o activamos una alerta a la red de agencias por WhatsApp." />
-  <meta name="theme-color" content="#0b0b0c" />
+  <meta name="theme-color" content="#0B1F3A" />
 
   <!-- Fuentes (mismas familias que Clutch!) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -22,9 +22,9 @@
       theme: {
         extend: {
           colors: {
-            bg: '#0b0b0c', bg2: '#131315', bg3: '#1a1a1d',
-            pr: '#3fe0c5', pr2: '#005aff', pr3: '#DC3DF1', sd3: '#3558FE',
-            ink: '#c4c4cc', line: 'rgba(255,255,255,.1)'
+            bg: '#0B1F3A', bg2: '#102846', bg3: '#15325A',
+            pr: '#FF7A1A', pr2: '#2563EB', pr3: '#FFB547', sd3: '#3B82F6',
+            ink: '#C6D1E1', line: 'rgba(255,255,255,.1)'
           },
           fontFamily: {
             display: ['"Mona Sans"', 'Inter', 'sans-serif'],
@@ -39,17 +39,17 @@
 
   <style>
     :root{
-      --pr:#3fe0c5; --pr-2:#005aff; --pr-3:#DC3DF1; --sd-3:#3558FE;
-      --gd-1:linear-gradient(62deg,#3adfcc 0%,#3943c1 100%);
-      --gd-3:linear-gradient(130deg,#e35ac0 21%,#5d6ecb 58%,#6fb4cc 100%);
-      --bg:#0b0b0c; --bg-2:#131315; --line:rgba(255,255,255,.1); --text:#c4c4cc;
+      --pr:#FF7A1A; --pr-2:#2563EB; --pr-3:#FFB547; --sd-3:#3B82F6;
+      --gd-1:linear-gradient(62deg,#FF8A2B 0%,#FFB547 100%);
+      --gd-3:linear-gradient(130deg,#FF7A1A 15%,#FFB547 60%,#FFD9A0 100%);
+      --bg:#0B1F3A; --bg-2:#102846; --line:rgba(255,255,255,.1); --text:#C6D1E1;
       --ease:cubic-bezier(.6,0,.2,1);
     }
     html.lenis, html.lenis body{height:auto}
     .lenis.lenis-smooth{scroll-behavior:auto!important}
     .lenis.lenis-stopped{overflow:hidden}
     body{background:var(--bg);color:var(--text);font-family:Inter,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-    ::selection{background:var(--pr);color:#0b0b0c}
+    ::selection{background:var(--pr);color:#0B1F3A}
     .font-display{font-variation-settings:"wdth" 100}
     .grain:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:60;opacity:.035;
       background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
@@ -73,14 +73,14 @@
     /* ===== Aurora agua marina (fondo del hero) ===== */
     .aurora{position:absolute;inset:-25% -10% -10%;filter:blur(60px) saturate(140%);opacity:.9}
     .aurora i{position:absolute;border-radius:50%;mix-blend-mode:screen;animation:auro 22s ease-in-out infinite alternate}
-    .aurora i:nth-child(1){left:5%;top:5%;width:55%;height:55%;background:radial-gradient(closest-side,rgba(63,224,197,.75),transparent)}
-    .aurora i:nth-child(2){right:0;top:0;width:50%;height:60%;background:radial-gradient(closest-side,rgba(53,88,254,.55),transparent);animation-duration:26s;animation-delay:-8s}
-    .aurora i:nth-child(3){left:25%;top:30%;width:60%;height:45%;background:radial-gradient(closest-side,rgba(20,184,166,.5),transparent);animation-duration:30s;animation-delay:-4s}
-    .aurora i:nth-child(4){left:-5%;bottom:10%;width:45%;height:40%;background:radial-gradient(closest-side,rgba(165,243,230,.35),transparent);animation-duration:34s;animation-delay:-12s}
-    .aurora b{position:absolute;left:-10%;right:-10%;top:18%;height:38%;background:linear-gradient(100deg,transparent 10%,rgba(63,224,197,.35) 35%,rgba(94,168,255,.28) 55%,transparent 80%);transform:skewY(-8deg);animation:band 18s ease-in-out infinite alternate;filter:blur(30px)}
+    .aurora i:nth-child(1){left:5%;top:5%;width:55%;height:55%;background:radial-gradient(closest-side,rgba(59,130,246,.6),transparent)}
+    .aurora i:nth-child(2){right:0;top:0;width:50%;height:60%;background:radial-gradient(closest-side,rgba(59,130,246,.55),transparent);animation-duration:26s;animation-delay:-8s}
+    .aurora i:nth-child(3){left:25%;top:30%;width:60%;height:45%;background:radial-gradient(closest-side,rgba(255,122,26,.28),transparent);animation-duration:30s;animation-delay:-4s}
+    .aurora i:nth-child(4){left:-5%;bottom:10%;width:45%;height:40%;background:radial-gradient(closest-side,rgba(147,197,253,.3),transparent);animation-duration:34s;animation-delay:-12s}
+    .aurora b{position:absolute;left:-10%;right:-10%;top:18%;height:38%;background:linear-gradient(100deg,transparent 10%,rgba(255,122,26,.22) 35%,rgba(94,168,255,.28) 55%,transparent 80%);transform:skewY(-8deg);animation:band 18s ease-in-out infinite alternate;filter:blur(30px)}
     @keyframes auro{0%{transform:translate(0,0) scale(1)}50%{transform:translate(6%,-4%) scale(1.15)}100%{transform:translate(-5%,6%) scale(.95)}}
     @keyframes band{0%{transform:skewY(-8deg) translateX(-6%)}100%{transform:skewY(-4deg) translateX(6%)}}
-    .hero-fade{position:absolute;inset:0;background:radial-gradient(ellipse 80% 70% at 50% 35%,transparent 35%,#0b0b0c 85%),linear-gradient(to bottom,transparent 60%,#0b0b0c)}
+    .hero-fade{position:absolute;inset:0;background:radial-gradient(ellipse 80% 70% at 50% 35%,transparent 35%,#0B1F3A 85%),linear-gradient(to bottom,transparent 60%,#0B1F3A)}
 
     /* ===== Auto en la ruta ===== */
     .ride{position:relative;width:100%;max-width:700px;margin-inline:auto;aspect-ratio:1000/330;pointer-events:none}
@@ -100,7 +100,7 @@
 
     /* ===== Tablero (números + dólar) ===== */
     .gauge{position:relative;border-radius:28px;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.01));border:1px solid var(--line);overflow:hidden}
-    .gauge:after{content:"";position:absolute;inset:auto -20% -60% -20%;height:80%;background:radial-gradient(closest-side,rgba(63,224,197,.12),transparent);pointer-events:none}
+    .gauge:after{content:"";position:absolute;inset:auto -20% -60% -20%;height:80%;background:radial-gradient(closest-side,rgba(255,122,26,.12),transparent);pointer-events:none}
     .dial{--p:0;width:100%;aspect-ratio:2/1;position:relative}
     .dial svg{width:100%;height:100%}
     .dial .arc{stroke-dasharray:283;stroke-dashoffset:calc(283 - 283 * var(--p));transition:stroke-dashoffset 1.6s var(--ease)}
@@ -115,7 +115,7 @@
     .faq summary::-webkit-details-marker{display:none}
     .faq summary:hover{color:var(--pr)}
     .faq summary .pm{flex:none;display:grid;place-items:center;width:2.25rem;height:2.25rem;border-radius:999px;border:1px solid var(--line);transition:transform .45s var(--ease),background .3s,border-color .3s}
-    .faq details[open] summary .pm{transform:rotate(45deg);background:var(--pr);border-color:var(--pr);color:#0b0b0c}
+    .faq details[open] summary .pm{transform:rotate(45deg);background:var(--pr);border-color:var(--pr);color:#0B1F3A}
     .faq .ans{overflow:hidden;color:var(--text);max-width:52rem}
     .faq .ans p{padding-bottom:1.6rem;line-height:1.7}
 
@@ -131,18 +131,18 @@
     .reveal-words .rw{color:rgba(255,255,255,.16);transition:color .2s}
 
     /* Botón principal estilo Clutch */
-    .btn-pr{position:relative;display:inline-flex;align-items:center;gap:.75rem;padding:.4rem 1.25rem .4rem .4rem;border-radius:999px;background:var(--pr);color:#0b0b0c;font-weight:600;overflow:hidden;isolation:isolate;transition:transform .5s var(--ease)}
-    .btn-pr .ic{display:grid;place-items:center;width:2.25rem;height:2.25rem;border-radius:999px;background:#0b0b0c;color:var(--pr);transition:transform .5s var(--ease)}
+    .btn-pr{position:relative;display:inline-flex;align-items:center;gap:.75rem;padding:.4rem 1.25rem .4rem .4rem;border-radius:999px;background:var(--pr);color:#0B1F3A;font-weight:600;overflow:hidden;isolation:isolate;transition:transform .5s var(--ease)}
+    .btn-pr .ic{display:grid;place-items:center;width:2.25rem;height:2.25rem;border-radius:999px;background:#0B1F3A;color:var(--pr);transition:transform .5s var(--ease)}
     .btn-pr:before{content:"";position:absolute;inset:0;background:#fff;transform:translateY(101%);transition:transform .5s var(--ease);z-index:-1;border-radius:inherit}
     .btn-pr:hover:before{transform:translateY(0)}
     .btn-pr:hover .ic{transform:rotate(-45deg)}
     .btn-pr:disabled{opacity:.6;pointer-events:none}
     .btn-gh{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.7rem 1.1rem;border-radius:999px;border:1px solid var(--line);color:#f2f2f5;font-weight:500;transition:all .4s var(--ease)}
-    .btn-gh:hover{border-color:rgba(63,224,197,.6);color:var(--pr);background:rgba(63,224,197,.06)}
+    .btn-gh:hover{border-color:rgba(255,122,26,.6);color:var(--pr);background:rgba(255,122,26,.06)}
 
     /* Caja de búsqueda con borde animado */
     .search-shell{position:relative;border-radius:28px;padding:1px;background:linear-gradient(var(--bg-2),var(--bg-2)) padding-box,conic-gradient(from var(--ang),rgba(255,255,255,.08),rgba(255,255,255,.08) 40%,var(--pr) 50%,var(--pr-3) 60%,rgba(255,255,255,.08) 70%) border-box;border:1px solid transparent;animation:gradmove 6s linear infinite;transition:box-shadow .5s var(--ease),transform .5s var(--ease)}
-    .search-shell.is-focus{box-shadow:0 0 0 6px rgba(63,224,197,.06),0 30px 80px -20px rgba(63,224,197,.25)}
+    .search-shell.is-focus{box-shadow:0 0 0 6px rgba(255,122,26,.06),0 30px 80px -20px rgba(255,122,26,.25)}
     .search-shell.is-listening{animation-duration:1.6s}
     .search-shell textarea{resize:none;background:transparent;outline:none}
     .search-shell textarea::placeholder{color:#6d6d78}
@@ -156,16 +156,16 @@
     .wave{display:none;align-items:center;gap:3px;height:22px}
     .is-listening .wave{display:flex}
     .wave i{display:block;width:3px;height:100%;border-radius:3px;background:var(--pr-3);animation:bar .9s ease-in-out infinite}
-    .send{display:grid;place-items:center;width:3rem;height:3rem;border-radius:999px;background:var(--pr);color:#0b0b0c;transition:transform .45s var(--ease),box-shadow .45s var(--ease)}
-    .send:hover{transform:rotate(-45deg) scale(1.05);box-shadow:0 0 30px rgba(63,224,197,.5)}
+    .send{display:grid;place-items:center;width:3rem;height:3rem;border-radius:999px;background:var(--pr);color:#0B1F3A;transition:transform .45s var(--ease),box-shadow .45s var(--ease)}
+    .send:hover{transform:rotate(-45deg) scale(1.05);box-shadow:0 0 30px rgba(255,122,26,.5)}
 
     .chip{display:inline-flex;align-items:center;gap:.4rem;padding:.45rem .8rem;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.02);font-size:.8rem;color:#bdbdc6;white-space:nowrap;transition:all .35s var(--ease);backdrop-filter:blur(6px)}
-    .chip:hover{border-color:rgba(63,224,197,.5);color:#fff;transform:translateY(-2px)}
+    .chip:hover{border-color:rgba(255,122,26,.5);color:#fff;transform:translateY(-2px)}
 
     /* Pills de lo que entendió la IA */
-    .pill{display:inline-flex;align-items:center;gap:.45rem;padding:.5rem .55rem .5rem .8rem;border-radius:999px;background:rgba(63,224,197,.08);border:1px solid rgba(63,224,197,.35);color:#dafbf5;font-size:.85rem;font-weight:500}
+    .pill{display:inline-flex;align-items:center;gap:.45rem;padding:.5rem .55rem .5rem .8rem;border-radius:999px;background:rgba(255,122,26,.08);border:1px solid rgba(255,122,26,.35);color:#dafbf5;font-size:.85rem;font-weight:500}
     .pill .x{display:grid;place-items:center;width:1.3rem;height:1.3rem;border-radius:999px;color:#7cc2b5;transition:all .3s var(--ease)}
-    .pill .x:hover{background:var(--pr);color:#0b0b0c;transform:rotate(90deg)}
+    .pill .x:hover{background:var(--pr);color:#0B1F3A;transform:rotate(90deg)}
     .pill.static{padding-right:.8rem;background:rgba(255,255,255,.04);border-color:var(--line);color:#d8d8de}
 
     /* Pasos "pensando" */
@@ -177,8 +177,8 @@
 
     /* Tarjetas */
     .card{position:relative;border-radius:24px;background:var(--bg-2);border:1px solid var(--line);overflow:hidden;transition:border-color .5s var(--ease),transform .6s var(--ease);transform-style:preserve-3d}
-    .card:before{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .4s;background:radial-gradient(420px circle at var(--mx,50%) var(--my,0%),rgba(63,224,197,.12),transparent 45%);z-index:1}
-    .card:hover{border-color:rgba(63,224,197,.35)}
+    .card:before{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .4s;background:radial-gradient(420px circle at var(--mx,50%) var(--my,0%),rgba(255,122,26,.12),transparent 45%);z-index:1}
+    .card:hover{border-color:rgba(255,122,26,.35)}
     .card:hover:before{opacity:1}
     .card .media{position:relative;aspect-ratio:16/10;overflow:hidden}
     .card .media img,.card .media .ph{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1s var(--ease)}
@@ -196,10 +196,10 @@
     .gal-bars span{flex:1;height:3px;border-radius:3px;background:rgba(255,255,255,.35);transition:background .3s}
     .gal-bars span.on{background:#fff}
     .gal-count{position:absolute;right:.75rem;bottom:.55rem;z-index:2;display:flex;align-items:center;gap:.25rem;font:600 11px/1 ui-monospace,monospace;color:#fff;background:rgba(0,0,0,.45);padding:.3rem .45rem;border-radius:999px;pointer-events:none}
-    .ph{display:grid;place-items:center;background:radial-gradient(120% 90% at 20% 10%,hsla(var(--h),80%,55%,.55),transparent 55%),radial-gradient(90% 80% at 90% 100%,rgba(63,224,197,.25),transparent 50%),#121214}
+    .ph{display:grid;place-items:center;background:radial-gradient(120% 90% at 20% 10%,hsla(var(--h),80%,55%,.55),transparent 55%),radial-gradient(90% 80% at 90% 100%,rgba(255,122,26,.25),transparent 50%),#0F2747}
     .ph .ghost{position:absolute;bottom:-.18em;left:.15em;font-family:"Mona Sans";font-weight:900;font-size:5.2rem;line-height:1;letter-spacing:-.04em;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.14);white-space:nowrap}
     .badge{display:inline-flex;align-items:center;gap:.35rem;padding:.3rem .6rem;border-radius:999px;font-size:.72rem;font-weight:600;letter-spacing:.01em;backdrop-filter:blur(10px)}
-    .badge.ok{background:rgba(63,224,197,.92);color:#0b0b0c}
+    .badge.ok{background:rgba(255,122,26,.92);color:#0B1F3A}
     .badge.near{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.18)}
     .spec{display:flex;flex-direction:column;gap:.2rem;padding:.6rem .65rem;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05)}
     .spec span{font-size:.68rem;color:#7c7c87}
@@ -212,40 +212,40 @@
     .swiper-pagination-progressbar{position:relative!important;height:2px!important;background:rgba(255,255,255,.08)!important;border-radius:2px;margin-top:2rem}
     .swiper-pagination-progressbar .swiper-pagination-progressbar-fill{background:var(--pr)!important}
     .nav-btn{display:grid;place-items:center;width:2.75rem;height:2.75rem;border-radius:999px;border:1px solid var(--line);color:#fff;transition:all .4s var(--ease)}
-    .nav-btn:hover{background:var(--pr);color:#0b0b0c;border-color:var(--pr)}
+    .nav-btn:hover{background:var(--pr);color:#0B1F3A;border-color:var(--pr)}
     .nav-btn.swiper-button-disabled{opacity:.3;pointer-events:none}
 
     /* Alerta / radar */
-    .radar{position:relative;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(63,224,197,.08) 0,transparent 70%)}
-    .radar .r{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(63,224,197,.15)}
+    .radar{position:relative;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(255,122,26,.08) 0,transparent 70%)}
+    .radar .r{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(255,122,26,.15)}
     .radar .r:nth-child(2){inset:18%}
     .radar .r:nth-child(3){inset:36%}
-    .radar .sweep{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,rgba(63,224,197,.35),transparent 25%);animation:radar 3.2s linear infinite;mask:radial-gradient(circle,#000 69%,transparent 70%)}
+    .radar .sweep{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,rgba(255,122,26,.35),transparent 25%);animation:radar 3.2s linear infinite;mask:radial-gradient(circle,#000 69%,transparent 70%)}
     .radar .core{position:absolute;inset:44%;border-radius:50%;background:var(--pr);box-shadow:0 0 25px var(--pr)}
     .radar .ag{position:absolute;width:9px;height:9px;margin:-4.5px;border-radius:50%;background:#3a3a40;transition:background .4s,box-shadow .4s}
     .radar .ag.lit{background:var(--pr);box-shadow:0 0 14px var(--pr)}
     .radar .ag.lit:after{content:"";position:absolute;inset:0;border-radius:50%;background:var(--pr);animation:ping 1.4s cubic-bezier(0,0,.2,1) infinite}
 
     .field{width:100%;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:16px;padding:.85rem 1rem;color:#fff;outline:none;transition:border-color .3s,box-shadow .3s}
-    .field:focus{border-color:rgba(63,224,197,.6);box-shadow:0 0 0 4px rgba(63,224,197,.08)}
+    .field:focus{border-color:rgba(255,122,26,.6);box-shadow:0 0 0 4px rgba(255,122,26,.08)}
     .field::placeholder{color:#5f5f69}
     .seg{display:inline-flex;padding:4px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid var(--line)}
     .seg button{padding:.4rem .9rem;border-radius:999px;font-size:.8rem;color:#9a9aa5;transition:all .35s var(--ease)}
-    .seg button.on{background:var(--pr);color:#0b0b0c;font-weight:600}
+    .seg button.on{background:var(--pr);color:#0B1F3A;font-weight:600}
     .opt{padding:.55rem .8rem;border-radius:14px;border:1px solid var(--line);font-size:.82rem;color:#c9c9d1;transition:all .3s var(--ease);text-align:center}
-    .opt:hover{border-color:rgba(63,224,197,.45)}
-    .opt.on{background:var(--pr);border-color:var(--pr);color:#0b0b0c;font-weight:600}
+    .opt:hover{border-color:rgba(255,122,26,.45)}
+    .opt.on{background:var(--pr);border-color:var(--pr);color:#0B1F3A;font-weight:600}
 
     /* Modal / bottom-sheet */
     .modal{position:fixed;inset:0;z-index:80;display:none}
     .modal.open{display:block}
     .modal .scrim{position:absolute;inset:0;background:rgba(5,5,6,.7);backdrop-filter:blur(6px)}
-    .modal .sheet{position:absolute;left:0;right:0;bottom:0;max-height:92vh;overflow:auto;background:#121214;border:1px solid var(--line);border-radius:28px 28px 0 0;padding:1.5rem 1.25rem calc(1.5rem + env(safe-area-inset-bottom))}
+    .modal .sheet{position:absolute;left:0;right:0;bottom:0;max-height:92vh;overflow:auto;background:#0F2747;border:1px solid var(--line);border-radius:28px 28px 0 0;padding:1.5rem 1.25rem calc(1.5rem + env(safe-area-inset-bottom))}
     @media (min-width:768px){.modal .sheet{left:50%;right:auto;bottom:auto;top:50%;width:min(520px,92vw);border-radius:28px}}
     .check-draw path{stroke-dasharray:60;stroke-dashoffset:60}
 
     /* Chat del bot (sección agencias) */
-    .phone{border-radius:42px;border:1px solid var(--line);background:#0e0e10;padding:12px;box-shadow:0 40px 120px -30px rgba(0,90,255,.35)}
+    .phone{border-radius:42px;border:1px solid var(--line);background:#0A1A31;padding:12px;box-shadow:0 40px 120px -30px rgba(0,90,255,.35)}
     .phone .scr{border-radius:32px;overflow:hidden;background:#0b141a;min-height:520px;display:flex;flex-direction:column}
     .bub{max-width:82%;padding:.55rem .75rem;border-radius:14px;font-size:.82rem;line-height:1.35;opacity:0;transform:translateY(10px) scale(.97)}
     .bub.in{align-self:flex-end;background:#005c4b;color:#e9fdf5;border-bottom-right-radius:4px}
@@ -262,7 +262,7 @@
     #toast.show{transform:translate(-50%,0)}
 
     /* Volver arriba con progreso */
-    #toTop{position:fixed;right:1rem;bottom:1rem;z-index:50;width:48px;height:48px;border-radius:999px;display:grid;place-items:center;background:#131315;border:1px solid var(--line);color:#fff;opacity:0;transform:translateY(20px);transition:all .5s var(--ease)}
+    #toTop{position:fixed;right:1rem;bottom:1rem;z-index:50;width:48px;height:48px;border-radius:999px;display:grid;place-items:center;background:#102846;border:1px solid var(--line);color:#fff;opacity:0;transform:translateY(20px);transition:all .5s var(--ease)}
     #toTop.show{opacity:1;transform:none}
     #toTop svg.prog{position:absolute;inset:-1px;transform:rotate(-90deg)}
 
@@ -304,7 +304,7 @@
         <p class="tag hero-in mb-6 justify-center">{IA} Marketplace inverso · Tucumán</p>
         <h1 class="split font-display text-[2.6rem] font-extrabold leading-[1.02] tracking-[-.035em] text-white sm:text-6xl md:text-7xl" data-split>
           Decí qué auto querés.
-          <span class="bg-gradient-to-r from-pr via-[#a5f3e6] to-[#5ea8ff] bg-clip-text text-transparent">Las agencias te buscan a vos.</span>
+          <span class="bg-gradient-to-r from-pr via-[#FFB547] to-[#FFD9A0] bg-clip-text text-transparent">Las agencias te buscan a vos.</span>
         </h1>
         <p class="hero-in mx-auto mt-6 max-w-xl text-base text-ink md:text-lg">Sin catálogos ni filtros. Escribí o dictá lo que buscás y hasta cuánto querés gastar: te mostramos autos reales o activamos una alerta a la red de agencias por WhatsApp.</p>
 
@@ -314,7 +314,7 @@
             <div class="flex items-end gap-2 p-2.5 pl-5 md:gap-3">
               <div class="flex min-h-[3rem] flex-1 flex-col justify-center py-2">
                 <textarea id="q" rows="1" maxlength="400" aria-label="¿Qué auto buscás?" class="w-full text-[1.02rem] leading-relaxed text-white md:text-lg" placeholder="Busco Toyota Etios 2016 hasta 14 millones"></textarea>
-                <div class="wave mt-1" aria-hidden="true"><i></i><i style="animation-delay:.1s"></i><i style="animation-delay:.25s"></i><i style="animation-delay:.05s"></i><i style="animation-delay:.3s"></i><i style="animation-delay:.15s"></i><i style="animation-delay:.2s"></i><span class="ml-2 text-xs text-[#e9a7f5]">Escuchando…</span></div>
+                <div class="wave mt-1" aria-hidden="true"><i></i><i style="animation-delay:.1s"></i><i style="animation-delay:.25s"></i><i style="animation-delay:.05s"></i><i style="animation-delay:.3s"></i><i style="animation-delay:.15s"></i><i style="animation-delay:.2s"></i><span class="ml-2 text-xs text-[#FFD9A0]">Escuchando…</span></div>
               </div>
               <button type="button" id="micBtn" class="mic shrink-0" aria-label="Dictar por voz"><span class="ring"></span><span class="ring"></span><i data-lucide="mic" class="h-5 w-5"></i></button>
               <button type="submit" class="send shrink-0" aria-label="Buscar"><i data-lucide="arrow-up-right" class="h-5 w-5"></i></button>
@@ -334,43 +334,43 @@
         <div class="ride hero-in mt-8 md:mt-10" aria-hidden="true">
           <svg viewBox="0 0 1000 330" fill="none">
             <defs>
-              <linearGradient id="gBody" x1="0" x2="1"><stop offset="0" stop-color="#5ea8ff"/><stop offset=".55" stop-color="#3fe0c5"/><stop offset="1" stop-color="#a5f3e6"/></linearGradient>
-              <linearGradient id="gGlass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a5f3e6" stop-opacity=".35"/><stop offset="1" stop-color="#3558FE" stop-opacity=".08"/></linearGradient>
-              <linearGradient id="gBeam" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#3fe0c5" stop-opacity="0"/></linearGradient>
+              <linearGradient id="gBody" x1="0" x2="1"><stop offset="0" stop-color="#5ea8ff"/><stop offset=".6" stop-color="#BFDBFE"/><stop offset="1" stop-color="#FF7A1A"/></linearGradient>
+              <linearGradient id="gGlass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#BFDBFE" stop-opacity=".35"/><stop offset="1" stop-color="#3B82F6" stop-opacity=".08"/></linearGradient>
+              <linearGradient id="gBeam" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#FF7A1A" stop-opacity="0"/></linearGradient>
               <linearGradient id="gRoad" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".22"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
-              <radialGradient id="gShadow"><stop offset="0" stop-color="#3fe0c5" stop-opacity=".35"/><stop offset="1" stop-color="#3fe0c5" stop-opacity="0"/></radialGradient>
+              <radialGradient id="gShadow"><stop offset="0" stop-color="#FF7A1A" stop-opacity=".35"/><stop offset="1" stop-color="#FF7A1A" stop-opacity="0"/></radialGradient>
             </defs>
             <!-- ruta -->
             <line x1="0" y1="292" x2="1000" y2="292" stroke="url(#gRoad)" stroke-width="1.5"/>
             <line class="lane" x1="0" y1="316" x2="1000" y2="316" stroke="url(#gRoad)" stroke-width="3" stroke-linecap="round"/>
-            <line class="streak" x1="1000" y1="150" x2="0" y2="150" stroke="#3fe0c5" stroke-opacity=".35" stroke-width="1.5"/>
+            <line class="streak" x1="1000" y1="150" x2="0" y2="150" stroke="#FF7A1A" stroke-opacity=".35" stroke-width="1.5"/>
             <line class="streak" x1="1000" y1="205" x2="0" y2="205" stroke="#5ea8ff" stroke-opacity=".3" stroke-width="1.5" style="animation-delay:-.6s"/>
-            <line class="streak" x1="1000" y1="255" x2="0" y2="255" stroke="#a5f3e6" stroke-opacity=".25" stroke-width="1" style="animation-delay:-1s"/>
+            <line class="streak" x1="1000" y1="255" x2="0" y2="255" stroke="#BFDBFE" stroke-opacity=".25" stroke-width="1" style="animation-delay:-1s"/>
             <ellipse cx="505" cy="292" rx="370" ry="18" fill="url(#gShadow)"/>
             <!-- haz de luz -->
             <path class="beam" d="M836 204 L1000 158 L1000 272 Z" fill="url(#gBeam)"/>
             <g class="car">
               <!-- carrocería (sedán genérico, dibujo propio) -->
               <path d="M170 252 C170 224 188 204 222 198 L318 186 C360 146 410 122 478 118 L588 118 C640 120 682 144 732 178 L800 190 C826 195 840 212 840 234 L840 246 C840 252 836 256 830 256 L750 256 A60 60 0 0 0 630 256 L370 256 A60 60 0 0 0 250 256 L182 256 C175 256 170 255 170 252 Z" fill="#0d1f1e" fill-opacity=".92"/>
-              <path class="car-line" pathLength="1" d="M170 252 C170 224 188 204 222 198 L318 186 C360 146 410 122 478 118 L588 118 C640 120 682 144 732 178 L800 190 C826 195 840 212 840 234 L840 246 C840 252 836 256 830 256 L750 256 A60 60 0 0 0 630 256 L370 256 A60 60 0 0 0 250 256 L182 256 C175 256 170 255 170 252 Z" stroke="url(#gBody)" stroke-width="3" stroke-linejoin="round" style="filter:drop-shadow(0 0 6px rgba(63,224,197,.7))"/>
+              <path class="car-line" pathLength="1" d="M170 252 C170 224 188 204 222 198 L318 186 C360 146 410 122 478 118 L588 118 C640 120 682 144 732 178 L800 190 C826 195 840 212 840 234 L840 246 C840 252 836 256 830 256 L750 256 A60 60 0 0 0 630 256 L370 256 A60 60 0 0 0 250 256 L182 256 C175 256 170 255 170 252 Z" stroke="url(#gBody)" stroke-width="3" stroke-linejoin="round" style="filter:drop-shadow(0 0 6px rgba(255,122,26,.7))"/>
               <!-- vidrios -->
-              <path d="M336 186 C372 152 414 130 476 126 L540 126 L540 186 Z" fill="url(#gGlass)" stroke="#a5f3e6" stroke-opacity=".5" stroke-width="1.5"/>
-              <path d="M556 126 L586 126 C630 128 668 150 708 184 L556 186 Z" fill="url(#gGlass)" stroke="#a5f3e6" stroke-opacity=".5" stroke-width="1.5"/>
+              <path d="M336 186 C372 152 414 130 476 126 L540 126 L540 186 Z" fill="url(#gGlass)" stroke="#BFDBFE" stroke-opacity=".5" stroke-width="1.5"/>
+              <path d="M556 126 L586 126 C630 128 668 150 708 184 L556 186 Z" fill="url(#gGlass)" stroke="#BFDBFE" stroke-opacity=".5" stroke-width="1.5"/>
               <!-- líneas de diseño -->
-              <path d="M226 214 L812 214" stroke="#3fe0c5" stroke-opacity=".35" stroke-width="1.5"/>
-              <path d="M548 190 L548 250" stroke="#a5f3e6" stroke-opacity=".25" stroke-width="1.5"/>
-              <path d="M590 202 L614 202" stroke="#a5f3e6" stroke-opacity=".6" stroke-width="3" stroke-linecap="round"/>
+              <path d="M226 214 L812 214" stroke="#FF7A1A" stroke-opacity=".35" stroke-width="1.5"/>
+              <path d="M548 190 L548 250" stroke="#BFDBFE" stroke-opacity=".25" stroke-width="1.5"/>
+              <path d="M590 202 L614 202" stroke="#BFDBFE" stroke-opacity=".6" stroke-width="3" stroke-linecap="round"/>
               <!-- luces -->
               <path d="M808 200 C826 203 836 210 838 220 L810 218 Z" fill="#fff" style="filter:drop-shadow(0 0 8px #fff)"/>
-              <rect x="172" y="206" width="14" height="13" rx="4" fill="#DC3DF1" style="filter:drop-shadow(0 0 8px #DC3DF1)"/>
+              <rect x="172" y="206" width="14" height="13" rx="4" fill="#FFB547" style="filter:drop-shadow(0 0 8px #FFB547)"/>
               <!-- ruedas -->
               <g transform="translate(310 256)">
-                <circle r="50" fill="#0b0b0c" stroke="#3fe0c5" stroke-opacity=".5" stroke-width="3"/>
-                <g class="wheel"><animateTransform attributeName="transform" type="rotate" from="0" to="360" dur=".9s" repeatCount="indefinite"/><circle r="30" stroke="#a5f3e6" stroke-opacity=".7" stroke-width="2"/><path d="M0 -30 V30 M-30 0 H30 M-21 -21 L21 21 M21 -21 L-21 21" stroke="#a5f3e6" stroke-opacity=".45" stroke-width="2"/><circle r="7" fill="#3fe0c5"/></g>
+                <circle r="50" fill="#0B1F3A" stroke="#FF7A1A" stroke-opacity=".5" stroke-width="3"/>
+                <g class="wheel"><animateTransform attributeName="transform" type="rotate" from="0" to="360" dur=".9s" repeatCount="indefinite"/><circle r="30" stroke="#BFDBFE" stroke-opacity=".7" stroke-width="2"/><path d="M0 -30 V30 M-30 0 H30 M-21 -21 L21 21 M21 -21 L-21 21" stroke="#BFDBFE" stroke-opacity=".45" stroke-width="2"/><circle r="7" fill="#FF7A1A"/></g>
               </g>
               <g transform="translate(690 256)">
-                <circle r="50" fill="#0b0b0c" stroke="#3fe0c5" stroke-opacity=".5" stroke-width="3"/>
-                <g class="wheel"><animateTransform attributeName="transform" type="rotate" from="0" to="360" dur=".9s" repeatCount="indefinite"/><circle r="30" stroke="#a5f3e6" stroke-opacity=".7" stroke-width="2"/><path d="M0 -30 V30 M-30 0 H30 M-21 -21 L21 21 M21 -21 L-21 21" stroke="#a5f3e6" stroke-opacity=".45" stroke-width="2"/><circle r="7" fill="#3fe0c5"/></g>
+                <circle r="50" fill="#0B1F3A" stroke="#FF7A1A" stroke-opacity=".5" stroke-width="3"/>
+                <g class="wheel"><animateTransform attributeName="transform" type="rotate" from="0" to="360" dur=".9s" repeatCount="indefinite"/><circle r="30" stroke="#BFDBFE" stroke-opacity=".7" stroke-width="2"/><path d="M0 -30 V30 M-30 0 H30 M-21 -21 L21 21 M21 -21 L-21 21" stroke="#BFDBFE" stroke-opacity=".45" stroke-width="2"/><circle r="7" fill="#FF7A1A"/></g>
               </g>
             </g>
           </svg>
@@ -455,7 +455,7 @@
 
                 <div id="alertOk" class="mt-8 hidden">
                   <div class="flex items-center gap-4 rounded-2xl border border-pr/30 bg-pr/5 p-4">
-                    <svg class="check-draw h-10 w-10 shrink-0" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="19" stroke="#3fe0c5" stroke-opacity=".35"/><path d="M12 20.5l5.5 5.5L28.5 14" stroke="#3fe0c5" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <svg class="check-draw h-10 w-10 shrink-0" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="19" stroke="#FF7A1A" stroke-opacity=".35"/><path d="M12 20.5l5.5 5.5L28.5 14" stroke="#FF7A1A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
                     <div>
                       <p class="font-semibold text-white">Alerta activa · <span id="okDias">15</span> días</p>
                       <p class="text-sm text-ink">Avisando a <b id="okCount" class="text-pr">0</b> agencias. Cuando una tenga tu auto, te escribimos al WhatsApp.</p>
@@ -487,7 +487,7 @@
         <p class="reveal-words max-w-5xl font-display text-3xl font-bold leading-[1.12] tracking-tight md:text-6xl">No navegás catálogos. No llenás filtros. Decís lo que querés y el mercado de Tucumán se mueve hacia vos.</p>
 
         <div class="relative mt-16 grid gap-4 md:grid-cols-3">
-          <svg class="pointer-events-none absolute left-0 right-0 top-1/2 hidden h-6 w-full -translate-y-1/2 md:block" preserveAspectRatio="none" viewBox="0 0 100 6" aria-hidden="true"><line class="lane-h" x1="0" y1="3" x2="100" y2="3" stroke="#3fe0c5" stroke-opacity=".5" stroke-width=".4" stroke-dasharray="2 1.6"/></svg>
+          <svg class="pointer-events-none absolute left-0 right-0 top-1/2 hidden h-6 w-full -translate-y-1/2 md:block" preserveAspectRatio="none" viewBox="0 0 100 6" aria-hidden="true"><line class="lane-h" x1="0" y1="3" x2="100" y2="3" stroke="#FF7A1A" stroke-opacity=".5" stroke-width=".4" stroke-dasharray="2 1.6"/></svg>
           <article class="card fade-up p-7" data-spot>
             <span class="font-mono text-xs text-pr">{01}</span>
             <div class="mt-6 grid h-12 w-12 place-items-center rounded-2xl border border-line bg-white/5"><i data-lucide="audio-lines" class="h-5 w-5 text-pr"></i></div>
@@ -541,7 +541,7 @@
               <svg viewBox="0 0 200 110" fill="none">
                 <path d="M10 100 A90 90 0 0 1 190 100" stroke="rgba(255,255,255,.08)" stroke-width="10" stroke-linecap="round"/>
                 <path class="arc" d="M10 100 A90 90 0 0 1 190 100" stroke="url(#gDial)" stroke-width="10" stroke-linecap="round"/>
-                <defs><linearGradient id="gDial" x1="0" x2="1"><stop offset="0" stop-color="#5ea8ff"/><stop offset="1" stop-color="#3fe0c5"/></linearGradient></defs>
+                <defs><linearGradient id="gDial" x1="0" x2="1"><stop offset="0" stop-color="#5ea8ff"/><stop offset="1" stop-color="#FF7A1A"/></linearGradient></defs>
                 <g stroke="rgba(255,255,255,.25)" stroke-width="1.5"><path d="M100 18 V28"/><path d="M33 47 L40 54"/><path d="M167 47 L160 54"/></g>
               </svg>
               <div class="absolute inset-x-0 bottom-0 text-center">
@@ -695,7 +695,7 @@
       </form>
 
       <div id="mOk" class="hidden py-8 text-center">
-        <svg class="check-draw mx-auto h-16 w-16" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="19" stroke="#3fe0c5" stroke-opacity=".35"/><path d="M12 20.5l5.5 5.5L28.5 14" stroke="#3fe0c5" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg class="check-draw mx-auto h-16 w-16" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="19" stroke="#FF7A1A" stroke-opacity=".35"/><path d="M12 20.5l5.5 5.5L28.5 14" stroke="#FF7A1A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <p class="mt-5 font-display text-2xl font-bold text-white" id="mOkTitle">¡Listo!</p>
         <p class="mx-auto mt-2 max-w-sm text-ink" id="mOkText"></p>
         <button class="btn-gh mt-6" data-close>Seguir viendo autos</button>
@@ -704,11 +704,11 @@
   </div>
 
   <!-- Toast -->
-  <div id="toast" class="flex items-center gap-3 rounded-full border border-line bg-[#18181b]/95 px-4 py-3 text-sm text-white shadow-2xl backdrop-blur"><i data-lucide="info" class="h-4 w-4 text-pr"></i><span id="toastTxt"></span></div>
+  <div id="toast" class="flex items-center gap-3 rounded-full border border-line bg-[#15325A]/95 px-4 py-3 text-sm text-white shadow-2xl backdrop-blur"><i data-lucide="info" class="h-4 w-4 text-pr"></i><span id="toastTxt"></span></div>
 
   <!-- Volver arriba -->
   <button id="toTop" aria-label="Volver arriba">
-    <svg class="prog" width="50" height="50" viewBox="0 0 50 50"><circle cx="25" cy="25" r="23" fill="none" stroke="#3fe0c5" stroke-width="2" stroke-dasharray="144.5" stroke-dashoffset="144.5" id="progC" stroke-linecap="round"/></svg>
+    <svg class="prog" width="50" height="50" viewBox="0 0 50 50"><circle cx="25" cy="25" r="23" fill="none" stroke="#FF7A1A" stroke-width="2" stroke-dasharray="144.5" stroke-dashoffset="144.5" id="progC" stroke-linecap="round"/></svg>
     <i data-lucide="arrow-up" class="h-4 w-4"></i>
   </button>
 
@@ -1173,7 +1173,7 @@
   const hdr = $('#hdr'), toTop = $('#toTop'), progC = $('#progC');
   const onScroll = () => {
     const y = scrollY, max = document.documentElement.scrollHeight - innerHeight;
-    hdr.classList.toggle('backdrop-blur-xl', y > 30); hdr.style.background = y > 30 ? 'rgba(11,11,12,.72)' : 'transparent';
+    hdr.classList.toggle('backdrop-blur-xl', y > 30); hdr.style.background = y > 30 ? 'rgba(11,31,58,.78)' : 'transparent';
     hdr.style.borderBottom = y > 30 ? '1px solid rgba(255,255,255,.06)' : '1px solid transparent';
     toTop.classList.toggle('show', y > 600);
     progC.style.strokeDashoffset = 144.5 * (1 - Math.min(1, y / Math.max(1, max)));
@@ -1363,7 +1363,7 @@
           <div class="absolute inset-x-0 top-0 z-[2] flex items-start justify-between p-3">
             <span class="badge ${exact ? 'ok' : 'near'}"><i data-lucide="${exact ? 'badge-check' : 'shuffle'}" class="h-3.5 w-3.5"></i>${exact ? 'Coincidencia exacta' : 'Alternativa cercana'}</span>
             <div class="ring-score relative grid h-11 w-11 place-items-center rounded-full bg-black/45 backdrop-blur" title="Afinidad con tu búsqueda">
-              <svg class="absolute inset-0 -rotate-90" viewBox="0 0 40 40"><circle cx="20" cy="20" r="16" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="3"/><circle class="val" cx="20" cy="20" r="16" fill="none" stroke="${exact ? '#3fe0c5' : '#fff'}" stroke-width="3" stroke-linecap="round" stroke-dasharray="${C.toFixed(2)}" stroke-dashoffset="${C.toFixed(2)}" data-off="${off.toFixed(2)}"/></svg>
+              <svg class="absolute inset-0 -rotate-90" viewBox="0 0 40 40"><circle cx="20" cy="20" r="16" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="3"/><circle class="val" cx="20" cy="20" r="16" fill="none" stroke="${exact ? '#FF7A1A' : '#fff'}" stroke-width="3" stroke-linecap="round" stroke-dasharray="${C.toFixed(2)}" stroke-dashoffset="${C.toFixed(2)}" data-off="${off.toFixed(2)}"/></svg>
               <span class="font-mono text-[11px] font-bold text-white">${Math.round(v.score || 0)}</span>
             </div>
           </div>
@@ -1522,11 +1522,11 @@
     const txt = {
       fuera: `<span class="text-red-300">Está fuera de mercado: la agencia no la va a recibir. Ofertá desde <b class="text-white">${money(t.minimo, S.offerCur)}</b>.</span>`,
       bajo: `<span class="text-amber-300">Oferta baja, pero negociable: ${Math.round((1 - t.r) * 100)}% menos que lo publicado.</span>`,
-      cerca: `<span class="text-pr">Cerca del precio: buenas chances de que la acepten.</span>`,
-      en_precio: `<span class="text-pr">En el precio publicado: es la que más rápido se cierra.</span>`,
+      cerca: `<span class="text-emerald-300">Cerca del precio: buenas chances de que la acepten.</span>`,
+      en_precio: `<span class="text-emerald-300">En el precio publicado: es la que más rápido se cierra.</span>`,
     }[t.nivel];
     el.innerHTML = `<span class="mb-2 flex items-center gap-2 text-xs uppercase tracking-wider text-ink/70"><i data-lucide="gauge" class="h-4 w-4"></i>Termómetro comercial</span>
-      <span class="relative block h-2 rounded-full" style="background:linear-gradient(90deg,#f87171 0%,#f87171 43%,#fbbf24 43%,#fbbf24 63%,#3fe0c5 63%)">
+      <span class="relative block h-2 rounded-full" style="background:linear-gradient(90deg,#f87171 0%,#f87171 43%,#fbbf24 43%,#fbbf24 63%,#22c55e 63%)">
         <span class="absolute top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-bg bg-white shadow" style="left:${pos}%;transition:left .35s"></span></span>
       <span class="mt-2 block">${txt}</span>`;
     icons();
@@ -1615,12 +1615,12 @@
     const logo = document.querySelector('#hdr a');
     const b = document.createElement('span');
     b.className = 'ml-3 hidden items-center gap-1.5 rounded-full border px-2.5 py-1 align-middle font-mono text-[10px] font-medium uppercase tracking-wider sm:inline-flex';
-    b.style.cssText = LIVE ? 'border-color:rgba(63,224,197,.4);color:#3fe0c5' : 'border-color:rgba(251,191,36,.4);color:#fbbf24';
+    b.style.cssText = LIVE ? 'border-color:rgba(255,122,26,.4);color:#FF7A1A' : 'border-color:rgba(251,191,36,.4);color:#fbbf24';
     b.innerHTML = `<span style="width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 8px currentColor"></span>${LIVE ? 'Conectado' : 'Modo demo'}`;
     logo.append(b);
   })();
   icons();
-  if (!LIVE) console.info('%cRed de Autos · MODO DEMO','color:#3fe0c5;font-weight:bold','· completá CONFIG.SUPABASE_URL y SUPABASE_ANON_KEY para usar datos reales.');
+  if (!LIVE) console.info('%cRed de Autos · MODO DEMO','color:#FF7A1A;font-weight:bold','· completá CONFIG.SUPABASE_URL y SUPABASE_ANON_KEY para usar datos reales.');
   </script>
 </body>
 </html>
