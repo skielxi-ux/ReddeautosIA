@@ -510,7 +510,7 @@
           </div>
         </div>
         <button type="submit" class="btn-pr w-full justify-center" id="mSubmit"><span class="ic"><i data-lucide="send" class="h-4 w-4"></i></span><span id="mBtnTxt">Confirmar visita</span></button>
-        <p class="text-center text-xs text-ink/60">La agencia recibe tu pedido por WhatsApp a través de Red de Autos.</p>
+        <p class="text-center text-xs text-ink/60">Red de Autos negocia por vos. Los datos de la agencia te llegan cuando acepta tu oferta o confirma la visita.</p>
       </form>
 
       <div id="mOk" class="hidden py-8 text-center">
@@ -1142,7 +1142,7 @@
           </div>
         </div>
         <div class="relative z-[2] flex flex-1 flex-col p-5">
-          <p class="flex items-center gap-1.5 text-xs text-ink/70"><i data-lucide="store" class="h-3.5 w-3.5"></i>${esc(v.agencia_nombre || 'Agencia')} · ${esc(v.agencia_ciudad || '')}${v.demo ? '<span class="ml-auto shrink-0 whitespace-nowrap rounded-full border border-line px-2 py-0.5 font-mono text-[10px] text-ink/60">demo</span>' : ''}</p>
+          <p class="flex items-center gap-1.5 text-xs text-ink/70"><i data-lucide="shield-check" class="h-3.5 w-3.5 text-pr"></i>Agencia verificada · ${esc(v.agencia_ciudad || 'Tucumán')}${v.demo ? '<span class="ml-auto shrink-0 whitespace-nowrap rounded-full border border-line px-2 py-0.5 font-mono text-[10px] text-ink/60">demo</span>' : ''}</p>
           <h3 class="mt-2 font-display text-2xl font-bold leading-tight tracking-tight text-white">${esc(v.marca)} ${esc(v.modelo)}</h3>
           <p class="text-sm text-ink">${esc(v.version || '')}</p>
           <div class="mt-4 grid grid-cols-4 gap-1.5">
@@ -1294,7 +1294,7 @@
     $('#mForm').classList.remove('hidden'); $('#mOk').classList.add('hidden');
     $('#mTag').textContent = mode === 'visita' ? 'Agendar visita' : 'Ofertar mi presupuesto';
     $('#mTitle').textContent = `${v.marca} ${v.modelo} ${v.anio || ''}`;
-    $('#mSub').textContent = `${money(v.precio, v.moneda)} · ${v.agencia_nombre} · ${v.agencia_ciudad}`;
+    $('#mSub').textContent = `${money(v.precio, v.moneda)} · Agencia verificada · ${v.agencia_ciudad || 'Tucumán'}`;
     $('#mBtnTxt').textContent = mode === 'visita' ? 'Confirmar visita' : 'Enviar oferta';
     const saved = store.get('busco_buyer'); $('#mNombre').value = saved?.nombre || $('#aNombre').value || ''; $('#mWa').value = saved?.wa || $('#aWa').value || '';
     if (mode === 'visita') buildDays();
@@ -1343,10 +1343,10 @@
       if (S.mode === 'visita') {
         const d = new Date(fecha);
         $('#mOkTitle').textContent = '¡Visita pedida!';
-        $('#mOkText').textContent = `${v.agencia_nombre} recibe tu pedido para el ${d.toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' })} a las ${S.visit.hour}. Te confirman por WhatsApp.`;
+        $('#mOkText').textContent = `La agencia recibe tu pedido para el ${d.toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' })} a las ${S.visit.hour}. Cuando la confirme, te pasamos por WhatsApp sus datos y la dirección.`;
       } else {
         $('#mOkTitle').textContent = '¡Oferta enviada!';
-        $('#mOkText').textContent = `Le llevamos tu oferta de ${money(monto, S.offerCur)} a ${v.agencia_nombre}. Si la acepta o contraoferta, te escribimos.`;
+        $('#mOkText').textContent = `Le llevamos tu oferta de ${money(monto, S.offerCur)} a la agencia. Si la acepta, te pasamos por WhatsApp sus datos para cerrar.`;
       }
       gsap.from('#mOk > *', { y: 14, autoAlpha: 0, stagger: .08, duration: .6, ease: 'expo.out' });
       gsap.to('#mOk .check-draw path', { strokeDashoffset: 0, duration: .8, ease: 'power2.out', delay: .25 });
