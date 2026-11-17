@@ -236,7 +236,7 @@
         <a href="#como" class="text-ink transition hover:text-white">Cómo funciona</a>
         <a href="#agencias" class="text-ink transition hover:text-white">Para agencias</a>
       </nav>
-      <a href="#agencias" class="btn-pr whitespace-nowrap text-sm" data-magnetic><span class="ic"><i data-lucide="store" class="h-4 w-4"></i></span>Soy agencia</a>
+      <a href="agencias.html" class="btn-pr whitespace-nowrap text-sm" data-magnetic><span class="ic"><i data-lucide="store" class="h-4 w-4"></i></span>Soy agencia</a>
     </div>
   </header>
 
@@ -428,7 +428,7 @@
             <div class="fade-up rounded-2xl border border-line p-4"><p class="font-display text-4xl font-bold text-white" data-count="1">0</p><p class="mt-1 text-xs text-ink">reenvío por auto</p></div>
             <div class="fade-up rounded-2xl border border-line p-4"><p class="font-display text-4xl font-bold text-pr" data-count="24" data-suffix="/7">0</p><p class="mt-1 text-xs text-ink">alertas de compra activas</p></div>
           </div>
-          <a id="joinBtn" href="#" class="btn-pr mt-10" data-magnetic><span class="ic"><i data-lucide="message-circle" class="h-4 w-4"></i></span>Sumar mi agencia por WhatsApp</a>
+          <a id="joinBtn" href="agencias.html" class="btn-pr mt-10" data-magnetic><span class="ic"><i data-lucide="store" class="h-4 w-4"></i></span>Sumar mi agencia</a>
         </div>
 
         <div class="flex justify-center">
@@ -971,8 +971,7 @@
   addEventListener('scroll', onScroll, { passive: true }); onScroll();
   toTop.onclick = () => lenis ? lenis.scrollTo(0, { duration: 1.4 }) : scrollTo(0, 0);
   $$('a[href^="#"]').forEach(a => a.addEventListener('click', e => { const id = a.getAttribute('href'); if (id.length > 1 && $(id)) { e.preventDefault(); scrollTo($(id)) } }));
-  $('#joinBtn').href = `https://wa.me/${CONFIG.WHATSAPP_AGENCIAS}?text=${encodeURIComponent('Hola! Quiero sumar mi agencia a Red de Autos 🚗')}`;
-  $('#joinBtn').target = '_blank';
+
   $('#ctaUp').onclick = () => { scrollTo($('#hero'), 0); setTimeout(() => q.focus(), 900) };
 
   /* ===================== Buscador ===================== */

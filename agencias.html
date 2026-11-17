@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Panel de agencias · Red de Autos</title>
+  <meta name="description" content="Panel para agencias de Red de Autos: cargá tu stock con un Excel, subí las fotos y recibí compradores con intención real de compra." />
+  <meta name="theme-color" content="#0b0b0c" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&family=Mona+Sans:wght@400..900&family=Space+Grotesk:wght@400..700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { bg: '#0b0b0c', bg2: '#131315', bg3: '#1a1a1d', pr: '#3fe0c5', ink: '#c4c4cc', line: 'rgba(255,255,255,.1)' },
+      fontFamily: { display: ['"Mona Sans"', 'Inter', 'sans-serif'], sans: ['Inter', 'sans-serif'], mono: ['"Space Grotesk"', 'monospace'] },
+    } } }
+  </script>
+  <style>
+    :root{--pr:#3fe0c5;--bg:#0b0b0c;--bg-2:#131315;--line:rgba(255,255,255,.1);--text:#c4c4cc;--ease:cubic-bezier(.6,0,.2,1)}
+    body{background:var(--bg);color:var(--text);font-family:Inter,sans-serif;-webkit-font-smoothing:antialiased}
+    ::selection{background:var(--pr);color:#0b0b0c}
+    .orb{position:fixed;border-radius:50%;filter:blur(90px);opacity:.35;pointer-events:none;z-index:0}
+    .tag{display:inline-flex;align-items:center;gap:.5rem;font-family:"Space Grotesk";font-size:.8rem;color:#e8e8ee}
+    .tag:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--pr);box-shadow:0 0 12px var(--pr)}
+    .btn-pr{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:.6rem;padding:.75rem 1.3rem;border-radius:999px;background:var(--pr);color:#0b0b0c;font-weight:600;overflow:hidden;isolation:isolate;transition:transform .4s var(--ease)}
+    .btn-pr:before{content:"";position:absolute;inset:0;background:#fff;transform:translateY(101%);transition:transform .45s var(--ease);z-index:-1}
+    .btn-pr:hover:before{transform:translateY(0)}
+    .btn-pr:disabled{opacity:.55;pointer-events:none}
+    .btn-gh{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.6rem 1rem;border-radius:999px;border:1px solid var(--line);color:#f2f2f5;font-weight:500;font-size:.875rem;transition:all .3s var(--ease)}
+    .btn-gh:hover{border-color:rgba(63,224,197,.6);color:var(--pr);background:rgba(63,224,197,.06)}
+    .btn-gh:disabled{opacity:.5;pointer-events:none}
+    .btn-sm{padding:.4rem .75rem;font-size:.78rem}
+    .box{border-radius:24px;background:var(--bg-2);border:1px solid var(--line)}
+    .fld{display:flex;flex-direction:column;gap:.35rem}
+    .fld label{font-size:.78rem;color:#9a9aa3}
+    .inp{width:100%;background:#0f0f11;border:1px solid var(--line);border-radius:14px;padding:.75rem .9rem;color:#fff;outline:none;transition:border-color .25s,box-shadow .25s}
+    .inp:focus{border-color:rgba(63,224,197,.7);box-shadow:0 0 0 4px rgba(63,224,197,.12)}
+    .inp::placeholder{color:#5c5c66}
+    select.inp{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239a9aa3' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .9rem center;padding-right:2.2rem}
+    .pin{display:flex;gap:.5rem}
+    .pin input{width:3rem;height:3.5rem;text-align:center;font:600 1.4rem "Space Grotesk";background:#0f0f11;border:1px solid var(--line);border-radius:14px;color:#fff;outline:none}
+    .pin input:focus{border-color:var(--pr);box-shadow:0 0 0 4px rgba(63,224,197,.12)}
+    .tab{position:relative;padding:.6rem 1rem;border-radius:999px;font-size:.88rem;color:#a3a3ad;display:inline-flex;align-items:center;gap:.45rem;transition:all .3s var(--ease);white-space:nowrap}
+    .tab:hover{color:#fff}
+    .tab.on{background:#fff;color:#0b0b0c;font-weight:600}
+    .tab .n{font:600 .7rem "Space Grotesk";background:rgba(63,224,197,.15);color:var(--pr);padding:.05rem .4rem;border-radius:999px}
+    .tab.on .n{background:#0b0b0c}
+    .drop{border:1.5px dashed rgba(255,255,255,.18);border-radius:24px;transition:all .3s var(--ease);cursor:pointer}
+    .drop:hover,.drop.over{border-color:var(--pr);background:rgba(63,224,197,.05)}
+    .chip{display:inline-flex;align-items:center;gap:.3rem;font-size:.72rem;font-weight:600;padding:.25rem .55rem;border-radius:999px;white-space:nowrap}
+    .c-ok{background:rgba(63,224,197,.14);color:var(--pr)}
+    .c-warn{background:rgba(251,191,36,.13);color:#fbbf24}
+    .c-mute{background:rgba(255,255,255,.07);color:#b4b4bd}
+    .c-bad{background:rgba(248,113,113,.13);color:#f87171}
+    .row{border-radius:20px;background:var(--bg-2);border:1px solid var(--line);transition:border-color .3s}
+    .row:hover{border-color:rgba(255,255,255,.18)}
+    .row.nuevo{border-color:rgba(63,224,197,.45);box-shadow:0 0 0 4px rgba(63,224,197,.06)}
+    .th{width:3.5rem;height:2.6rem;border-radius:10px;object-fit:cover;background:#1a1a1d;flex:none}
+    .thx{position:relative}
+    .thx button{position:absolute;top:-6px;right:-6px;display:none;width:18px;height:18px;border-radius:999px;background:#f87171;color:#0b0b0c;place-items:center}
+    .thx:hover button{display:grid}
+    .spin{width:1rem;height:1rem;border-radius:999px;border:2px solid currentColor;border-right-color:transparent;animation:sp .7s linear infinite;display:inline-block}
+    @keyframes sp{to{transform:rotate(360deg)}}
+    .fade{animation:fade .45s var(--ease) both}
+    @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+    .toast{position:fixed;left:50%;bottom:1.5rem;transform:translateX(-50%) translateY(150%);z-index:80;background:#fff;color:#0b0b0c;padding:.75rem 1.1rem;border-radius:999px;font-weight:600;font-size:.88rem;display:flex;gap:.5rem;align-items:center;transition:transform .45s var(--ease);max-width:92vw}
+    .toast.show{transform:translateX(-50%) translateY(0)}
+    .toast.err{background:#f87171}
+    .modal{position:fixed;inset:0;z-index:70;display:none;align-items:center;justify-content:center;padding:1rem;background:rgba(0,0,0,.65);backdrop-filter:blur(6px)}
+    .modal.show{display:flex}
+    .ed{background:transparent;border:1px solid transparent;border-radius:10px;padding:.25rem .4rem;color:#fff;width:100%;outline:none;transition:border-color .2s}
+    .ed:hover{border-color:var(--line)}
+    .ed:focus{border-color:var(--pr);background:#0f0f11}
+    [hidden]{display:none!important}
+  </style>
+</head>
+<body class="min-h-screen">
+  <div class="orb" style="width:520px;height:520px;left:-160px;top:-180px;background:#3fe0c5"></div>
+  <div class="orb" style="width:420px;height:420px;right:-140px;top:30%;background:#3558FE;opacity:.22"></div>
+
+  <!-- Header -->
+  <header class="relative z-10 mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-5">
+    <a href="./" class="flex items-center gap-2.5">
+      <span class="grid h-9 w-9 place-items-center rounded-xl bg-pr text-bg"><i data-lucide="car-front" class="h-5 w-5"></i></span>
+      <span class="font-display text-lg font-bold tracking-tight text-white">Red de Autos</span>
+      <span class="hidden rounded-full border border-line px-2.5 py-1 font-mono text-[11px] text-ink sm:inline">Agencias</span>
+    </a>
+    <div id="hdrUser" class="flex items-center gap-3" hidden>
+      <span id="hdrTel" class="hidden font-mono text-xs text-ink/70 sm:inline"></span>
+      <button id="btnSalir" class="btn-gh btn-sm"><i data-lucide="log-out" class="h-3.5 w-3.5"></i>Salir</button>
+    </div>
+  </header>
+
+  <main class="relative z-10 mx-auto max-w-6xl px-5 pb-24">
+
+    <!-- ===================== INGRESO ===================== -->
+    <section id="vLogin" class="grid gap-10 pt-6 lg:grid-cols-[1.1fr_1fr] lg:items-center lg:pt-14" hidden>
+      <div class="fade">
+        <p class="tag">Para agencias de Tucumán</p>
+        <h1 class="mt-5 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white md:text-6xl">Tu stock frente a compradores <span class="text-pr">que ya decidieron comprar.</span></h1>
+        <p class="mt-5 max-w-lg text-ink">Subí tu stock con un Excel y las fotos de tus autos. Cuando alguien busca un auto como el tuyo, te llega la oferta por WhatsApp.</p>
+        <ul class="mt-7 space-y-3 text-sm text-ink">
+          <li class="flex gap-3"><i data-lucide="file-spreadsheet" class="h-5 w-5 flex-none text-pr"></i>Cargá todo tu stock de una vez con tu planilla de siempre.</li>
+          <li class="flex gap-3"><i data-lucide="images" class="h-5 w-5 flex-none text-pr"></i>Arrastrá las fotos: la IA detecta de qué auto es cada una.</li>
+          <li class="flex gap-3"><i data-lucide="shield-check" class="h-5 w-5 flex-none text-pr"></i>Tus datos quedan ocultos hasta que el comprador acepta: nadie te saltea.</li>
+        </ul>
+      </div>
+
+      <div class="box fade p-6 md:p-8" style="animation-delay:.1s">
+        <h2 class="font-display text-2xl font-bold text-white">Ingresar o registrarme</h2>
+        <p class="mt-1 text-sm text-ink">Sin contraseñas: te mandamos un PIN por WhatsApp.</p>
+
+        <div class="mt-6 space-y-5">
+          <div class="fld">
+            <label for="lTel">1 · Tu WhatsApp (el de la agencia)</label>
+            <input id="lTel" class="inp" inputmode="tel" autocomplete="tel" placeholder="381 555-1234" />
+          </div>
+          <div>
+            <p class="mb-2 text-[.78rem] text-[#9a9aa3]">2 · Pedí tu PIN</p>
+            <a id="btnPin" target="_blank" rel="noopener" class="btn-gh w-full"><i data-lucide="message-circle" class="h-4 w-4"></i>Pedir PIN por WhatsApp</a>
+            <p class="mt-2 text-xs text-ink/60">Se abre WhatsApp con el mensaje <b class="text-white">PIN</b> listo. Envialo y el bot te contesta con tu código.</p>
+          </div>
+          <div>
+            <p class="mb-2 text-[.78rem] text-[#9a9aa3]">3 · Escribí el PIN de 6 números</p>
+            <div class="pin" id="pinBox">
+              <input inputmode="numeric" autocomplete="one-time-code" aria-label="Dígito 1 del PIN" /><input inputmode="numeric" aria-label="Dígito 2" /><input inputmode="numeric" aria-label="Dígito 3" />
+              <input inputmode="numeric" aria-label="Dígito 4" /><input inputmode="numeric" aria-label="Dígito 5" /><input inputmode="numeric" aria-label="Dígito 6" />
+            </div>
+          </div>
+          <button id="btnIngresar" class="btn-pr w-full"><i data-lucide="log-in" class="h-4 w-4"></i>Ingresar</button>
+          <p id="lErr" class="text-sm text-red-400" hidden></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== REGISTRO / MIS DATOS ===================== -->
+    <section id="vPerfil" class="mx-auto max-w-3xl pt-6" hidden>
+      <div id="perfilIntro" class="fade mb-6">
+        <p class="tag">Paso 1 de 2</p>
+        <h1 class="mt-4 font-display text-3xl font-bold tracking-tight text-white md:text-4xl">Datos de tu agencia</h1>
+        <p class="mt-2 text-ink">Los revisamos para darte el sello de <b class="text-pr">Agencia verificada</b>. Los compradores no ven tus datos de contacto hasta cerrar el acuerdo.</p>
+      </div>
+      <form id="fPerfil" class="box fade grid gap-4 p-6 md:grid-cols-2 md:p-8">
+        <div class="fld md:col-span-2"><label>Nombre de la agencia *</label><input name="nombre" class="inp" required maxlength="80" placeholder="Ej. Norte Automotores" /></div>
+        <div class="fld"><label>Razón social</label><input name="razon_social" class="inp" maxlength="120" placeholder="Ej. Norte Automotores SRL" /></div>
+        <div class="fld"><label>CUIT</label><input name="cuit" class="inp" inputmode="numeric" maxlength="13" placeholder="30-12345678-9" /></div>
+        <div class="fld md:col-span-2"><label>Dirección del local *</label><input name="direccion" class="inp" required maxlength="150" placeholder="Av. Mate de Luna 1234" /></div>
+        <div class="fld"><label>Ciudad</label>
+          <select name="ciudad" class="inp">
+            <option>San Miguel de Tucumán</option><option>Yerba Buena</option><option>Tafí Viejo</option><option>Banda del Río Salí</option>
+            <option>Alderetes</option><option>Las Talitas</option><option>Lules</option><option>Famaillá</option><option>Monteros</option>
+            <option>Concepción</option><option>Aguilares</option><option>Simoca</option><option>Tafí del Valle</option>
+          </select>
+        </div>
+        <div class="fld"><label>Horario</label><input name="horario" class="inp" maxlength="120" placeholder="Lun a vie 9–13 y 17–21 · Sáb 9–13" /></div>
+        <div class="fld"><label>Persona de contacto</label><input name="contacto_nombre" class="inp" maxlength="80" placeholder="Nombre y apellido" /></div>
+        <div class="fld"><label>Email (opcional)</label><input name="email" type="email" class="inp" maxlength="120" placeholder="ventas@tuagencia.com" /></div>
+        <div class="fld md:col-span-2"><label>Marcas en las que te especializás (opcional, separadas por coma)</label><input name="marcas" class="inp" placeholder="Toyota, Volkswagen, Fiat" /><span class="text-xs text-ink/60">Te avisamos primero los pedidos de esas marcas. Vacío = todas.</span></div>
+        <div class="fld md:col-span-2">
+          <label>Foto del frente del local (para verificarte; no se publica)</label>
+          <label id="localDrop" class="drop flex items-center gap-4 p-4">
+            <span id="localPrev" class="grid h-16 w-24 flex-none place-items-center overflow-hidden rounded-xl bg-bg3"><i data-lucide="store" class="h-6 w-6 text-ink/50"></i></span>
+            <span class="text-sm"><b class="text-white">Elegir foto</b><br /><span class="text-ink/60">Se ve el cartel y la entrada</span></span>
+            <input id="localFile" type="file" accept="image/*" class="hidden" />
+          </label>
+        </div>
+        <div class="flex flex-wrap items-center gap-3 md:col-span-2">
+          <button id="btnPerfil" class="btn-pr"><i data-lucide="send" class="h-4 w-4"></i><span>Enviar para verificación</span></button>
+          <button type="button" id="btnPerfilCancel" class="btn-gh" hidden>Cancelar</button>
+          <span class="text-xs text-ink/60">* obligatorio</span>
+        </div>
+      </form>
+    </section>
+
+    <!-- ===================== PANEL ===================== -->
+    <section id="vPanel" hidden>
+      <div class="fade flex flex-wrap items-end justify-between gap-4 pt-4">
+        <div>
+          <p class="tag" id="pTag">Panel de agencia</p>
+          <h1 id="pNombre" class="mt-3 font-display text-3xl font-bold tracking-tight text-white md:text-4xl"></h1>
+        </div>
+        <button id="btnDatos" class="btn-gh btn-sm"><i data-lucide="settings-2" class="h-3.5 w-3.5"></i>Mis datos</button>
+      </div>
+
+      <div id="banner" class="fade mt-5"></div>
+
+      <div class="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4">
+        <div class="box p-4"><p class="text-xs text-ink/70">En la web</p><p id="sPub" class="mt-1 font-display text-3xl font-bold text-pr">0</p></div>
+        <div class="box p-4"><p class="text-xs text-ink/70">Les faltan fotos</p><p id="sFot" class="mt-1 font-display text-3xl font-bold text-amber-300">0</p></div>
+        <div class="box p-4"><p class="text-xs text-ink/70">Sin publicar</p><p id="sBor" class="mt-1 font-display text-3xl font-bold text-white">0</p></div>
+        <div class="box p-4"><p class="text-xs text-ink/70">Vendidos</p><p id="sVen" class="mt-1 font-display text-3xl font-bold text-white">0</p></div>
+      </div>
+
+      <nav class="mt-8 flex gap-1 overflow-x-auto rounded-full border border-line bg-bg2 p-1" id="tabs">
+        <button class="tab on" data-t="stock"><i data-lucide="list" class="h-4 w-4"></i>Mi stock <span class="n" id="nStock">0</span></button>
+        <button class="tab" data-t="excel"><i data-lucide="file-spreadsheet" class="h-4 w-4"></i>Subir Excel</button>
+        <button class="tab" data-t="fotos"><i data-lucide="images" class="h-4 w-4"></i>Subir fotos</button>
+      </nav>
+
+      <!-- Mi stock -->
+      <div id="tStock" class="mt-6">
+        <div class="mb-4 flex flex-wrap items-center gap-2">
+          <input id="fBuscar" class="inp max-w-xs py-2" placeholder="Buscar en mi stock…" />
+          <select id="fEstado" class="inp max-w-[13rem] py-2">
+            <option value="">Todos</option><option value="web">En la web</option><option value="fotos">Faltan fotos</option>
+            <option value="borrador">Sin publicar</option><option value="pausado">Pausados</option><option value="reservado">Reservados</option>
+          </select>
+          <button id="btnPubTodos" class="btn-pr ml-auto py-2 text-sm" hidden><i data-lucide="rocket" class="h-4 w-4"></i><span></span></button>
+        </div>
+        <div id="lista" class="space-y-3"></div>
+        <div id="vacio" class="box grid place-items-center gap-3 p-12 text-center" hidden>
+          <i data-lucide="car" class="h-10 w-10 text-ink/40"></i>
+          <p class="text-white">Todavía no cargaste autos.</p>
+          <button class="btn-pr" data-goto="excel"><i data-lucide="file-spreadsheet" class="h-4 w-4"></i>Subir mi Excel</button>
+        </div>
+      </div>
+
+      <!-- Subir Excel -->
+      <div id="tExcel" class="mt-6" hidden>
+        <label id="xlsDrop" class="drop grid place-items-center gap-3 p-10 text-center md:p-14">
+          <span class="grid h-14 w-14 place-items-center rounded-2xl bg-pr/15 text-pr"><i data-lucide="file-up" class="h-7 w-7"></i></span>
+          <span class="font-display text-xl font-bold text-white">Arrastrá tu planilla de stock</span>
+          <span class="max-w-md text-sm text-ink">Excel (.xlsx, .xls), CSV o PDF. No hace falta un formato especial: la IA entiende tus columnas (marca, modelo, año, km, precio…).</span>
+          <span class="btn-gh btn-sm mt-1">Elegir archivo</span>
+          <input id="xlsFile" type="file" accept=".xlsx,.xls,.csv,.ods,.pdf" class="hidden" />
+        </label>
+        <div id="xlsEstado" class="mt-4" hidden></div>
+        <div class="mt-5 flex flex-wrap items-center gap-3 text-sm text-ink">
+          <button id="btnModelo" class="btn-gh btn-sm"><i data-lucide="download" class="h-3.5 w-3.5"></i>Descargar planilla modelo</button>
+          <span>Los autos quedan <b class="text-white">sin publicar</b> hasta que los revises y toques Publicar.</span>
+        </div>
+      </div>
+
+      <!-- Subir fotos -->
+      <div id="tFotos" class="mt-6" hidden>
+        <label id="fotDrop" class="drop grid place-items-center gap-3 p-10 text-center md:p-14">
+          <span class="grid h-14 w-14 place-items-center rounded-2xl bg-pr/15 text-pr"><i data-lucide="images" class="h-7 w-7"></i></span>
+          <span class="font-display text-xl font-bold text-white">Arrastrá todas las fotos de tus autos</span>
+          <span class="max-w-lg text-sm text-ink">Mezcladas, de todos los autos juntos. La IA detecta de qué auto es cada una. Cada auto necesita <b class="text-white">mínimo 3 fotos</b> para aparecer en la web.</span>
+          <span class="btn-gh btn-sm mt-1">Elegir fotos</span>
+          <input id="fotFiles" type="file" accept="image/*" multiple class="hidden" />
+        </label>
+        <div class="mt-4 grid gap-2 text-xs text-ink/70 md:grid-cols-2">
+          <p class="flex gap-2"><i data-lucide="lightbulb" class="h-4 w-4 flex-none text-pr"></i>Tip: si nombrás los archivos con el modelo (ej. <b class="text-white">corolla-1.jpg</b>) acierta siempre.</p>
+          <p class="flex gap-2"><i data-lucide="eye-off" class="h-4 w-4 flex-none text-pr"></i>Las fotos con teléfono, logo o nombre de la agencia se rechazan: los compradores no deben ver tus datos.</p>
+        </div>
+        <div id="fotResumen" class="mt-5 text-sm" hidden></div>
+        <div id="fotGrid" class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5"></div>
+      </div>
+    </section>
+
+    <div id="vCarga" class="grid place-items-center py-40 text-ink"><span class="spin h-6 w-6 text-pr"></span></div>
+  </main>
+
+  <!-- Modal editar auto -->
+  <div id="mEdit" class="modal">
+    <form id="fEdit" class="box w-full max-w-xl p-6 md:p-7">
+      <div class="flex items-start justify-between gap-4">
+        <h3 class="font-display text-xl font-bold text-white">Editar auto</h3>
+        <button type="button" data-cerrar class="btn-gh btn-sm"><i data-lucide="x" class="h-4 w-4"></i></button>
+      </div>
+      <div class="mt-5 grid grid-cols-2 gap-3">
+        <div class="fld"><label>Marca</label><input name="marca" class="inp" /></div>
+        <div class="fld"><label>Modelo</label><input name="modelo" class="inp" /></div>
+        <div class="fld col-span-2"><label>Versión</label><input name="version" class="inp" /></div>
+        <div class="fld"><label>Año</label><input name="anio" type="number" min="1960" max="2035" class="inp" /></div>
+        <div class="fld"><label>Km</label><input name="km" inputmode="numeric" class="inp" /></div>
+        <div class="fld"><label>Precio</label><input name="precio" inputmode="numeric" class="inp" /></div>
+        <div class="fld"><label>Moneda</label><select name="moneda" class="inp"><option value="ARS">$ Pesos</option><option value="USD">US$ Dólares</option></select></div>
+        <div class="fld"><label>Combustible</label><select name="combustible" class="inp"><option value="">—</option><option value="nafta">Nafta</option><option value="diesel">Diésel</option><option value="nafta_gnc">Nafta + GNC</option><option value="gnc">GNC</option><option value="hibrido">Híbrido</option><option value="electrico">Eléctrico</option></select></div>
+        <div class="fld"><label>Caja</label><select name="transmision" class="inp"><option value="">—</option><option value="manual">Manual</option><option value="automatica">Automática</option></select></div>
+        <div class="fld"><label>Color</label><input name="color" class="inp" /></div>
+        <div class="fld"><label>Carrocería</label><select name="carroceria" class="inp"><option value="">—</option><option value="hatchback">Hatchback</option><option value="sedan">Sedán</option><option value="suv">SUV</option><option value="pickup">Pickup</option><option value="utilitario">Utilitario</option><option value="rural">Rural</option><option value="monovolumen">Monovolumen</option><option value="coupe">Coupé</option></select></div>
+        <label class="col-span-1 flex items-center gap-2 text-sm"><input type="checkbox" name="acepta_permuta" class="accent-[#3fe0c5]" />Toma usado</label>
+        <label class="col-span-1 flex items-center gap-2 text-sm"><input type="checkbox" name="financiacion" class="accent-[#3fe0c5]" />Financiación</label>
+      </div>
+      <div class="mt-6 flex gap-3"><button class="btn-pr"><i data-lucide="check" class="h-4 w-4"></i>Guardar</button><button type="button" data-cerrar class="btn-gh">Cancelar</button></div>
+    </form>
+  </div>
+
+  <div id="toast" class="toast"><i data-lucide="check" class="h-4 w-4"></i><span></span></div>
+  <input id="fotCarFile" type="file" accept="image/*" multiple class="hidden" />
+
+  <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script>
+  const CONFIG = {
+    SUPABASE_URL: 'https://ytuecptdgtmrbiddyzht.supabase.co',
+    SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl0dWVjcHRkZ3RtcmJpZGR5emh0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ0MTMxNTMsImV4cCI6MjEwOTk4OTE1M30.H-Yi5dwDW8TvZfFWvP3dquHnCeQNtHTf8MO6i5v02VA',
+    WHATSAPP_BOT: '15551478965', // número del bot de Red de Autos
+    MIN_FOTOS: 3,
+  };
+  const $ = (s, el = document) => el.querySelector(s);
+  const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const nf = new Intl.NumberFormat('es-AR', { maximumFractionDigits: 0 });
+  const money = (n, cur) => n == null ? 'Sin precio' : (cur === 'USD' ? 'US$ ' : '$ ') + nf.format(Math.round(n));
+  const icons = () => window.lucide && lucide.createIcons();
+  const sb = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY, { auth: { persistSession: true, storageKey: 'rda-agencia' } });
+  const S = { yo: null, autos: [], nuevos: new Set(), editando: null, fotoPara: null };
+
+  function toast(msg, err = false) {
+    const t = $('#toast'); $('span', t).textContent = msg; t.classList.toggle('err', err);
+    t.classList.add('show'); clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('show'), 3800);
+  }
+
+  async function api(accion, datos = {}) {
+    const { data: { session } } = await sb.auth.getSession();
+    const r = await fetch(`${CONFIG.SUPABASE_URL}/functions/v1/panel`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', apikey: CONFIG.SUPABASE_ANON_KEY, ...(session ? { Authorization: `Bearer ${session.access_token}` } : {}) },
+      body: JSON.stringify({ accion, ...datos }),
+    });
+    const j = await r.json().catch(() => ({}));
+    if (r.status === 401 && accion !== 'login') { await sb.auth.signOut(); mostrar('login'); }
+    if (!r.ok) throw new Error(j.error || 'Algo salió mal. Probá de nuevo.');
+    return j;
+  }
+
+  function mostrar(v) {
+    ['vLogin', 'vPerfil', 'vPanel', 'vCarga'].forEach((id) => $('#' + id).hidden = id !== 'v' + v[0].toUpperCase() + v.slice(1));
+    $('#hdrUser').hidden = v === 'login' || v === 'carga';
+    icons(); window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ===================== INGRESO =====================
+  const normTel = (t) => {
+    let d = String(t).replace(/\D/g, '');
+    if (d.startsWith('00')) d = d.slice(2);
+    if (d.startsWith('0')) d = d.slice(1);
+    if (!d.startsWith('54')) d = '54' + d;
+    d = d.replace(/^54(\d{2,4})15(\d{6,8})$/, '54$1$2');
+    if (!d.startsWith('549')) d = '549' + d.slice(2);
+    return d;
+  };
+  $('#btnPin').href = `https://wa.me/${CONFIG.WHATSAPP_BOT}?text=${encodeURIComponent('PIN')}`;
+  $('#btnPin').addEventListener('click', () => { setTimeout(() => $$('#pinBox input')[0].focus(), 800) });
+  const pins = $$('#pinBox input');
+  pins.forEach((inp, i) => {
+    inp.addEventListener('input', () => {
+      const v = inp.value.replace(/\D/g, '');
+      if (v.length > 1) { v.split('').slice(0, 6 - i).forEach((c, k) => pins[i + k].value = c); pins[Math.min(5, i + v.length - 1)].focus(); }
+      else { inp.value = v; if (v && i < 5) pins[i + 1].focus(); }
+      if (pins.every((p) => p.value)) $('#btnIngresar').focus();
+    });
+    inp.addEventListener('keydown', (e) => { if (e.key === 'Backspace' && !inp.value && i) pins[i - 1].focus(); if (e.key === 'Enter') ingresar(); });
+    inp.addEventListener('paste', (e) => { const t = (e.clipboardData.getData('text') || '').replace(/\D/g, '').slice(0, 6); if (t.length === 6) { e.preventDefault(); t.split('').forEach((c, k) => pins[k].value = c); $('#btnIngresar').focus(); } });
+  });
+  $('#lTel').value = localStorage.getItem('rda-tel') || '';
+  $('#btnIngresar').addEventListener('click', ingresar);
+
+  async function ingresar() {
+    const tel = $('#lTel').value.trim(), pin = pins.map((p) => p.value).join('');
+    const err = $('#lErr'); err.hidden = true;
+    if (normTel(tel).length < 12) { err.textContent = 'Escribí tu número de WhatsApp con código de área (ej. 381 555-1234).'; err.hidden = false; return; }
+    if (pin.length !== 6) { err.textContent = 'Escribí los 6 números del PIN que te mandó el bot.'; err.hidden = false; return; }
+    const b = $('#btnIngresar'); b.disabled = true; b.innerHTML = '<span class="spin"></span>Ingresando…';
+    try {
+      const { email, otp } = await api('login', { telefono: tel, pin });
+      let r = await sb.auth.verifyOtp({ email, token: otp, type: 'email' });
+      if (r.error) r = await sb.auth.verifyOtp({ email, token: otp, type: 'magiclink' });
+      if (r.error) throw new Error('No se pudo iniciar la sesión. Pedí un PIN nuevo.');
+      localStorage.setItem('rda-tel', tel);
+      pins.forEach((p) => p.value = '');
+      await arrancar();
+    } catch (e) { err.textContent = e.message; err.hidden = false; }
+    finally { b.disabled = false; b.innerHTML = '<i data-lucide="log-in" class="h-4 w-4"></i>Ingresar'; icons(); }
+  }
+  $('#btnSalir').addEventListener('click', async () => { await sb.auth.signOut(); S.yo = null; mostrar('login'); });
+
+  // ===================== ARRANQUE =====================
+  async function arrancar() {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) return mostrar('login');
+    mostrar('carga');
+    try {
+      S.yo = await api('yo');
+      $('#hdrTel').textContent = '+' + S.yo.telefono;
+      if (!S.yo.agencia) return abrirPerfil(true);
+      pintarPanel();
+      await cargarStock();
+      mostrar('panel');
+    } catch (e) { toast(e.message, true); mostrar('login'); }
+  }
+
+  // ===================== PERFIL =====================
+  let fotoLocal = null;
+  function abrirPerfil(nueva) {
+    const f = $('#fPerfil'), ag = S.yo?.agencia;
+    $('#perfilIntro').hidden = !nueva;
+    $('#btnPerfilCancel').hidden = nueva;
+    $('#btnPerfil span').textContent = nueva ? 'Enviar para verificación' : (ag?.verificacion === 'rechazada' ? 'Reenviar para verificación' : 'Guardar cambios');
+    if (ag) {
+      ['nombre', 'razon_social', 'cuit', 'direccion', 'ciudad', 'horario', 'contacto_nombre', 'email'].forEach((k) => { if (f[k]) f[k].value = ag[k] ?? (k === 'ciudad' ? 'San Miguel de Tucumán' : ''); });
+      f.marcas.value = (ag.marcas_foco || []).map((m) => m[0].toUpperCase() + m.slice(1)).join(', ');
+      if (ag.tiene_foto_local) $('#localPrev').innerHTML = '<i data-lucide="check-circle-2" class="h-6 w-6 text-pr"></i>';
+    }
+    mostrar('perfil');
+  }
+  $('#btnDatos').addEventListener('click', () => abrirPerfil(false));
+  $('#btnPerfilCancel').addEventListener('click', () => mostrar('panel'));
+  $('#localFile').addEventListener('change', async (e) => {
+    const f = e.target.files[0]; if (!f) return;
+    fotoLocal = await achicar(f, 1280);
+    $('#localPrev').innerHTML = `<img src="data:image/jpeg;base64,${fotoLocal.base64}" class="h-full w-full object-cover" />`;
+  });
+  $('#fPerfil').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const f = e.target, b = $('#btnPerfil'), txt = $('#btnPerfil span').textContent;
+    const nueva = !S.yo?.agencia;
+    if (nueva && !fotoLocal) return toast('Subí una foto del frente del local para verificarte.', true);
+    b.disabled = true; $('#btnPerfil span').textContent = 'Guardando…';
+    try {
+      const datos = Object.fromEntries(['nombre', 'razon_social', 'cuit', 'direccion', 'ciudad', 'horario', 'contacto_nombre', 'email'].map((k) => [k, f[k].value]));
+      datos.marcas_foco = f.marcas.value.split(',').map((s) => s.trim()).filter(Boolean);
+      if (fotoLocal) datos.foto_local = { base64: fotoLocal.base64, mime: 'image/jpeg' };
+      const r = await api('guardar_perfil', datos);
+      fotoLocal = null;
+      S.yo.agencia = r.agencia;
+      toast(nueva ? '¡Listo! Recibimos tus datos.' : 'Datos guardados.');
+      pintarPanel(); await cargarStock(); mostrar('panel');
+      if (nueva) irTab('excel');
+    } catch (err) { toast(err.message, true); }
+    finally { b.disabled = false; $('#btnPerfil span').textContent = txt; }
+  });
+
+  // ===================== PANEL =====================
+  function pintarPanel() {
+    const ag = S.yo.agencia;
+    $('#pNombre').textContent = ag.nombre;
+    const v = ag.verificacion;
+    $('#pTag').textContent = v === 'aprobada' ? 'Agencia verificada' : 'Panel de agencia';
+    $('#banner').innerHTML = v === 'pendiente'
+      ? `<div class="flex gap-3 rounded-2xl border border-amber-300/25 bg-amber-300/[.06] p-4 text-sm"><i data-lucide="hourglass" class="h-5 w-5 flex-none text-amber-300"></i><div><b class="text-white">Estamos verificando tu agencia.</b> Mientras tanto ya podés cargar tu stock y las fotos: se publican solos apenas te aprobemos. Te avisamos por WhatsApp.</div></div>`
+      : v === 'rechazada'
+      ? `<div class="flex flex-wrap items-center gap-3 rounded-2xl border border-red-400/25 bg-red-400/[.06] p-4 text-sm"><i data-lucide="alert-triangle" class="h-5 w-5 flex-none text-red-400"></i><div class="flex-1"><b class="text-white">No pudimos verificar tu agencia.</b> Revisá tus datos y la foto del local y volvé a enviarlos.</div><button class="btn-gh btn-sm" onclick="abrirPerfil(false)">Revisar mis datos</button></div>`
+      : `<div class="flex gap-3 rounded-2xl border border-pr/25 bg-pr/[.05] p-4 text-sm"><i data-lucide="badge-check" class="h-5 w-5 flex-none text-pr"></i><div><b class="text-white">Agencia verificada.</b> Tus autos con ${CONFIG.MIN_FOTOS} fotos o más aparecen en las búsquedas. Las ofertas te llegan por WhatsApp.</div></div>`;
+    icons();
+  }
+
+  // Tabs
+  function irTab(t) {
+    $$('#tabs .tab').forEach((b) => b.classList.toggle('on', b.dataset.t === t));
+    $('#tStock').hidden = t !== 'stock'; $('#tExcel').hidden = t !== 'excel'; $('#tFotos').hidden = t !== 'fotos';
+  }
+  $$('#tabs .tab').forEach((b) => b.addEventListener('click', () => irTab(b.dataset.t)));
+  document.addEventListener('click', (e) => { const g = e.target.closest('[data-goto]'); if (g) irTab(g.dataset.goto); });
+
+  // ===================== STOCK =====================
+  async function cargarStock() {
+    const r = await api('stock');
+    S.autos = r.vehiculos;
+    pintarStock();
+  }
+  const nFotos = (v) => v.fotos_publicas?.length ?? 0;
+  const enWeb = (v) => v.estado === 'disponible' && nFotos(v) >= CONFIG.MIN_FOTOS && S.yo.agencia.verificacion === 'aprobada';
+  function estadoChip(v) {
+    if (v.estado === 'borrador') return `<span class="chip c-mute"><i data-lucide="file-pen" class="h-3 w-3"></i>Sin publicar</span>`;
+    if (v.estado === 'pausado') return `<span class="chip c-mute"><i data-lucide="pause" class="h-3 w-3"></i>Pausado</span>`;
+    if (v.estado === 'reservado') return `<span class="chip c-warn"><i data-lucide="bookmark" class="h-3 w-3"></i>Reservado</span>`;
+    if (nFotos(v) < CONFIG.MIN_FOTOS) return `<span class="chip c-warn"><i data-lucide="camera" class="h-3 w-3"></i>Faltan ${CONFIG.MIN_FOTOS - nFotos(v)} foto${CONFIG.MIN_FOTOS - nFotos(v) > 1 ? 's' : ''}</span>`;
+    if (S.yo.agencia.verificacion !== 'aprobada') return `<span class="chip c-warn"><i data-lucide="hourglass" class="h-3 w-3"></i>Esperando verificación</span>`;
+    return `<span class="chip c-ok"><i data-lucide="globe" class="h-3 w-3"></i>En la web</span>`;
+  }
+  function filaHTML(v) {
+    const fotos = (v.fotos_publicas || []);
+    const thumbs = fotos.slice(0, 4).map((u) => `<span class="thx"><img src="${esc(u)}" class="th" loading="lazy" /><button data-quitar="${esc(u)}" data-id="${v.id}" title="Quitar foto"><i data-lucide="x" class="h-3 w-3"></i></button></span>`).join('');
+    const mas = fotos.length > 4 ? `<span class="grid h-[2.6rem] w-10 place-items-center rounded-[10px] bg-bg3 text-xs text-ink">+${fotos.length - 4}</span>` : '';
+    const dudosos = (v.campos_dudosos || []).length ? `<span class="chip c-warn" title="Revisá: ${esc(v.campos_dudosos.join(', '))}"><i data-lucide="alert-circle" class="h-3 w-3"></i>Revisar ${esc(v.campos_dudosos.join(', '))}</span>` : '';
+    const acciones = [];
+    if (v.estado === 'borrador' || v.estado === 'pausado') acciones.push(`<button class="btn-gh btn-sm" data-acc="publicar" data-id="${v.id}"><i data-lucide="rocket" class="h-3.5 w-3.5"></i>Publicar</button>`);
+    if (v.estado === 'disponible') acciones.push(`<button class="btn-gh btn-sm" data-acc="pausar" data-id="${v.id}"><i data-lucide="pause" class="h-3.5 w-3.5"></i>Pausar</button>`);
+    if (v.estado === 'disponible' || v.estado === 'reservado') acciones.push(`<button class="btn-gh btn-sm" data-acc="vendido" data-id="${v.id}"><i data-lucide="badge-dollar-sign" class="h-3.5 w-3.5"></i>Vendido</button>`);
+    if (v.estado === 'borrador') acciones.push(`<button class="btn-gh btn-sm" data-acc="borrar" data-id="${v.id}" title="Eliminar"><i data-lucide="trash-2" class="h-3.5 w-3.5"></i></button>`);
+    return `
+    <article class="row fade p-4 ${S.nuevos.has(v.id) ? 'nuevo' : ''}" data-row="${v.id}">
+      <div class="flex flex-col gap-4 lg:flex-row lg:items-center">
+        <div class="min-w-0 flex-1">
+          <div class="flex flex-wrap items-center gap-2">${estadoChip(v)}${dudosos}</div>
+          <h3 class="mt-2 truncate font-display text-lg font-bold text-white">${esc(v.marca)} ${esc(v.modelo)} <span class="font-sans text-sm font-normal text-ink">${esc(v.version || '')}</span></h3>
+          <p class="mt-0.5 text-sm text-ink">${[v.anio, v.km != null ? nf.format(v.km) + ' km' : null, v.color, v.transmision === 'automatica' ? 'Automático' : null].filter(Boolean).map(esc).join(' · ') || '—'}</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="w-36">
+            <p class="text-[11px] text-ink/60">Precio</p>
+            <input class="ed font-display text-lg font-bold" data-precio="${v.id}" value="${v.precio != null ? (v.moneda === 'USD' ? 'US$ ' : '$ ') + nf.format(v.precio) : ''}" placeholder="Poné el precio" />
+          </div>
+        </div>
+        <div class="flex items-center gap-1.5">
+          ${thumbs}${mas}
+          <button class="grid h-[2.6rem] w-[3.5rem] place-items-center rounded-[10px] border border-dashed border-white/20 text-ink transition hover:border-pr hover:text-pr" data-fotos="${v.id}" title="Agregar fotos de este auto"><i data-lucide="image-plus" class="h-4 w-4"></i></button>
+        </div>
+        <div class="flex flex-wrap items-center gap-1.5 lg:justify-end">
+          ${acciones.join('')}
+          <button class="btn-gh btn-sm" data-acc="editar" data-id="${v.id}" title="Editar"><i data-lucide="pencil" class="h-3.5 w-3.5"></i></button>
+        </div>
+      </div>
+    </article>`;
+  }
+  function pintarStock() {
+    const q = $('#fBuscar').value.trim().toLowerCase(), fe = $('#fEstado').value;
+    let vs = S.autos.filter((v) => !q || `${v.marca} ${v.modelo} ${v.version} ${v.anio} ${v.color}`.toLowerCase().includes(q));
+    if (fe === 'web') vs = vs.filter(enWeb);
+    else if (fe === 'fotos') vs = vs.filter((v) => ['disponible', 'borrador'].includes(v.estado) && nFotos(v) < CONFIG.MIN_FOTOS);
+    else if (fe) vs = vs.filter((v) => v.estado === fe);
+    // Orden: nuevos/borradores primero, después faltan fotos, después el resto
+    const peso = (v) => (S.nuevos.has(v.id) ? 0 : v.estado === 'borrador' ? 1 : nFotos(v) < CONFIG.MIN_FOTOS ? 2 : 3);
+    vs.sort((a, b) => peso(a) - peso(b));
+    $('#lista').innerHTML = vs.map(filaHTML).join('');
+    $('#vacio').hidden = S.autos.length > 0;
+    $('#nStock').textContent = S.autos.length;
+    const bor = S.autos.filter((v) => v.estado === 'borrador');
+    const conPrecio = bor.filter((v) => v.precio != null);
+    $('#btnPubTodos').hidden = !conPrecio.length;
+    $('#btnPubTodos span').textContent = `Publicar ${conPrecio.length} auto${conPrecio.length > 1 ? 's' : ''}`;
+    $('#sPub').textContent = S.autos.filter(enWeb).length;
+    $('#sFot').textContent = S.autos.filter((v) => ['disponible', 'borrador'].includes(v.estado) && nFotos(v) < CONFIG.MIN_FOTOS).length;
+    $('#sBor').textContent = bor.length;
+    $('#sVen').textContent = S.yo.resumen?.vendidos ?? 0;
+    icons();
+  }
+  $('#fBuscar').addEventListener('input', pintarStock);
+  $('#fEstado').addEventListener('change', pintarStock);
+
+  const autoPorId = (id) => S.autos.find((v) => v.id === id);
+  function reemplazar(v) { const i = S.autos.findIndex((x) => x.id === v.id); if (i >= 0) S.autos[i] = { ...S.autos[i], ...v }; pintarStock(); }
+
+  $('#btnPubTodos').addEventListener('click', async () => {
+    const ids = S.autos.filter((v) => v.estado === 'borrador' && v.precio != null).map((v) => v.id);
+    const b = $('#btnPubTodos'); b.disabled = true;
+    try {
+      const r = await api('publicar', { ids });
+      S.autos.forEach((v) => { if (ids.includes(v.id)) v.estado = 'disponible'; });
+      pintarStock();
+      const sinFotos = S.autos.filter((v) => ids.includes(v.id) && nFotos(v) < CONFIG.MIN_FOTOS).length;
+      toast(`${r.publicados} publicado${r.publicados > 1 ? 's' : ''}.` + (sinFotos ? ` Subí las fotos para que aparezcan en la web.` : ''));
+      if (sinFotos) setTimeout(() => irTab('fotos'), 900);
+    } catch (e) { toast(e.message, true); } finally { b.disabled = false; }
+  });
+
+  // Acciones de cada fila
+  $('#lista').addEventListener('click', async (e) => {
+    const q = e.target.closest('[data-quitar]');
+    if (q) {
+      if (!confirm('¿Quitar esta foto?')) return;
+      try { await api('quitar_foto', { vehiculo_id: q.dataset.id, url: q.dataset.quitar }); const v = autoPorId(q.dataset.id); v.fotos_publicas = v.fotos_publicas.filter((u) => u !== q.dataset.quitar); pintarStock(); }
+      catch (err) { toast(err.message, true); }
+      return;
+    }
+    const f = e.target.closest('[data-fotos]');
+    if (f) { S.fotoPara = f.dataset.fotos; $('#fotCarFile').value = ''; $('#fotCarFile').click(); return; }
+    const b = e.target.closest('[data-acc]'); if (!b) return;
+    const id = b.dataset.id, v = autoPorId(id);
+    try {
+      if (b.dataset.acc === 'editar') return abrirEdit(v);
+      if (b.dataset.acc === 'borrar') {
+        if (!confirm(`¿Eliminar ${v.marca} ${v.modelo}?`)) return;
+        await api('borrar', { ids: [id] }); S.autos = S.autos.filter((x) => x.id !== id); pintarStock(); return toast('Eliminado.');
+      }
+      if (b.dataset.acc === 'vendido' && !confirm(`¿Marcar ${v.marca} ${v.modelo} como vendido? Deja de aparecer en la web.`)) return;
+      const estado = { publicar: 'disponible', pausar: 'pausado', vendido: 'vendido' }[b.dataset.acc];
+      b.disabled = true;
+      const r = await api('actualizar', { id, cambios: { estado } });
+      if (estado === 'vendido') { S.autos = S.autos.filter((x) => x.id !== id); S.yo.resumen.vendidos = (S.yo.resumen.vendidos || 0) + 1; pintarStock(); return toast('¡Felicitaciones por la venta! 🎉'); }
+      reemplazar(r.vehiculo);
+      toast(estado === 'disponible' ? (nFotos(r.vehiculo) >= CONFIG.MIN_FOTOS ? 'Publicado.' : 'Publicado. Faltan fotos para que aparezca en la web.') : 'Pausado.');
+    } catch (err) { toast(err.message, true); b.disabled = false; }
+  });
+
+  // Precio editable en línea
+  // "14.500.000" · "14,5 palos" · "US$ 11.500" · "11500" (menos de 100 mil → dólares)
+  const parsePrecio = (t) => {
+    const s = String(t).toLowerCase();
+    let n = s.replace(/[^\d,\.]/g, '');
+    n = /\.\d{3}/.test(n) ? n.replace(/\./g, '').replace(',', '.') : n.replace(',', '.');
+    let v = parseFloat(n) || 0;
+    if (/palo|mill/.test(s)) v *= 1e6; else if (/luca|mil\b|k\b/.test(s)) v *= 1e3;
+    const usd = /us|u\$|usd|d[oó]lar|verde/.test(s) || (v > 0 && v < 100000);
+    return { precio: Math.round(v) || null, moneda: usd ? 'USD' : 'ARS' };
+  };
+  $('#lista').addEventListener('change', async (e) => {
+    const inp = e.target.closest('[data-precio]'); if (!inp) return;
+    const v = autoPorId(inp.dataset.precio);
+    const { precio, moneda } = parsePrecio(inp.value);
+    if (!precio) { inp.value = v.precio ? money(v.precio, v.moneda) : ''; return toast('No entendí el precio. Ej: 14.500.000 o US$ 11.500', true); }
+    try { const r = await api('actualizar', { id: v.id, cambios: { precio, moneda } }); reemplazar(r.vehiculo); toast('Precio actualizado.'); }
+    catch (err) { toast(err.message, true); }
+  });
+  $('#lista').addEventListener('keydown', (e) => { if (e.key === 'Enter' && e.target.matches('[data-precio]')) e.target.blur(); });
+
+  // Modal editar
+  function abrirEdit(v) {
+    S.editando = v.id; const f = $('#fEdit');
+    ['marca', 'modelo', 'version', 'anio', 'km', 'precio', 'moneda', 'combustible', 'transmision', 'color', 'carroceria'].forEach((k) => f[k].value = v[k] ?? (k === 'moneda' ? 'ARS' : ''));
+    f.acepta_permuta.checked = !!v.acepta_permuta; f.financiacion.checked = !!v.financiacion;
+    $('#mEdit').classList.add('show'); icons();
+  }
+  $$('#mEdit [data-cerrar]').forEach((b) => b.addEventListener('click', () => $('#mEdit').classList.remove('show')));
+  $('#mEdit').addEventListener('click', (e) => { if (e.target.id === 'mEdit') $('#mEdit').classList.remove('show'); });
+  $('#fEdit').addEventListener('submit', async (e) => {
+    e.preventDefault(); const f = e.target;
+    const cambios = Object.fromEntries(['marca', 'modelo', 'version', 'anio', 'km', 'moneda', 'combustible', 'transmision', 'color', 'carroceria'].map((k) => [k, f[k].value]));
+    cambios.precio = String(f.precio.value).replace(/\D/g, '');
+    cambios.acepta_permuta = f.acepta_permuta.checked; cambios.financiacion = f.financiacion.checked;
+    try { const r = await api('actualizar', { id: S.editando, cambios }); reemplazar(r.vehiculo); $('#mEdit').classList.remove('show'); toast('Guardado.'); }
+    catch (err) { toast(err.message, true); }
+  });
+
+  // ===================== EXCEL =====================
+  const xlsDrop = $('#xlsDrop');
+  ['dragenter', 'dragover'].forEach((ev) => xlsDrop.addEventListener(ev, (e) => { e.preventDefault(); xlsDrop.classList.add('over') }));
+  ['dragleave', 'drop'].forEach((ev) => xlsDrop.addEventListener(ev, (e) => { e.preventDefault(); xlsDrop.classList.remove('over') }));
+  xlsDrop.addEventListener('drop', (e) => e.dataTransfer.files[0] && subirExcel(e.dataTransfer.files[0]));
+  $('#xlsFile').addEventListener('change', (e) => e.target.files[0] && subirExcel(e.target.files[0]));
+
+  const aBase64 = (buf) => { let s = ''; const b = new Uint8Array(buf); for (let i = 0; i < b.length; i += 0x8000) s += String.fromCharCode(...b.subarray(i, i + 0x8000)); return btoa(s); };
+
+  async function subirExcel(file) {
+    const st = $('#xlsEstado'); st.hidden = false;
+    st.innerHTML = `<div class="box flex items-center gap-3 p-4 text-sm"><span class="spin text-pr"></span><div><b class="text-white">Leyendo ${esc(file.name)}…</b><br /><span class="text-ink/70">La IA está interpretando tus columnas. Con listas largas puede tardar un minuto.</span></div></div>`;
+    try {
+      const buf = await file.arrayBuffer();
+      let datos;
+      if (/\.pdf$/i.test(file.name) || file.type === 'application/pdf') {
+        if (buf.byteLength > 8e6) throw new Error('El PDF es muy pesado (máx. 8 MB).');
+        datos = { archivo: { base64: aBase64(buf), mime: 'application/pdf' } };
+      } else {
+        const wb = XLSX.read(buf, { type: 'array' });
+        const texto = wb.SheetNames.map((n) => { const csv = XLSX.utils.sheet_to_csv(wb.Sheets[n], { blankrows: false }).trim(); return csv ? `### Hoja "${n}"\n${csv}` : ''; }).filter(Boolean).join('\n\n');
+        if (!texto) throw new Error('La planilla está vacía.');
+        datos = { texto };
+      }
+      const r = await api('importar', datos);
+      S.nuevos = new Set(r.vehiculos.map((v) => v.id));
+      S.autos = [...r.vehiculos, ...S.autos];
+      const sinPrecio = r.vehiculos.filter((v) => v.precio == null).length;
+      st.innerHTML = `<div class="flex flex-wrap items-center gap-3 rounded-2xl border border-pr/30 bg-pr/[.06] p-4 text-sm"><i data-lucide="check-circle-2" class="h-5 w-5 text-pr"></i><div class="flex-1"><b class="text-white">Encontré ${r.vehiculos.length} auto${r.vehiculos.length > 1 ? 's' : ''}.</b> Revisalos en Mi stock${sinPrecio ? ` (a ${sinPrecio} les falta el precio)` : ''} y tocá Publicar.</div><button class="btn-pr py-2 text-sm" data-goto="stock">Revisar y publicar</button></div>`;
+      $('#fEstado').value = ''; pintarStock(); icons();
+      setTimeout(() => irTab('stock'), 1400);
+    } catch (e) {
+      st.innerHTML = `<div class="flex gap-3 rounded-2xl border border-red-400/30 bg-red-400/[.06] p-4 text-sm"><i data-lucide="alert-triangle" class="h-5 w-5 text-red-400"></i><span>${esc(e.message)}</span></div>`;
+      icons();
+    } finally { $('#xlsFile').value = ''; }
+  }
+
+  $('#btnModelo').addEventListener('click', () => {
+    const filas = [
+      ['Marca', 'Modelo', 'Versión', 'Año', 'Km', 'Precio', 'Moneda', 'Combustible', 'Caja', 'Color', 'Toma usado', 'Financiación'],
+      ['Toyota', 'Etios', 'XLS 1.5 5P', 2016, 98000, 13800000, 'ARS', 'Nafta', 'Manual', 'Blanco', 'Sí', 'Sí'],
+      ['Ford', 'Ranger', 'XLT 3.2 4x4 AT', 2019, 98000, 36500, 'USD', 'Diésel', 'Automática', 'Gris', 'No', 'Sí'],
+    ];
+    const ws = XLSX.utils.aoa_to_sheet(filas); ws['!cols'] = filas[0].map((h) => ({ wch: Math.max(10, h.length + 2) }));
+    const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Stock');
+    XLSX.writeFile(wb, 'red-de-autos-stock.xlsx');
+  });
+
+  // ===================== FOTOS =====================
+  const fotDrop = $('#fotDrop');
+  ['dragenter', 'dragover'].forEach((ev) => fotDrop.addEventListener(ev, (e) => { e.preventDefault(); fotDrop.classList.add('over') }));
+  ['dragleave', 'drop'].forEach((ev) => fotDrop.addEventListener(ev, (e) => { e.preventDefault(); fotDrop.classList.remove('over') }));
+  fotDrop.addEventListener('drop', (e) => subirFotos([...e.dataTransfer.files]));
+  $('#fotFiles').addEventListener('change', (e) => { subirFotos([...e.target.files]); e.target.value = ''; });
+  $('#fotCarFile').addEventListener('change', (e) => { const id = S.fotoPara; irTab('fotos'); subirFotos([...e.target.files], id); });
+
+  // Achica la foto en el navegador (más rápido de subir, mismo resultado)
+  function achicar(file, max = 1600) {
+    return new Promise((res, rej) => {
+      const img = new Image(), url = URL.createObjectURL(file);
+      img.onload = () => {
+        const k = Math.min(1, max / Math.max(img.width, img.height));
+        const c = document.createElement('canvas'); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        URL.revokeObjectURL(url);
+        res({ base64: c.toDataURL('image/jpeg', .84).split(',')[1], w: c.width, h: c.height });
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); rej(new Error('No pude abrir ' + file.name)); };
+      img.src = url;
+    });
+  }
+
+  const opcionesAutos = (sel) => S.autos.filter((v) => v.estado !== 'vendido').map((v) => `<option value="${v.id}" ${v.id === sel ? 'selected' : ''}>${esc(`${v.marca} ${v.modelo} ${v.anio ?? ''} ${v.color ?? ''}`)}</option>`).join('');
+  const nombreAuto = (id) => { const v = autoPorId(id); return v ? `${v.marca} ${v.modelo} ${v.anio ?? ''}` : 'auto'; };
+
+  let colaFotos = [], activos = 0;
+  const lote = { total: 0, ok: 0, dudosa: 0, rechazo: 0 };
+  function subirFotos(files, vehiculoId = null) {
+    files = files.filter((f) => f.type.startsWith('image/'));
+    if (!files.length) return;
+    if (!S.autos.length) return toast('Primero cargá tus autos con el Excel.', true);
+    const grid = $('#fotGrid');
+    lote.total += files.length;
+    for (const f of files) {
+      const id = 'f' + Math.random().toString(36).slice(2);
+      grid.insertAdjacentHTML('afterbegin', `<div class="box fade overflow-hidden" id="${id}">
+        <div class="relative aspect-[4/3] bg-bg3"><img class="h-full w-full object-cover opacity-50" src="${URL.createObjectURL(f)}" /><span class="absolute inset-0 grid place-items-center"><span class="spin text-white"></span></span></div>
+        <div class="p-2.5 text-xs"><p class="truncate text-ink/70">${esc(f.name)}</p><p class="mt-1 text-ink" data-st>En cola…</p></div></div>`);
+      colaFotos.push({ f, id, vehiculoId });
+    }
+    pintarResumenFotos();
+    procesarCola();
+  }
+  function procesarCola() {
+    while (activos < 3 && colaFotos.length) {
+      const t = colaFotos.shift(); activos++;
+      subirUna(t).finally(() => { activos--; procesarCola(); if (!activos && !colaFotos.length) cargarStock().catch(() => {}); });
+    }
+  }
+  async function subirUna({ f, id, vehiculoId }) {
+    const el = document.getElementById(id), st = $('[data-st]', el), img = $('img', el), spin = $('.absolute', el);
+    st.textContent = 'La IA la está revisando…';
+    try {
+      const { base64 } = await achicar(f);
+      const r = await api('foto', { base64, mime: 'image/jpeg', nombre: f.name, vehiculo_id: vehiculoId });
+      spin.remove(); img.classList.remove('opacity-50');
+      lote[r.resultado]++;
+      if (r.resultado === 'ok') {
+        const v = autoPorId(r.vehiculo_id); if (v) v.fotos_publicas = [...(v.fotos_publicas || []), r.url];
+        st.innerHTML = `<span class="chip c-ok"><i data-lucide="check" class="h-3 w-3"></i>${esc(nombreAuto(r.vehiculo_id))}</span>`;
+        el.dataset.url = r.url; el.dataset.auto = r.vehiculo_id;
+        st.insertAdjacentHTML('beforeend', ` <button class="ml-1 text-[11px] text-ink/60 underline" data-cambiar>cambiar</button>`);
+      } else if (r.resultado === 'dudosa') {
+        el.dataset.url = r.url;
+        st.innerHTML = `<span class="chip c-warn mb-1.5"><i data-lucide="help-circle" class="h-3 w-3"></i>¿De qué auto es?</span><select class="inp py-1.5 text-xs" data-asignar><option value="">Elegir…</option>${opcionesAutos()}</select>`;
+      } else {
+        img.classList.add('opacity-30', 'grayscale');
+        st.innerHTML = `<span class="chip c-bad mb-1"><i data-lucide="x" class="h-3 w-3"></i>No publicada</span><span class="block text-[11px] leading-snug text-red-300/90">${esc(r.motivo)}</span>`;
+      }
+    } catch (e) {
+      lote.rechazo++; spin.remove();
+      st.innerHTML = `<span class="chip c-bad"><i data-lucide="alert-triangle" class="h-3 w-3"></i>${esc(e.message)}</span>`;
+    }
+    pintarResumenFotos(); icons();
+  }
+  function pintarResumenFotos() {
+    const hechos = lote.ok + lote.dudosa + lote.rechazo, r = $('#fotResumen');
+    r.hidden = !lote.total;
+    const completos = S.autos.filter((v) => nFotos(v) >= CONFIG.MIN_FOTOS && v.estado !== 'vendido').length;
+    const faltan = S.autos.filter((v) => ['disponible', 'borrador'].includes(v.estado) && nFotos(v) < CONFIG.MIN_FOTOS);
+    r.innerHTML = `<div class="box flex flex-wrap items-center gap-x-5 gap-y-2 p-4">
+      <span class="text-white">${hechos < lote.total ? `<span class="spin mr-2 text-pr"></span>Revisando ${hechos}/${lote.total}` : `Listo: ${lote.total} foto${lote.total > 1 ? 's' : ''}`}</span>
+      <span class="chip c-ok">${lote.ok} asignadas</span>${lote.dudosa ? `<span class="chip c-warn">${lote.dudosa} para elegir auto</span>` : ''}${lote.rechazo ? `<span class="chip c-bad">${lote.rechazo} no publicadas</span>` : ''}
+      <span class="ml-auto text-xs text-ink/70">${completos} auto${completos === 1 ? '' : 's'} con ${CONFIG.MIN_FOTOS}+ fotos${faltan.length ? ` · faltan fotos de: ${faltan.slice(0, 3).map((v) => esc(v.modelo)).join(', ')}${faltan.length > 3 ? '…' : ''}` : ''}</span></div>`;
+  }
+  $('#fotGrid').addEventListener('change', async (e) => {
+    const s = e.target.closest('[data-asignar]'); if (!s || !s.value) return;
+    const el = s.closest('.box'), desde = el.dataset.auto || null;
+    try {
+      await api('asignar_foto', { url: el.dataset.url, vehiculo_id: s.value, desde });
+      if (desde) { const pv = autoPorId(desde); if (pv) pv.fotos_publicas = pv.fotos_publicas.filter((u) => u !== el.dataset.url); } else { lote.dudosa--; lote.ok++; }
+      const v = autoPorId(s.value); v.fotos_publicas = [...(v.fotos_publicas || []), el.dataset.url];
+      el.dataset.auto = s.value;
+      $('[data-st]', el).innerHTML = `<span class="chip c-ok"><i data-lucide="check" class="h-3 w-3"></i>${esc(nombreAuto(s.value))}</span> <button class="ml-1 text-[11px] text-ink/60 underline" data-cambiar>cambiar</button>`;
+      pintarResumenFotos(); pintarStock(); icons();
+    } catch (err) { toast(err.message, true); }
+  });
+  $('#fotGrid').addEventListener('click', (e) => {
+    const c = e.target.closest('[data-cambiar]'); if (!c) return;
+    const el = c.closest('.box');
+    $('[data-st]', el).innerHTML = `<select class="inp py-1.5 text-xs" data-asignar><option value="">Mover a…</option>${opcionesAutos(el.dataset.auto)}</select>`;
+  });
+
+  // ===================== INICIO =====================
+  icons();
+  sb.auth.onAuthStateChange((ev) => { if (ev === 'SIGNED_OUT') mostrar('login'); });
+  arrancar();
+  </script>
+</body>
+</html>
