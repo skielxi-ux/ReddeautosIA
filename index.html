@@ -84,8 +84,11 @@
     .hero-fade{position:absolute;inset:0;background:radial-gradient(ellipse 80% 70% at 50% 35%,transparent 40%,#fff 88%),linear-gradient(to bottom,transparent 60%,#fff)}
 
     /* ===== Auto en la ruta ===== */
-    .ride{position:relative;width:100%;max-width:700px;margin-inline:auto;aspect-ratio:1000/330;pointer-events:none}
+    .ride{position:relative;width:100%;max-width:760px;margin-inline:auto;aspect-ratio:1000/400;pointer-events:none}
     .ride svg{width:100%;height:100%;overflow:visible}
+    .ride svg.road{position:absolute;inset:0;transform:scaleX(-1)}
+    .ride .car-img{position:absolute;left:50%;bottom:3%;width:80%;height:auto;transform:translateX(-50%);animation:drivein 1.6s var(--ease) .35s both,bob 2.8s ease-in-out 2s infinite;filter:drop-shadow(0 18px 18px rgba(0,0,0,.12))}
+    @keyframes drivein{from{opacity:0;transform:translateX(-10%)}to{opacity:1;transform:translateX(-50%)}}
     .ride .lane{stroke-dasharray:46 34;animation:lane .55s linear infinite}
     @keyframes lane{to{stroke-dashoffset:80}}
     .ride .streak{stroke-dasharray:60 900;animation:streak 1.4s linear infinite}
@@ -95,8 +98,8 @@
     
     .ride .car-line{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 2.4s .5s var(--ease) forwards}
     @keyframes draw{to{stroke-dashoffset:0}}
-    .ride .car{animation:bob 2.6s ease-in-out infinite}
-    @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-2.5px)}}
+    
+    @keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-3px)}}
     @media (prefers-reduced-motion:reduce){.ride *,.aurora *{animation:none!important}.ride .car-line{stroke-dashoffset:0}}
 
     /* ===== Tablero (números + dólar) ===== */
@@ -129,7 +132,8 @@
     .split .w>span{display:inline-block;will-change:transform}
 
     /* Texto que se "enciende" con el scroll */
-    .reveal-words .rw{color:rgba(0,0,0,.14);transition:color .2s}
+    .reveal-words .rw{color:#a1a1aa;transition:color .35s var(--ease);cursor:default}
+    .reveal-words .rw:hover{color:#0b0b0c;transition-duration:.08s}
 
     /* Botón principal estilo Clutch */
     .btn-pr{position:relative;display:inline-flex;align-items:center;gap:.75rem;padding:.4rem 1.25rem .4rem .4rem;border-radius:999px;background:#0b0b0c;color:#fff;font-weight:600;overflow:hidden;isolation:isolate;transition:transform .5s var(--ease),color .4s var(--ease)}
@@ -296,7 +300,7 @@
 
   <main>
     <!-- ============ HERO + BUSCADOR ============ -->
-    <section id="hero" class="relative flex min-h-[100svh] items-center overflow-hidden pt-28 pb-6">
+    <section id="hero" class="relative flex min-h-[92svh] items-center overflow-hidden pt-28 pb-4">
       <div class="pointer-events-none absolute inset-0" aria-hidden="true">
         <div class="aurora"><i></i><i></i><i></i><i></i><b></b></div>
         <div id="stars" class="absolute inset-0 opacity-60"></div>
@@ -335,48 +339,21 @@
 
         <!-- Auto en la ruta (ilustración propia, se reemplaza fácil por una foto) -->
         <div class="ride hero-in mt-8 md:mt-10" aria-hidden="true">
-          <svg viewBox="0 0 1000 330" fill="none">
+          <svg class="road" viewBox="0 0 1000 330" preserveAspectRatio="none" fill="none">
             <defs>
-              <linearGradient id="gBody" x1="0" x2="1"><stop offset="0" stop-color="#52525b"/><stop offset=".6" stop-color="#0b0b0c"/><stop offset="1" stop-color="#d6f345"/></linearGradient>
-              <linearGradient id="gGlass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e4e4e7" stop-opacity=".35"/><stop offset="1" stop-color="#d6f345" stop-opacity=".12"/></linearGradient>
-              <linearGradient id="gBeam" x1="0" x2="1"><stop offset="0" stop-color="#d6f345" stop-opacity=".7"/><stop offset="1" stop-color="#d6f345" stop-opacity="0"/></linearGradient>
               <linearGradient id="gRoad" x1="0" x2="1"><stop offset="0" stop-color="#000" stop-opacity="0"/><stop offset=".5" stop-color="#000" stop-opacity=".25"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient>
-              <radialGradient id="gShadow"><stop offset="0" stop-color="#000" stop-opacity=".18"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
             </defs>
-            <!-- ruta -->
-            <line x1="0" y1="292" x2="1000" y2="292" stroke="url(#gRoad)" stroke-width="1.5"/>
-            <line class="lane" x1="0" y1="316" x2="1000" y2="316" stroke="url(#gRoad)" stroke-width="3" stroke-linecap="round"/>
-            <line class="streak" x1="1000" y1="150" x2="0" y2="150" stroke="#0b0b0c" stroke-opacity=".18" stroke-width="1.5"/>
-            <line class="streak" x1="1000" y1="205" x2="0" y2="205" stroke="#a1a1aa" stroke-opacity=".35" stroke-width="1.5" style="animation-delay:-.6s"/>
-            <line class="streak" x1="1000" y1="255" x2="0" y2="255" stroke="#9fb52a" stroke-opacity=".5" stroke-width="1" style="animation-delay:-1s"/>
-            <ellipse cx="505" cy="292" rx="370" ry="18" fill="url(#gShadow)"/>
-            <!-- haz de luz -->
-            <path class="beam" d="M836 204 L1000 158 L1000 272 Z" fill="url(#gBeam)"/>
-            <g class="car">
-              <!-- carrocería (sedán genérico, dibujo propio) -->
-              <path d="M170 252 C170 224 188 204 222 198 L318 186 C360 146 410 122 478 118 L588 118 C640 120 682 144 732 178 L800 190 C826 195 840 212 840 234 L840 246 C840 252 836 256 830 256 L750 256 A60 60 0 0 0 630 256 L370 256 A60 60 0 0 0 250 256 L182 256 C175 256 170 255 170 252 Z" fill="#18181b" fill-opacity=".95"/>
-              <path class="car-line" pathLength="1" d="M170 252 C170 224 188 204 222 198 L318 186 C360 146 410 122 478 118 L588 118 C640 120 682 144 732 178 L800 190 C826 195 840 212 840 234 L840 246 C840 252 836 256 830 256 L750 256 A60 60 0 0 0 630 256 L370 256 A60 60 0 0 0 250 256 L182 256 C175 256 170 255 170 252 Z" stroke="url(#gBody)" stroke-width="3" stroke-linejoin="round" style="filter:drop-shadow(0 0 6px rgba(255,122,26,.7))"/>
-              <!-- vidrios -->
-              <path d="M336 186 C372 152 414 130 476 126 L540 126 L540 186 Z" fill="url(#gGlass)" stroke="#e4e4e7" stroke-opacity=".5" stroke-width="1.5"/>
-              <path d="M556 126 L586 126 C630 128 668 150 708 184 L556 186 Z" fill="url(#gGlass)" stroke="#e4e4e7" stroke-opacity=".5" stroke-width="1.5"/>
-              <!-- líneas de diseño -->
-              <path d="M226 214 L812 214" stroke="#d6f345" stroke-opacity=".35" stroke-width="1.5"/>
-              <path d="M548 190 L548 250" stroke="#e4e4e7" stroke-opacity=".25" stroke-width="1.5"/>
-              <path d="M590 202 L614 202" stroke="#e4e4e7" stroke-opacity=".6" stroke-width="3" stroke-linecap="round"/>
-              <!-- luces -->
-              <path d="M808 200 C826 203 836 210 838 220 L810 218 Z" fill="#fff" style="filter:drop-shadow(0 0 8px #fff)"/>
-              <rect x="172" y="206" width="14" height="13" rx="4" fill="#FFB547" style="filter:drop-shadow(0 0 8px #FFB547)"/>
-              <!-- ruedas -->
-              <g transform="translate(310 256)">
-                <circle r="50" fill="#0b0b0c" stroke="#d6f345" stroke-opacity=".9" stroke-width="3"/>
-                <g class="wheel"><animateTransform attributeName="transform" type="rotate" from="0" to="360" dur=".9s" repeatCount="indefinite"/><circle r="30" stroke="#e4e4e7" stroke-opacity=".7" stroke-width="2"/><path d="M0 -30 V30 M-30 0 H30 M-21 -21 L21 21 M21 -21 L-21 21" stroke="#e4e4e7" stroke-opacity=".45" stroke-width="2"/><circle r="7" fill="#d6f345"/></g>
-              </g>
-              <g transform="translate(690 256)">
-                <circle r="50" fill="#0b0b0c" stroke="#d6f345" stroke-opacity=".9" stroke-width="3"/>
-                <g class="wheel"><animateTransform attributeName="transform" type="rotate" from="0" to="360" dur=".9s" repeatCount="indefinite"/><circle r="30" stroke="#e4e4e7" stroke-opacity=".7" stroke-width="2"/><path d="M0 -30 V30 M-30 0 H30 M-21 -21 L21 21 M21 -21 L-21 21" stroke="#e4e4e7" stroke-opacity=".45" stroke-width="2"/><circle r="7" fill="#d6f345"/></g>
-              </g>
-            </g>
+            <line x1="0" y1="300" x2="1000" y2="300" stroke="url(#gRoad)" stroke-width="1.5"/>
+            <line class="lane" x1="0" y1="320" x2="1000" y2="320" stroke="url(#gRoad)" stroke-width="3" stroke-linecap="round"/>
+            <line class="streak" x1="1000" y1="120" x2="0" y2="120" stroke="#0b0b0c" stroke-opacity=".14" stroke-width="1.5"/>
+            <line class="streak" x1="1000" y1="190" x2="0" y2="190" stroke="#a1a1aa" stroke-opacity=".35" stroke-width="1.5" style="animation-delay:-.6s"/>
+            <line class="streak" x1="1000" y1="250" x2="0" y2="250" stroke="#9fb52a" stroke-opacity=".55" stroke-width="1" style="animation-delay:-1s"/>
           </svg>
+          <picture>
+            <source srcset="img/auto-hero.webp" type="image/webp" />
+            <img class="car-img" src="img/auto-hero.png" alt="" width="1200" height="490" fetchpriority="high" decoding="async" />
+          </picture>
+        </div>
         </div>
       </div>
 
@@ -428,7 +405,7 @@
         </div>
 
         <!-- Alerta de compra -->
-        <div id="alertBox" class="mt-16 hidden">
+        <div id="alertBox" class="mt-10 hidden">
           <div class="relative overflow-hidden rounded-[32px] border border-line bg-bg2 p-6 md:p-12">
             <div class="orb right-[-10%] top-[-30%] h-[360px] w-[360px] opacity-60" style="background:#d6f345"></div>
             <div class="relative grid items-center gap-10 md:grid-cols-[1.15fr_.85fr]">
@@ -484,12 +461,12 @@
     </section>
 
     <!-- ============ CÓMO FUNCIONA ============ -->
-    <section id="como" class="relative py-24 md:py-36">
+    <section id="como" class="relative py-14 md:py-[86px]">
       <div class="mx-auto max-w-7xl px-5 md:px-8">
         <p class="tag mb-6">{01} Cómo funciona</p>
         <p class="reveal-words max-w-5xl font-display text-3xl font-bold leading-[1.12] tracking-tight md:text-6xl">No navegás catálogos. No llenás filtros. Decís lo que querés y el mercado de Tucumán se mueve hacia vos.</p>
 
-        <div class="relative mt-16 grid gap-4 md:grid-cols-3">
+        <div class="relative mt-10 grid gap-4 md:grid-cols-3">
           <svg class="pointer-events-none absolute left-0 right-0 top-1/2 hidden h-6 w-full -translate-y-1/2 md:block" preserveAspectRatio="none" viewBox="0 0 100 6" aria-hidden="true"><line class="lane-h" x1="0" y1="3" x2="100" y2="3" stroke="#0b0b0c" stroke-opacity=".5" stroke-width=".4" stroke-dasharray="2 1.6"/></svg>
           <article class="card fade-up p-7" data-spot>
             <span class="font-mono text-xs text-pr">{01}</span>
@@ -515,7 +492,7 @@
 
 
     <!-- ============ TABLERO: NÚMEROS DE LA RED + DÓLAR ============ -->
-    <section id="red" class="relative scroll-mt-20 py-24 md:py-32">
+    <section id="red" class="relative scroll-mt-20 py-14 md:py-20">
       <div class="mx-auto max-w-7xl px-5 md:px-8">
         <div class="flex flex-wrap items-end justify-between gap-6">
           <div>
@@ -566,7 +543,7 @@
     </section>
 
     <!-- ============ PARA AGENCIAS ============ -->
-    <section id="agencias" class="relative overflow-hidden py-24 md:py-36">
+    <section id="agencias" class="relative overflow-hidden py-14 md:py-[86px]">
       <div class="orb left-[-15%] top-[20%] h-[420px] w-[420px] opacity-40" style="background:#d6f345"></div>
       <div class="relative mx-auto grid max-w-7xl items-center gap-16 px-5 md:grid-cols-2 md:px-8">
         <div>
@@ -611,7 +588,7 @@
 
 
     <!-- ============ PREGUNTAS FRECUENTES ============ -->
-    <section id="faq" class="relative scroll-mt-20 py-24 md:py-32">
+    <section id="faq" class="relative scroll-mt-20 py-14 md:py-20">
       <div class="mx-auto grid max-w-7xl gap-12 px-5 md:px-8 lg:grid-cols-[1fr_1.6fr]">
         <div>
           <p class="tag mb-6">{04} Preguntas frecuentes</p>
@@ -631,7 +608,7 @@
     </section>
 
     <!-- ============ CTA FINAL ============ -->
-    <section class="relative py-24 md:py-32">
+    <section class="relative py-14 md:py-20">
       <div class="mx-auto max-w-4xl px-5 text-center">
         <h2 class="split font-display text-4xl font-extrabold tracking-[-.03em] text-zinc-950 md:text-7xl" data-split>¿Qué auto estás buscando?</h2>
         <button id="ctaUp" class="btn-pr mt-10" data-magnetic><span class="ic"><i data-lucide="search" class="h-4 w-4"></i></span>Contale a la IA</button>
@@ -1078,7 +1055,6 @@
   // Texto que se enciende palabra por palabra (scrub)
   $$('.reveal-words').forEach(el => {
     el.innerHTML = el.textContent.trim().split(/\s+/).map(w => `<span class="rw">${esc(w)}</span>`).join(' ');
-    gsap.to(el.querySelectorAll('.rw'), { color: '#ffffff', stagger: .1, ease: 'none', scrollTrigger: { trigger: el, start: 'top 80%', end: 'bottom 45%', scrub: true } });
   });
 
   // Contadores
@@ -1090,7 +1066,7 @@
   // Marquee de marcas
   (() => {
     const list = ['Toyota', 'Volkswagen', 'Fiat', 'Chevrolet', 'Ford', 'Renault', 'Peugeot', 'Citroën', 'Nissan', 'Honda', 'Jeep'];
-    const one = list.map(b => `<span class="flex items-center gap-10">${b}<i class="text-pr">✦</i></span>`).join('');
+    const one = list.map(b => `<span class="flex items-center">${b}</span>`).join('');
     $('#marquee').innerHTML = one + one;
   })();
 
