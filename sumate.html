@@ -14,6 +14,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&family=Mona+Sans:wght@500..900&family=Space+Grotesk:wght@500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11.1.14/swiper-bundle.min.css" />
+  <link rel="preload" as="image" href="img/hero-1.webp" type="image/webp" media="(min-width:768px)" />
+  <link rel="preload" as="image" href="img/hero-1-m.webp" type="image/webp" media="(max-width:767px)" />
   <link rel="stylesheet" href="sumate.css" />
 
   <style>
@@ -62,10 +64,30 @@
     .sticky-bar.show{transform:none}
     .swiper-pagination-bullet{background:#0b0b0c;opacity:.2}
     .swiper-pagination-bullet-active{background:#0b0b0c;opacity:1;width:18px;border-radius:4px;transition:width .3s}
-    @media (prefers-reduced-motion:reduce){.aurora i,.pulse:after{animation:none}.reveal{opacity:1;transform:none}}
+    @media (prefers-reduced-motion:reduce){.aurora i,.pulse:after,.hero-swiper .swiper-slide-active img,.hero-dot.on:after{animation:none}.reveal{opacity:1;transform:none}}
     .celu-item{transition:box-shadow .3s var(--ease),background .3s}
     .celu-item:hover{background:#fafcef}
     .celu-item.on{box-shadow:0 0 0 2px #0b0b0c,0 14px 30px -18px rgba(0,0,0,.35);background:#fff}
+    /* ===== Hero con galería ===== */
+    .hero-swiper .swiper-slide{overflow:hidden}
+    .hero-swiper img{transform:scale(1.03)}
+    .hero-swiper .swiper-slide-active img{animation:kb 8s ease-out forwards}
+    @keyframes kb{from{transform:scale(1.03)}to{transform:scale(1.13)}}
+    .hero-shade{background:linear-gradient(90deg,rgba(8,8,9,.86) 0%,rgba(8,8,9,.62) 42%,rgba(8,8,9,.18) 78%,rgba(8,8,9,.1) 100%),linear-gradient(180deg,rgba(8,8,9,.55) 0%,transparent 22%,transparent 60%,rgba(8,8,9,.6) 100%)}
+    @media (max-width:767px){.hero-shade{background:linear-gradient(180deg,rgba(8,8,9,.55) 0%,rgba(8,8,9,.25) 30%,rgba(8,8,9,.78) 62%,rgba(8,8,9,.94) 100%)}}
+    .hero-texts>.ht{grid-area:1/1;align-self:end;opacity:0;transform:translateY(18px);transition:opacity .5s var(--ease),transform .7s var(--ease);pointer-events:none}
+    .hero-texts>.ht.on{opacity:1;transform:none;transition-delay:.25s;pointer-events:auto}
+    .btn-hero{position:relative;overflow:hidden;isolation:isolate;background:#d6f345;color:#0b0b0c;transition:transform .35s var(--ease),box-shadow .35s var(--ease);box-shadow:0 12px 30px -14px rgba(214,243,69,.6)}
+    .btn-hero:before{content:"";position:absolute;inset:0;background:#fff;transform:translateY(101%);transition:transform .45s var(--ease);z-index:-1;border-radius:inherit}
+    .btn-hero:hover:before{transform:translateY(0)}
+    .btn-hero:hover{transform:translateY(-2px)}
+    .btn-hero svg{transition:transform .45s var(--ease)}.btn-hero:hover svg{transform:translateX(3px) rotate(-45deg)}
+    .btn-hero-gh{transition:all .35s var(--ease)}.btn-hero-gh:hover{background:#d6f345;border-color:#d6f345;color:#0b0b0c}
+    .hero-dot{position:relative;width:42px;height:4px;border-radius:3px;background:rgba(255,255,255,.3);overflow:hidden}
+    .hero-dot.on:after{content:"";position:absolute;inset:0;background:#d6f345;transform-origin:left;animation:dotfill 6.5s linear forwards}
+    @keyframes dotfill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+    .hero-nav{display:grid;place-items:center;width:42px;height:42px;border-radius:999px;border:1px solid rgba(255,255,255,.3);color:#fff;transition:all .35s var(--ease)}
+    .hero-nav:hover{background:#d6f345;border-color:#d6f345;color:#0b0b0c}
     /* ===== Cuerpo claro ===== */
     @media (min-width:1024px){.step:not(:last-child):after{content:"";position:absolute;top:88px;left:calc(50% + 100px);width:calc(100% - 200px + 2rem);border-top:2px dashed #0b0b0c;opacity:.35}}
     .light{background:#fff;color:#3f3f46}
@@ -82,11 +104,6 @@
     .spark{transform-origin:96px 24px;animation:tw 2.4s ease-in-out infinite}.spark2{transform-origin:18px 18px;animation:tw 2.4s ease-in-out -1.2s infinite}
     @keyframes tw{50%{transform:scale(.6) rotate(20deg);opacity:.6}}
     .pop{transform-origin:92px 22px;animation:pop 2.8s ease-in-out infinite}
-    .funnel .coin{animation:coin 6.4s ease-in-out 3.2s infinite}
-    @keyframes coin{0%,80%,100%{transform:scale(1)}88%{transform:scale(1.18)}94%{transform:scale(.96)}}
-    .funnel .xmark{animation:xm 2.6s ease-in-out infinite}
-    .funnel .xmark:nth-of-type(2n){animation-delay:-1.3s}
-    @keyframes xm{0%,100%{opacity:.35}50%{opacity:1}}
     @keyframes pop{0%,60%,100%{transform:scale(1)}70%{transform:scale(1.18)}}
     .dash{animation:dash 1.6s linear infinite}@keyframes dash{to{stroke-dashoffset:-5.6}}
     .needle{transform:rotate(-95deg);transition:transform 1.6s cubic-bezier(.3,1.4,.5,1) .3s}
@@ -94,7 +111,7 @@
     .bar{width:0;transition:width 1.2s var(--ease) .2s}.reveal.in .bar{width:var(--w)}
     .sweep{animation:spin 4s linear infinite}.spin-slow{animation:spin 30s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
-    @media (prefers-reduced-motion:reduce){.float1,.float2,.float3,.flame,.spark,.spark2,.pop,.dash,.sweep,.spin-slow,.funnel .coin,.funnel .xmark{animation:none}.needle{transform:none}.bar{width:var(--w)}}
+    @media (prefers-reduced-motion:reduce){.float1,.float2,.float3,.flame,.spark,.spark2,.pop,.dash,.sweep,.spin-slow{animation:none}.needle{transform:none}.bar{width:var(--w)}}
   </style>
 </head>
 <body>
@@ -102,99 +119,82 @@
 <!-- ============ BARRA SUPERIOR (sin menú: la única salida es convertir) ============ -->
 <header class="absolute inset-x-0 top-0 z-30">
   <div class="mx-auto flex max-w-6xl items-center justify-between px-5 py-5">
-    <a href="./" class="flex items-center gap-2 font-display text-lg font-extrabold tracking-tight text-zinc-950" aria-label="Red de Autos">
-      <span class="grid h-8 w-8 place-items-center rounded-lg bg-pr text-bg"><i data-lucide="car-front" class="h-5 w-5"></i></span>
+    <a href="./" class="flex items-center gap-2 font-display text-lg font-extrabold tracking-tight text-white" aria-label="Red de Autos">
+      <span class="grid h-8 w-8 place-items-center rounded-lg bg-hl text-zinc-950"><i data-lucide="car-front" class="h-5 w-5"></i></span>
       Red de Autos
     </a>
-    <a href="#form" data-cta="header" class="hidden rounded-full border border-black/10 px-4 py-2 text-sm font-semibold text-zinc-950 transition hover:border-zinc-950 hover:text-pr sm:inline-flex">Sumar mi agencia</a>
+    <a href="#form" data-cta="header" class="hidden rounded-full border border-white/30 px-4 py-2 text-sm font-semibold text-white backdrop-blur transition hover:border-hl hover:bg-hl hover:text-zinc-950 sm:inline-flex">Sumar mi agencia</a>
   </div>
 </header>
 
-<!-- ============ HERO (blanco + galería de fotos) ============ -->
-<section class="relative overflow-clip pt-28 sm:pt-32" id="top">
-  <div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
-  <div class="relative mx-auto grid max-w-6xl gap-10 px-5 pb-16 lg:grid-cols-[1.08fr_.92fr] lg:items-center lg:pb-24">
-    <div>
-      <p class="chip mb-5 border border-black/10 bg-hl/40 text-pr"><i data-lucide="map-pin" class="h-3.5 w-3.5"></i> Para dueños y gerentes de agencias de autos en Tucumán</p>
-      <h1 class="font-display text-[2.15rem] font-extrabold leading-[1.05] tracking-tight text-zinc-950 sm:text-5xl lg:text-[3.4rem]">
-        Vendé los usados que tenés parados: <span class="hl">recibí ofertas de compradores validados</span> sin quemar plata en redes.
-      </h1>
-      <p class="mt-6 max-w-xl text-lg leading-relaxed text-zinc-600">
-        Decile chau a pasarte el día contestando “¿cuánto vale?” y a tirar plata en avisos que no rinden. Cruzamos tu stock con compradores de verdad y te mandamos la oferta al WhatsApp, con la plata en la mano.
-      </p>
+<!-- ============ HERO (galería de fotos con texto) ============ -->
+<section class="relative isolate overflow-clip bg-zinc-950 text-white" id="top">
+  <div class="swiper hero-swiper absolute inset-0 -z-20" aria-hidden="true">
+    <div class="swiper-wrapper">
+      <div class="swiper-slide">
+        <picture>
+          <source media="(max-width:767px)" srcset="img/hero-1-m.webp" type="image/webp" />
+          <source srcset="img/hero-1.webp" type="image/webp" />
+          <img src="img/hero-1.jpg" alt="" class="h-full w-full object-cover" style="object-position:55% 50%" fetchpriority="high" decoding="async" />
+        </picture>
+      </div>
+      <div class="swiper-slide">
+        <picture>
+          <source media="(max-width:767px)" srcset="img/hero-2-m.webp" type="image/webp" />
+          <source srcset="img/hero-2.webp" type="image/webp" />
+          <img src="img/hero-2.jpg" alt="" class="h-full w-full object-cover" style="object-position:42% 50%" loading="lazy" decoding="async" />
+        </picture>
+      </div>
+      <div class="swiper-slide">
+        <picture>
+          <source media="(max-width:767px)" srcset="img/hero-3-m.webp" type="image/webp" />
+          <source srcset="img/hero-3.webp" type="image/webp" />
+          <img src="img/hero-3.jpg" alt="" class="h-full w-full object-cover" style="object-position:50% 50%" loading="lazy" decoding="async" />
+        </picture>
+      </div>
+    </div>
+  </div>
+  <div class="hero-shade absolute inset-0 -z-10" aria-hidden="true"></div>
+
+  <div class="mx-auto flex min-h-[100svh] max-w-6xl flex-col justify-end px-5 pb-10 pt-28 sm:pb-16 md:justify-center lg:min-h-[92vh]">
+    <div class="max-w-2xl">
+      <div class="hero-texts grid">
+          <div class="ht on" data-i="0">
+            <p class="chip mb-5 border border-white/20 bg-white/10 text-white backdrop-blur"><i data-lucide="map-pin" class="h-3.5 w-3.5"></i> Para dueños y gerentes de agencias de autos en Tucumán</p>
+            <h1 class="font-display text-[2.2rem] font-extrabold leading-[1.04] tracking-tight sm:text-5xl lg:text-[3.6rem]">Vendé los usados que tenés parados: <span class="text-hl">recibí ofertas de compradores validados</span> sin quemar plata en redes.</h1>
+            <p class="mt-5 max-w-xl text-lg leading-relaxed text-white/85">Decile chau a pasarte el día contestando “¿cuánto vale?” y a tirar plata en avisos que no rinden. Cruzamos tu stock con compradores de verdad y te mandamos la oferta al WhatsApp, con la plata en la mano.</p>
+          </div>
+          <div class="ht" data-i="1" aria-hidden="true">
+            <p class="chip mb-5 border border-white/20 bg-white/10 text-white backdrop-blur"><i data-lucide="badge-check" class="h-3.5 w-3.5"></i> Compradores con presupuesto declarado</p>
+            <h2 class="font-display text-[2.2rem] font-extrabold leading-[1.04] tracking-tight sm:text-5xl lg:text-[3.6rem]">Te llegan ofertas reales, <span class="text-hl">no curiosos.</span></h2>
+            <p class="mt-5 max-w-xl text-lg leading-relaxed text-white/85">El comprador dice qué auto quiere y cuánto puede pagar. El termómetro comercial frena las ofertas fuera de mercado antes de que lleguen a tu WhatsApp.</p>
+          </div>
+          <div class="ht" data-i="2" aria-hidden="true">
+            <p class="chip mb-5 border border-white/20 bg-white/10 text-white backdrop-blur"><i data-lucide="key-round" class="h-3.5 w-3.5"></i> Cerrá la venta en tu salón</p>
+            <h2 class="font-display text-[2.2rem] font-extrabold leading-[1.04] tracking-tight sm:text-5xl lg:text-[3.6rem]">Aceptás la oferta y <span class="text-hl">el cliente va a tu agencia</span> a cerrar.</h2>
+            <p class="mt-5 max-w-xl text-lg leading-relaxed text-white/85">Cuando aceptás, se comparten los contactos y se arma la visita. Vos hacés lo que mejor sabés hacer: vender.</p>
+          </div>
+      </div>
       <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-        <a href="#form" data-cta="hero" class="btn-cta pulse inline-flex items-center justify-center gap-2 rounded-2xl px-7 py-4 text-base font-bold">
+        <a href="#form" data-cta="hero" class="btn-hero pulse inline-flex items-center justify-center gap-2 rounded-2xl px-7 py-4 text-base font-bold">
           Quiero sumar mi agencia <i data-lucide="arrow-right" class="h-5 w-5"></i>
         </a>
-        <a href="#" data-wa class="inline-flex items-center justify-center gap-2 rounded-2xl border border-black/10 px-6 py-4 text-base font-semibold text-zinc-950 transition hover:border-black/40">
-          <i data-lucide="message-circle" class="h-5 w-5 text-pr"></i> Consultar por WhatsApp
+        <a href="#" data-wa class="btn-hero-gh inline-flex items-center justify-center gap-2 rounded-2xl border border-white/35 px-6 py-4 text-base font-semibold text-white backdrop-blur">
+          <i data-lucide="message-circle" class="h-5 w-5"></i> Consultar por WhatsApp
         </a>
       </div>
-      <ul class="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm text-zinc-600">
-        <li class="flex items-center gap-1.5"><i data-lucide="credit-card" class="h-4 w-4 text-pr"></i> Sin tarjeta de crédito</li>
-        <li class="flex items-center gap-1.5"><i data-lucide="file-spreadsheet" class="h-4 w-4 text-pr"></i> Carga masiva de stock en 2 minutos</li>
-        <li class="flex items-center gap-1.5"><i data-lucide="shield-check" class="h-4 w-4 text-pr"></i> 30 días para probarlo</li>
+      <ul class="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm text-white/80">
+        <li class="flex items-center gap-1.5"><i data-lucide="credit-card" class="h-4 w-4"></i> Sin tarjeta de crédito</li>
+        <li class="flex items-center gap-1.5"><i data-lucide="file-spreadsheet" class="h-4 w-4"></i> Carga masiva de stock en 2 minutos</li>
+        <li class="flex items-center gap-1.5"><i data-lucide="shield-check" class="h-4 w-4"></i> 30 días para probarlo</li>
       </ul>
-    </div>
-
-    <!-- Embudo de ventas 3D -->
-    <div class="relative">
-      <div class="absolute -inset-4 rotate-2 rounded-[2.4rem] bg-hl" aria-hidden="true"></div>
-      <div class="relative overflow-hidden rounded-[2rem] bg-white px-4 pb-4 pt-6 ring-1 ring-black/10 sm:px-8">
-        <p class="text-center font-mono text-[11px] uppercase tracking-[.2em] text-zinc-500">Así filtra Red de Autos</p>
-        <svg viewBox="0 0 480 600" class="funnel mx-auto w-full max-w-[460px]" fill="none" role="img" aria-label="Embudo de ventas: los curiosos, los que no tienen presupuesto y las ofertas fuera de mercado se filtran; al fondo llega el comprador con la plata lista">
-<defs>
- <linearGradient id="gL1" x1="0" x2="1"><stop offset="0" stop-color="#d4d4d8"/><stop offset=".45" stop-color="#ffffff"/><stop offset="1" stop-color="#c4c4c9"/></linearGradient>
- <linearGradient id="gL2" x1="0" x2="1"><stop offset="0" stop-color="#a1a1aa"/><stop offset=".45" stop-color="#e4e4e7"/><stop offset="1" stop-color="#9a9aa3"/></linearGradient>
- <linearGradient id="gL3" x1="0" x2="1"><stop offset="0" stop-color="#18181b"/><stop offset=".45" stop-color="#52525b"/><stop offset="1" stop-color="#18181b"/></linearGradient>
- <linearGradient id="gSp" x1="0" x2="1"><stop offset="0" stop-color="#a3bf1f"/><stop offset=".45" stop-color="#e9ff7a"/><stop offset="1" stop-color="#9fb52a"/></linearGradient>
- <radialGradient id="gHole" cx=".5" cy=".35" r=".7"><stop offset="0" stop-color="#3f3f46"/><stop offset="1" stop-color="#0b0b0c"/></radialGradient>
- <radialGradient id="gFloor" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#000" stop-opacity=".22"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
-</defs>
-<ellipse cx="240" cy="570" rx="150" ry="20" fill="url(#gFloor)"/>
-<ellipse cx="240" cy="96" rx="196.0" ry="39.2" fill="url(#gHole)" stroke="#0b0b0c" stroke-width="2.2" opacity="1"/>
-<circle r="6" fill="#a1a1aa" stroke="#0b0b0c" stroke-width="1.5" opacity="0"><animateMotion path="M190 -10 L205 120 L208 199 Q150 202 20 210" dur="4.2s" begin="0s" repeatCount="indefinite" keyPoints="0;1" keyTimes="0;1" calcMode="linear"/><animate attributeName="opacity" values="0;1;1;1;0" keyTimes="0;.08;.6;.85;1" dur="4.2s" begin="0s" repeatCount="indefinite"/></circle>
-<circle r="6" fill="#a1a1aa" stroke="#0b0b0c" stroke-width="1.5" opacity="0"><animateMotion path="M300 -10 L280 120 L276 199 Q330 203 470 212" dur="4.6s" begin="0.9s" repeatCount="indefinite" keyPoints="0;1" keyTimes="0;1" calcMode="linear"/><animate attributeName="opacity" values="0;1;1;1;0" keyTimes="0;.08;.6;.85;1" dur="4.6s" begin="0.9s" repeatCount="indefinite"/></circle>
-<circle r="5" fill="#d4d4d8" stroke="#0b0b0c" stroke-width="1.5" opacity="0"><animateMotion path="M150 -10 L190 120 L210 199 Q120 203 10 216" dur="5.0s" begin="2.1s" repeatCount="indefinite" keyPoints="0;1" keyTimes="0;1" calcMode="linear"/><animate attributeName="opacity" values="0;1;1;1;0" keyTimes="0;.08;.6;.85;1" dur="5.0s" begin="2.1s" repeatCount="indefinite"/></circle>
-<circle r="5" fill="#a1a1aa" stroke="#0b0b0c" stroke-width="1.5" opacity="0"><animateMotion path="M330 -10 L290 130 L270 199 Q380 202 476 206" dur="4.4s" begin="3.0s" repeatCount="indefinite" keyPoints="0;1" keyTimes="0;1" calcMode="linear"/><animate attributeName="opacity" values="0;1;1;1;0" keyTimes="0;.08;.6;.85;1" dur="4.4s" begin="3.0s" repeatCount="indefinite"/></circle>
-<circle r="6" fill="#71717a" stroke="#0b0b0c" stroke-width="1.5" opacity="0"><animateMotion path="M220 -10 L228 150 L232 307 Q330 310 470 316" dur="5.2s" begin="0.4s" repeatCount="indefinite" keyPoints="0;1" keyTimes="0;1" calcMode="linear"/><animate attributeName="opacity" values="0;1;1;1;0" keyTimes="0;.08;.6;.85;1" dur="5.2s" begin="0.4s" repeatCount="indefinite"/></circle>
-<circle r="6" fill="#71717a" stroke="#0b0b0c" stroke-width="1.5" opacity="0"><animateMotion path="M265 -10 L255 150 L248 307 Q160 311 14 318" dur="5.6s" begin="2.6s" repeatCount="indefinite" keyPoints="0;1" keyTimes="0;1" calcMode="linear"/><animate attributeName="opacity" values="0;1;1;1;0" keyTimes="0;.08;.6;.85;1" dur="5.6s" begin="2.6s" repeatCount="indefinite"/></circle>
-<circle r="6" fill="#52525b" stroke="#0b0b0c" stroke-width="1.5" opacity="0"><animateMotion path="M245 -10 L240 160 L240 391 Q300 393 440 398" dur="6.0s" begin="1.5s" repeatCount="indefinite" keyPoints="0;1" keyTimes="0;1" calcMode="linear"/><animate attributeName="opacity" values="0;1;1;1;0" keyTimes="0;.08;.6;.85;1" dur="6.0s" begin="1.5s" repeatCount="indefinite"/></circle>
-<g opacity="0"><animateMotion path="M240 -10 L240 478" dur="6.4s" begin="3.2s" repeatCount="indefinite" calcMode="spline" keyPoints="0;1" keyTimes="0;1" keySplines=".5 0 .8 .6"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.06;.9;1" dur="6.4s" begin="3.2s" repeatCount="indefinite"/><circle r="9" fill="#d6f345" stroke="#0b0b0c" stroke-width="2"/></g>
-<ellipse cx="240" cy="96" rx="196.0" ry="39.2" fill="#f4f4f5" stroke="#0b0b0c" stroke-width="2.2" opacity="1"/>
-<ellipse cx="240" cy="96" rx="190.0" ry="38.0" fill="url(#gHole)" stroke="#0b0b0c" stroke-width="2.2" opacity="1"/>
-<path d="M44.0 96 A196.0 39.2 0 0 0 436.0 96 L400.7 180 A160.7 32.1 0 0 1 79.3 180 Z" fill="url(#gL1)" stroke="#0b0b0c" stroke-width="2.2" stroke-linejoin="round" />
-<text x="240" y="159.1" text-anchor="middle" font-family="Mona Sans, Inter, sans-serif" font-weight="800" font-size="19" fill="#0b0b0c">Curiosos</text>
-<text x="240" y="176.1" text-anchor="middle" font-family="Inter, sans-serif" font-weight="500" font-size="11.5" fill="#0b0b0c" opacity=".75">“¿precio?” y nunca vienen</text>
-<ellipse cx="240" cy="218" rx="144.8" ry="29.0" fill="#e4e4e7" stroke="#0b0b0c" stroke-width="2.2" opacity="1"/>
-<ellipse cx="240" cy="218" rx="137.8" ry="27.6" fill="#0b0b0c" opacity=".85"/>
-<path d="M95.2 218 A144.8 29.0 0 0 0 384.8 218 L354.5 290 A114.5 22.9 0 0 1 125.5 290 Z" fill="url(#gL2)" stroke="#0b0b0c" stroke-width="2.2" stroke-linejoin="round" />
-<text x="240" y="272.5" text-anchor="middle" font-family="Mona Sans, Inter, sans-serif" font-weight="800" font-size="19" fill="#0b0b0c">Sin presupuesto</text>
-<text x="240" y="289.5" text-anchor="middle" font-family="Inter, sans-serif" font-weight="500" font-size="11.5" fill="#0b0b0c" opacity=".75">no pueden pagarlo</text>
-<ellipse cx="240" cy="324" rx="100.2" ry="20.0" fill="#27272a" stroke="#0b0b0c" stroke-width="2.2" opacity="1"/>
-<ellipse cx="240" cy="324" rx="93.2" ry="18.6" fill="#0b0b0c" opacity=".85"/>
-<path d="M139.8 324 A100.2 20.0 0 0 0 340.2 324 L316.7 380 A76.7 15.3 0 0 1 163.3 380 Z" fill="url(#gL3)" stroke="#0b0b0c" stroke-width="2.2" stroke-linejoin="round" />
-<text x="240" y="363.6" text-anchor="middle" font-family="Mona Sans, Inter, sans-serif" font-weight="800" font-size="15.5" fill="#ffffff">Fuera de mercado</text>
-<text x="240" y="380.6" text-anchor="middle" font-family="Inter, sans-serif" font-weight="500" font-size="10.5" fill="#ffffff" opacity=".75">el termómetro los frena</text>
-<ellipse cx="240" cy="402" rx="30.0" ry="6.0" fill="#e9ff7a" stroke="#0b0b0c" stroke-width="2.2" opacity="1"/>
-<ellipse cx="240" cy="402" rx="24" ry="4.8" fill="#0b0b0c"/>
-<path d="M210.0 402 A30.0 6.0 0 0 0 270.0 402 L270.0 452 A30.0 6.0 0 0 1 210.0 452 Z" fill="url(#gSp)" stroke="#0b0b0c" stroke-width="2.2" stroke-linejoin="round" />
-<g class="coin" style="transform-origin:240px 508px">
- <circle cx="240" cy="508" r="30" fill="#d6f345" stroke="#0b0b0c" stroke-width="2.5"/>
- <circle cx="240" cy="508" r="22" fill="none" stroke="#0b0b0c" stroke-width="1.5" stroke-dasharray="3 3"/>
- <text x="240" y="517" text-anchor="middle" font-family="Mona Sans, Inter, sans-serif" font-weight="900" font-size="25" fill="#0b0b0c">$</text>
-</g>
-<text x="240" y="560" text-anchor="middle" font-family="Mona Sans, Inter, sans-serif" font-weight="800" font-size="16" fill="#0b0b0c">Comprador con la plata lista</text>
-<text x="240" y="580" text-anchor="middle" font-family="Inter, sans-serif" font-weight="500" font-size="11.5" fill="#52525b">intención real · presupuesto declarado</text>
-<g class="xmark" transform="translate(30 206)"><circle r="9" fill="#fff" stroke="#e11d48" stroke-width="1.8"/><path d="M-3.5 -3.5L3.5 3.5M3.5 -3.5L-3.5 3.5" stroke="#e11d48" stroke-width="2" stroke-linecap="round"/></g>
-<g class="xmark" transform="translate(452 208)"><circle r="9" fill="#fff" stroke="#e11d48" stroke-width="1.8"/><path d="M-3.5 -3.5L3.5 3.5M3.5 -3.5L-3.5 3.5" stroke="#e11d48" stroke-width="2" stroke-linecap="round"/></g>
-<g class="xmark" transform="translate(456 314)"><circle r="9" fill="#fff" stroke="#e11d48" stroke-width="1.8"/><path d="M-3.5 -3.5L3.5 3.5M3.5 -3.5L-3.5 3.5" stroke="#e11d48" stroke-width="2" stroke-linecap="round"/></g>
-<g class="xmark" transform="translate(24 316)"><circle r="9" fill="#fff" stroke="#e11d48" stroke-width="1.8"/><path d="M-3.5 -3.5L3.5 3.5M3.5 -3.5L-3.5 3.5" stroke="#e11d48" stroke-width="2" stroke-linecap="round"/></g>
-<g class="xmark" transform="translate(436 396)"><circle r="9" fill="#fff" stroke="#e11d48" stroke-width="1.8"/><path d="M-3.5 -3.5L3.5 3.5M3.5 -3.5L-3.5 3.5" stroke="#e11d48" stroke-width="2" stroke-linecap="round"/></g>
-</svg>
-        <div class="pop absolute bottom-20 right-3 hidden rounded-2xl bg-zinc-950 px-3.5 py-2.5 text-white shadow-xl sm:bottom-24 sm:right-5 sm:block" style="transform-origin:80% 100%">
-          <p class="text-[13px] font-bold text-hl">💰 Nueva oferta</p>
-          <p class="text-[13px] font-semibold">US$ 11.900 · Etios</p>
+      <div class="mt-8 flex items-center gap-4">
+        <div class="flex gap-2" id="heroDots">
+          <button class="hero-dot on" data-go="0" aria-label="Foto 1"></button><button class="hero-dot" data-go="1" aria-label="Foto 2"></button><button class="hero-dot" data-go="2" aria-label="Foto 3"></button>
+        </div>
+        <div class="ml-auto hidden gap-2 sm:flex">
+          <button class="hero-nav" id="heroPrev" aria-label="Foto anterior"><i data-lucide="arrow-left" class="h-4 w-4"></i></button>
+          <button class="hero-nav" id="heroNext" aria-label="Foto siguiente"><i data-lucide="arrow-right" class="h-4 w-4"></i></button>
         </div>
       </div>
     </div>
@@ -933,6 +933,20 @@
   window.addEventListener('DOMContentLoaded', () => {
     window.lucide && lucide.createIcons();
     if (window.Swiper) {
+
+      // Galería del hero
+      const textos = [...document.querySelectorAll('.hero-texts .ht')], dots = [...document.querySelectorAll('#heroDots .hero-dot')];
+      const hero = new Swiper('.hero-swiper', { loop: true, speed: 1200, effect: 'fade', fadeEffect: { crossFade: true }, allowTouchMove: true,
+        autoplay: { delay: 6500, disableOnInteraction: false } });
+      const pintar = () => {
+        const i = hero.realIndex;
+        textos.forEach((t, j) => { t.classList.toggle('on', j === i); t.setAttribute('aria-hidden', j === i ? 'false' : 'true') });
+        dots.forEach((d, j) => { d.classList.remove('on'); void d.offsetWidth; d.classList.toggle('on', j === i) });
+      };
+      hero.on('slideChange', pintar);
+      dots.forEach((d) => d.addEventListener('click', () => hero.slideToLoop(+d.dataset.go)));
+      document.getElementById('heroPrev')?.addEventListener('click', () => hero.slidePrev());
+      document.getElementById('heroNext')?.addEventListener('click', () => hero.slideNext());
       const chat = new Swiper('.chat-swiper', { loop: true, speed: 700, autoplay: { delay: 4800, disableOnInteraction: false }, effect: 'fade', fadeEffect: { crossFade: true }, pagination: { el: '.chat-swiper .swiper-pagination', clickable: true } });
       const marcar = () => document.querySelectorAll('.celu-item').forEach(b => b.classList.toggle('on', +b.dataset.slide === chat.realIndex));
       chat.on('slideChange', marcar); marcar();
