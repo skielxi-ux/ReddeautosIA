@@ -134,6 +134,19 @@
     .card .media{position:relative;aspect-ratio:16/10;overflow:hidden}
     .card .media img,.card .media .ph{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1s var(--ease)}
     .card:hover .media img,.card:hover .media .ph{transform:scale(1.06)}
+    .gal{position:absolute;inset:0}
+    .gal img{opacity:0;transition:opacity .45s var(--ease),transform 1s var(--ease)}
+    .gal img.on{opacity:1}
+    .gal::after{content:"";position:absolute;inset:auto 0 0;height:38%;background:linear-gradient(transparent,rgba(0,0,0,.55));pointer-events:none}
+    .gal-nav{position:absolute;top:0;bottom:0;width:50%;z-index:1;display:flex;align-items:center;padding:0 .6rem;color:#fff;opacity:0;transition:opacity .25s;cursor:pointer;background:none;border:0}
+    .gal-nav.l{left:0;justify-content:flex-start}.gal-nav.r{right:0;justify-content:flex-end}
+    .gal-nav i,.gal-nav svg{background:rgba(0,0,0,.45);border-radius:999px;padding:.3rem;width:2rem;height:2rem;backdrop-filter:blur(6px)}
+    .card:hover .gal-nav{opacity:1}
+    @media (hover:none){.gal-nav{opacity:1}.gal-nav i,.gal-nav svg{display:none}}
+    .gal-bars{position:absolute;left:.85rem;right:3.6rem;bottom:.8rem;z-index:2;display:flex;gap:4px;pointer-events:none}
+    .gal-bars span{flex:1;height:3px;border-radius:3px;background:rgba(255,255,255,.35);transition:background .3s}
+    .gal-bars span.on{background:#fff}
+    .gal-count{position:absolute;right:.75rem;bottom:.55rem;z-index:2;display:flex;align-items:center;gap:.25rem;font:600 11px/1 ui-monospace,monospace;color:#fff;background:rgba(0,0,0,.45);padding:.3rem .45rem;border-radius:999px;pointer-events:none}
     .ph{display:grid;place-items:center;background:radial-gradient(120% 90% at 20% 10%,hsla(var(--h),80%,55%,.55),transparent 55%),radial-gradient(90% 80% at 90% 100%,rgba(63,224,197,.25),transparent 50%),#121214}
     .ph .ghost{position:absolute;bottom:-.18em;left:.15em;font-family:"Mona Sans";font-weight:900;font-size:5.2rem;line-height:1;letter-spacing:-.04em;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.14);white-space:nowrap}
     .badge{display:inline-flex;align-items:center;gap:.35rem;padding:.3rem .6rem;border-radius:999px;font-size:.72rem;font-weight:600;letter-spacing:.01em;backdrop-filter:blur(10px)}
@@ -1126,8 +1139,13 @@
     const exact = v.tipo_match === 'exacto';
     const C = 2 * Math.PI * 16, off = C * (1 - Math.min(100, v.score || 0) / 100);
     const alt = v.moneda === 'USD' ? money(v.precio_ars, 'ARS') : money(v.precio_usd, 'USD');
-    const media = v.fotos?.[0]
-      ? `<img src="${esc(v.fotos[0])}" alt="${esc(v.marca + ' ' + v.modelo)}" loading="lazy" />`
+    const fotos = (v.fotos || []).slice(0, 10);
+    const media = fotos.length
+      ? `<div class="gal" data-gal>${fotos.map((f, k) => `<img src="${esc(f)}" alt="${esc(v.marca + ' ' + v.modelo)} foto ${k + 1}" loading="lazy" class="${k ? '' : 'on'}" />`).join('')}
+          ${fotos.length > 1 ? `<button type="button" class="gal-nav l" data-gal-go="-1" aria-label="Foto anterior"><i data-lucide="chevron-left" class="h-5 w-5"></i></button>
+          <button type="button" class="gal-nav r" data-gal-go="1" aria-label="Foto siguiente"><i data-lucide="chevron-right" class="h-5 w-5"></i></button>
+          <div class="gal-bars">${fotos.map((_, k) => `<span class="${k ? '' : 'on'}"></span>`).join('')}</div>
+          <span class="gal-count"><i data-lucide="camera" class="h-3 w-3"></i>${fotos.length}</span>` : ''}</div>`
       : `<div class="ph" style="--h:${hueOf(v.modelo)}"><i data-lucide="car-front" class="h-16 w-16 text-white/85" stroke-width="1.2"></i><span class="ghost">${esc(v.modelo.toUpperCase())}</span></div>`;
     return `
     <div class="swiper-slide">
@@ -1204,6 +1222,12 @@
       gsap.from('#cards .card', { y: 60, autoAlpha: 0, rotate: 2, duration: 1, ease: 'expo.out', stagger: .09, onComplete: () => $$('#cards .ring-score .val').forEach(c => c.style.strokeDashoffset = c.dataset.off) });
     }
     $$('#cards [data-act]').forEach(b => b.addEventListener('click', () => openModal(b.dataset.act, S.results[+b.dataset.i])));
+    $$('#cards [data-gal-go]').forEach(b => b.addEventListener('click', e => {
+      e.preventDefault(); e.stopPropagation();
+      const g = b.closest('[data-gal]'), imgs = $$('img', g), bars = $$('.gal-bars span', g);
+      const cur = imgs.findIndex(x => x.classList.contains('on')), n = (cur + (+b.dataset.galGo) + imgs.length) % imgs.length;
+      imgs.forEach((x, k) => x.classList.toggle('on', k === n)); bars.forEach((x, k) => x.classList.toggle('on', k === n));
+    }));
 
     // Bloque de alerta: protagonista si no hay exactos, secundario si los hay
     renderAlert(exact, nombre);
