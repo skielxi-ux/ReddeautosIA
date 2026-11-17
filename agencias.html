@@ -64,10 +64,15 @@
     @keyframes sp{to{transform:rotate(360deg)}}
     .fade{animation:fade .45s var(--ease) both}
     @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-    .toast{position:fixed;left:50%;bottom:1.5rem;transform:translateX(-50%) translateY(150%);z-index:80;background:#fff;color:#0b0b0c;padding:.75rem 1.1rem;border-radius:999px;font-weight:600;font-size:.88rem;display:flex;gap:.5rem;align-items:center;transition:transform .45s var(--ease);max-width:92vw}
-    .toast.show{transform:translateX(-50%) translateY(0)}
+    .toast{position:fixed;left:50%;bottom:1.5rem;transform:translateX(-50%) translateY(calc(100% + 2rem));visibility:hidden;pointer-events:none;z-index:80;background:#fff;color:#0b0b0c;padding:.75rem 1.1rem;border-radius:999px;font-weight:600;font-size:.88rem;display:flex;gap:.5rem;align-items:center;transition:transform .45s var(--ease);max-width:92vw}
+    .toast.show{transform:translateX(-50%) translateY(0);visibility:visible;pointer-events:auto}
+    .toast{transition:transform .45s var(--ease),visibility 0s linear .45s}
+    .toast.show{transition:transform .45s var(--ease),visibility 0s}
     .toast.err{background:#f87171}
     .modal{position:fixed;inset:0;z-index:70;display:none;align-items:center;justify-content:center;padding:1rem;background:rgba(0,0,0,.65);backdrop-filter:blur(6px)}
+    .modal-card{display:flex;flex-direction:column;max-height:calc(100vh - 2rem);max-height:calc(100dvh - 2rem);overflow:hidden}
+    .modal-body{overflow-y:auto;overscroll-behavior:contain;padding:0 1.5rem}
+    .modal-foot{flex:none;display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;padding:1rem 1.5rem;border-top:1px solid var(--line);background:var(--bg-2)}
     .modal.show{display:flex}
     .ed{background:transparent;border:1px solid transparent;border-radius:10px;padding:.25rem .4rem;color:#fff;width:100%;outline:none;transition:border-color .2s}
     .ed:hover{border-color:var(--line)}
@@ -255,12 +260,12 @@
 
   <!-- Modal editar auto -->
   <div id="mEdit" class="modal">
-    <form id="fEdit" class="box w-full max-w-xl p-6 md:p-7">
-      <div class="flex items-start justify-between gap-4">
+    <form id="fEdit" class="box modal-card w-full max-w-xl">
+      <div class="flex flex-none items-start justify-between gap-4 px-6 pb-4 pt-6">
         <h3 class="font-display text-xl font-bold text-white">Editar auto</h3>
-        <button type="button" data-cerrar class="btn-gh btn-sm"><i data-lucide="x" class="h-4 w-4"></i></button>
+        <button type="button" data-cerrar class="btn-gh btn-sm" aria-label="Cerrar"><i data-lucide="x" class="h-4 w-4"></i></button>
       </div>
-      <div class="mt-5 grid grid-cols-2 gap-3">
+      <div class="modal-body"><div class="grid grid-cols-2 gap-3 pb-4">
         <div class="fld"><label>Marca</label><input name="marca" class="inp" /></div>
         <div class="fld"><label>Modelo</label><input name="modelo" class="inp" /></div>
         <div class="fld col-span-2"><label>Versión</label><input name="version" class="inp" /></div>
@@ -274,8 +279,12 @@
         <div class="fld"><label>Carrocería</label><select name="carroceria" class="inp"><option value="">—</option><option value="hatchback">Hatchback</option><option value="sedan">Sedán</option><option value="suv">SUV</option><option value="pickup">Pickup</option><option value="utilitario">Utilitario</option><option value="rural">Rural</option><option value="monovolumen">Monovolumen</option><option value="coupe">Coupé</option></select></div>
         <label class="col-span-1 flex items-center gap-2 text-sm"><input type="checkbox" name="acepta_permuta" class="accent-[#3fe0c5]" />Toma usado</label>
         <label class="col-span-1 flex items-center gap-2 text-sm"><input type="checkbox" name="financiacion" class="accent-[#3fe0c5]" />Financiación</label>
+      </div></div>
+      <div class="modal-foot">
+        <button class="btn-pr"><i data-lucide="check" class="h-4 w-4"></i>Guardar</button>
+        <button type="button" data-cerrar class="btn-gh">Cancelar</button>
+        <button type="button" id="btnEliminar" class="btn-gh ml-auto !border-red-400/30 !text-red-300 hover:!bg-red-400/10"><i data-lucide="trash-2" class="h-4 w-4"></i><span>Eliminar</span></button>
       </div>
-      <div class="mt-6 flex gap-3"><button class="btn-pr"><i data-lucide="check" class="h-4 w-4"></i>Guardar</button><button type="button" data-cerrar class="btn-gh">Cancelar</button></div>
     </form>
   </div>
 
@@ -331,9 +340,10 @@
     if (d.startsWith('00')) d = d.slice(2);
     if (d.startsWith('0')) d = d.slice(1);
     if (!d.startsWith('54')) d = '54' + d;
-    d = d.replace(/^54(\d{2,4})15(\d{6,8})$/, '54$1$2');
-    if (!d.startsWith('549')) d = '549' + d.slice(2);
-    return d;
+    let n = d.slice(2);
+    // Solo si sobran 2 dígitos (número de 10 + "15") sacamos el 15 que va después del código de área
+    if (n.length === 12 && !n.startsWith('9')) for (const a of [3, 4, 2]) if (n.slice(a, a + 2) === '15') { n = n.slice(0, a) + n.slice(a + 2); break; }
+    return n.startsWith('9') ? '54' + n : '549' + n;
   };
   $('#btnPin').href = `https://wa.me/${CONFIG.WHATSAPP_BOT}?text=${encodeURIComponent('PIN')}`;
   $('#btnPin').addEventListener('click', () => { setTimeout(() => $$('#pinBox input')[0].focus(), 800) });
@@ -595,8 +605,21 @@
     S.editando = v.id; const f = $('#fEdit');
     ['marca', 'modelo', 'version', 'anio', 'km', 'precio', 'moneda', 'combustible', 'transmision', 'color', 'carroceria'].forEach((k) => f[k].value = v[k] ?? (k === 'moneda' ? 'ARS' : ''));
     f.acepta_permuta.checked = !!v.acepta_permuta; f.financiacion.checked = !!v.financiacion;
-    $('#mEdit').classList.add('show'); icons();
+    $('#btnEliminar span').textContent = v.estado === 'borrador' ? 'Eliminar' : 'Dar de baja';
+    $('#mEdit').classList.add('show'); $('#mEdit .modal-body').scrollTop = 0; icons();
   }
+  $('#btnEliminar').addEventListener('click', async () => {
+    const v = autoPorId(S.editando); if (!v) return;
+    const borrador = v.estado === 'borrador';
+    if (!confirm(borrador ? `¿Eliminar ${v.marca} ${v.modelo}?` : `¿Dar de baja ${v.marca} ${v.modelo}? Deja de aparecer en la web.`)) return;
+    try {
+      await api('borrar', { ids: [v.id] });
+      S.autos = S.autos.filter((x) => x.id !== v.id);
+      $('#mEdit').classList.remove('show'); pintarStock();
+      toast(borrador ? 'Eliminado.' : 'Dado de baja.');
+    } catch (err) { toast(err.message, true); }
+  });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') $('#mEdit').classList.remove('show'); });
   $$('#mEdit [data-cerrar]').forEach((b) => b.addEventListener('click', () => $('#mEdit').classList.remove('show')));
   $('#mEdit').addEventListener('click', (e) => { if (e.target.id === 'mEdit') $('#mEdit').classList.remove('show'); });
   $('#fEdit').addEventListener('submit', async (e) => {
