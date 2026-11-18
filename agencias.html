@@ -154,14 +154,23 @@
     <section id="vPerfil" class="mx-auto max-w-3xl pt-6" hidden>
       <div id="perfilIntro" class="fade mb-6">
         <p class="tag">Paso 1 de 2</p>
-        <h1 class="mt-4 font-display text-3xl font-bold tracking-tight text-zinc-950 md:text-4xl">Datos de tu agencia</h1>
-        <p class="mt-2 text-ink">Los revisamos para darte el sello de <b class="text-pr">Agencia verificada</b>. Los compradores no ven tus datos de contacto hasta cerrar el acuerdo.</p>
+        <h1 class="mt-4 font-display text-3xl font-bold tracking-tight text-zinc-950 md:text-4xl" id="perfilTit">Tus datos</h1>
+        <p class="mt-2 text-ink" id="perfilSub">Los revisamos para darte el sello de <b class="text-pr">verificado</b>. Los compradores no ven tus datos de contacto hasta cerrar el acuerdo.</p>
       </div>
       <form id="fPerfil" class="box fade grid gap-4 p-6 md:grid-cols-2 md:p-8">
-        <div class="fld md:col-span-2"><label>Nombre de la agencia *</label><input name="nombre" class="inp" required maxlength="80" placeholder="Ej. Norte Automotores" /></div>
-        <div class="fld"><label>Razón social</label><input name="razon_social" class="inp" maxlength="120" placeholder="Ej. Norte Automotores SRL" /></div>
-        <div class="fld"><label>CUIT</label><input name="cuit" class="inp" inputmode="numeric" maxlength="13" placeholder="30-12345678-9" /></div>
-        <div class="fld md:col-span-2"><label>Dirección del local *</label><input name="direccion" class="inp" required maxlength="150" placeholder="Av. Mate de Luna 1234" /></div>
+        <div class="md:col-span-2">
+          <p class="mb-2 text-sm font-semibold text-zinc-950">¿Cómo te sumás?</p>
+          <div class="seg !grid-cols-2" id="pfTipo">
+            <button type="button" data-tipo="agencia" class="on"><i data-lucide="store" class="h-4 w-4"></i>Soy agencia</button>
+            <button type="button" data-tipo="vendedor"><i data-lucide="user-round" class="h-4 w-4"></i>Soy vendedor</button>
+          </div>
+          <p class="mt-2 text-xs text-ink/70" id="pfTipoAyuda">Cuenta de la agencia: publicás el stock y recibís los compradores.</p>
+        </div>
+        <div class="fld md:col-span-2"><label id="lblNombre">Nombre de la agencia *</label><input name="nombre" class="inp" required maxlength="80" placeholder="Ej. Norte Automotores" /></div>
+        <div class="fld md:col-span-2 solo-vend" hidden><label>Agencia donde trabajás *</label><input name="trabaja_en" class="inp" maxlength="80" placeholder="Ej. Norte Automotores" /></div>
+        <div class="fld solo-ag"><label>Razón social</label><input name="razon_social" class="inp" maxlength="120" placeholder="Ej. Norte Automotores SRL" /></div>
+        <div class="fld solo-ag"><label>CUIT</label><input name="cuit" class="inp" inputmode="numeric" maxlength="13" placeholder="30-12345678-9" /></div>
+        <div class="fld md:col-span-2"><label id="lblDir">Dirección del local *</label><input name="direccion" class="inp" required maxlength="150" placeholder="Av. Mate de Luna 1234" /></div>
         <div class="fld"><label>Ciudad</label>
           <select name="ciudad" class="inp">
             <option>San Miguel de Tucumán</option><option>Yerba Buena</option><option>Tafí Viejo</option><option>Banda del Río Salí</option>
@@ -170,14 +179,14 @@
           </select>
         </div>
         <div class="fld"><label>Horario</label><input name="horario" class="inp" maxlength="120" placeholder="Lun a vie 9–13 y 17–21 · Sáb 9–13" /></div>
-        <div class="fld"><label>Persona de contacto</label><input name="contacto_nombre" class="inp" maxlength="80" placeholder="Nombre y apellido" /></div>
+        <div class="fld solo-ag"><label>Persona de contacto</label><input name="contacto_nombre" class="inp" maxlength="80" placeholder="Nombre y apellido" /></div>
         <div class="fld"><label>Email (opcional)</label><input name="email" type="email" class="inp" maxlength="120" placeholder="ventas@tuagencia.com" /></div>
         <div class="fld md:col-span-2"><label>Marcas en las que te especializás (opcional, separadas por coma)</label><input name="marcas" class="inp" placeholder="Toyota, Volkswagen, Fiat" /><span class="text-xs text-ink/60">Te avisamos primero los pedidos de esas marcas. Vacío = todas.</span></div>
         <div class="fld md:col-span-2">
-          <label>Foto del frente del local (para verificarte; no se publica)</label>
+          <label id="lblFoto">Foto del frente del local (para verificarte; no se publica)</label>
           <label id="localDrop" class="drop flex items-center gap-4 p-4">
             <span id="localPrev" class="grid h-16 w-24 flex-none place-items-center overflow-hidden rounded-xl bg-bg3"><i data-lucide="store" class="h-6 w-6 text-ink/50"></i></span>
-            <span class="text-sm"><b class="text-zinc-950">Elegir foto</b><br /><span class="text-ink/60">Se ve el cartel y la entrada</span></span>
+            <span class="text-sm"><b class="text-zinc-950">Elegir foto</b><br /><span class="text-ink/60" id="fotoAyuda">Se ve el cartel y la entrada</span></span>
             <input id="localFile" type="file" accept="image/*" class="hidden" />
           </label>
         </div>
@@ -399,6 +408,7 @@
     SUPABASE_URL: 'https://ytuecptdgtmrbiddyzht.supabase.co',
     SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl0dWVjcHRkZ3RtcmJpZGR5emh0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ0MTMxNTMsImV4cCI6MjEwOTk4OTE1M30.H-Yi5dwDW8TvZfFWvP3dquHnCeQNtHTf8MO6i5v02VA',
     WHATSAPP_BOT: '15551478965', // número del bot de Red de Autos
+    WHATSAPP_ADMIN: '5493816335234', // para activar planes
     MIN_FOTOS: 3,
   };
   const $ = (s, el = document) => el.querySelector(s);
@@ -499,13 +509,32 @@
 
   // ===================== PERFIL =====================
   let fotoLocal = null;
+  let pfTipo = 'agencia';
+  function tipoPerfil(t) {
+    pfTipo = t; const v = t === 'vendedor';
+    $$('#pfTipo button').forEach((b) => b.classList.toggle('on', b.dataset.tipo === t));
+    $$('#fPerfil .solo-ag').forEach((el) => el.hidden = v);
+    $$('#fPerfil .solo-vend').forEach((el) => el.hidden = !v);
+    $('#fPerfil').trabaja_en.required = v;
+    $('#lblNombre').textContent = v ? 'Tu nombre y apellido *' : 'Nombre de la agencia *';
+    $('#fPerfil').nombre.placeholder = v ? 'Ej. Juan Pérez' : 'Ej. Norte Automotores';
+    $('#lblDir').textContent = v ? 'Dirección de la agencia *' : 'Dirección del local *';
+    $('#lblFoto').textContent = v ? 'Foto tuya en la agencia (para verificarte; no se publica)' : 'Foto del frente del local (para verificarte; no se publica)';
+    $('#fotoAyuda').textContent = v ? 'Una selfie adentro de la agencia o con el cartel' : 'Se ve el cartel y la entrada';
+    $('#pfTipoAyuda').textContent = v
+      ? 'Cuenta personal de vendedor: cargás los autos que vendés y los compradores te llegan a vos. 30 días gratis.'
+      : 'Cuenta de la agencia: publicás el stock y recibís los compradores.';
+  }
+  $$('#pfTipo button').forEach((b) => b.addEventListener('click', () => { if (!S.yo?.agencia) tipoPerfil(b.dataset.tipo); }));
   function abrirPerfil(nueva) {
     const f = $('#fPerfil'), ag = S.yo?.agencia;
+    tipoPerfil(ag?.tipo || 'agencia');
+    $$('#pfTipo button').forEach((b) => b.disabled = !!ag && b.dataset.tipo !== (ag.tipo || 'agencia'));
     $('#perfilIntro').hidden = !nueva;
     $('#btnPerfilCancel').hidden = nueva;
     $('#btnPerfil span').textContent = nueva ? 'Enviar para verificación' : (ag?.verificacion === 'rechazada' ? 'Reenviar para verificación' : 'Guardar cambios');
     if (ag) {
-      ['nombre', 'razon_social', 'cuit', 'direccion', 'ciudad', 'horario', 'contacto_nombre', 'email'].forEach((k) => { if (f[k]) f[k].value = ag[k] ?? (k === 'ciudad' ? 'San Miguel de Tucumán' : ''); });
+      ['nombre', 'trabaja_en', 'razon_social', 'cuit', 'direccion', 'ciudad', 'horario', 'contacto_nombre', 'email'].forEach((k) => { if (f[k]) f[k].value = ag[k] ?? (k === 'ciudad' ? 'San Miguel de Tucumán' : ''); });
       f.marcas.value = (ag.marcas_foco || []).map((m) => m[0].toUpperCase() + m.slice(1)).join(', ');
       if (ag.tiene_foto_local) $('#localPrev').innerHTML = '<i data-lucide="check-circle-2" class="h-6 w-6 text-pr"></i>';
     }
@@ -522,10 +551,11 @@
     e.preventDefault();
     const f = e.target, b = $('#btnPerfil'), txt = $('#btnPerfil span').textContent;
     const nueva = !S.yo?.agencia;
-    if (nueva && !fotoLocal) return toast('Subí una foto del frente del local para verificarte.', true);
+    if (nueva && !fotoLocal) return toast(pfTipo === 'vendedor' ? 'Subí una foto tuya en la agencia para verificarte.' : 'Subí una foto del frente del local para verificarte.', true);
     b.disabled = true; $('#btnPerfil span').textContent = 'Guardando…';
     try {
-      const datos = Object.fromEntries(['nombre', 'razon_social', 'cuit', 'direccion', 'ciudad', 'horario', 'contacto_nombre', 'email'].map((k) => [k, f[k].value]));
+      const datos = Object.fromEntries(['nombre', 'trabaja_en', 'razon_social', 'cuit', 'direccion', 'ciudad', 'horario', 'contacto_nombre', 'email'].map((k) => [k, f[k].value]));
+      datos.tipo = pfTipo;
       datos.marcas_foco = f.marcas.value.split(',').map((s) => s.trim()).filter(Boolean);
       if (fotoLocal) datos.foto_local = { base64: fotoLocal.base64, mime: 'image/jpeg' };
       const r = await api('guardar_perfil', datos);
@@ -541,14 +571,19 @@
   // ===================== PANEL =====================
   function pintarPanel() {
     const ag = S.yo.agencia;
-    $('#pNombre').textContent = ag.nombre;
+    const esV = ag.tipo === 'vendedor';
+    $('#pNombre').textContent = ag.nombre + (esV && ag.trabaja_en ? ` · ${ag.trabaja_en}` : '');
     const v = ag.verificacion;
-    $('#pTag').textContent = v === 'aprobada' ? 'Agencia verificada' : 'Panel de agencia';
+    $('#pTag').textContent = esV ? (v === 'aprobada' ? 'Vendedor verificado' : 'Panel de vendedor') : (v === 'aprobada' ? 'Agencia verificada' : 'Panel de agencia');
     $('#banner').innerHTML = v === 'pendiente'
       ? `<div class="flex gap-3 rounded-2xl border border-amber-300/25 bg-amber-300/[.06] p-4 text-sm"><i data-lucide="hourglass" class="h-5 w-5 flex-none text-amber-700"></i><div><b class="text-zinc-950">Estamos verificando tu agencia.</b> Mientras tanto ya podés cargar tu stock y las fotos: se publican solos apenas te aprobemos. Te avisamos por WhatsApp.</div></div>`
       : v === 'rechazada'
       ? `<div class="flex flex-wrap items-center gap-3 rounded-2xl border border-red-400/25 bg-red-400/[.06] p-4 text-sm"><i data-lucide="alert-triangle" class="h-5 w-5 flex-none text-red-400"></i><div class="flex-1"><b class="text-zinc-950">No pudimos verificar tu agencia.</b> Revisá tus datos y la foto del local y volvé a enviarlos.</div><button class="btn-gh btn-sm" onclick="abrirPerfil(false)">Revisar mis datos</button></div>`
-      : `<div class="flex items-start gap-3 rounded-2xl border border-[#0866FF]/20 bg-[#0866FF]/[.05] p-4 text-sm">${VERIF}<div><b class="text-zinc-950">Agencia verificada.</b> Tus autos con ${CONFIG.MIN_FOTOS} fotos o más aparecen en las búsquedas. Las ofertas te llegan por WhatsApp.</div></div>`;
+      : `<div class="flex items-start gap-3 rounded-2xl border border-[#0866FF]/20 bg-[#0866FF]/[.05] p-4 text-sm">${VERIF}<div><b class="text-zinc-950">${esV ? 'Vendedor verificado' : 'Agencia verificada'}.</b> Tus autos con ${CONFIG.MIN_FOTOS} fotos o más aparecen en las búsquedas. Las ofertas te llegan por WhatsApp.</div></div>`;
+    if (esV && ag.plan === 'prueba' && ag.prueba_hasta) {
+      const dias = Math.max(0, Math.ceil((new Date(ag.prueba_hasta) - Date.now()) / 864e5));
+      $('#banner').innerHTML += `<div class="mt-3 flex flex-wrap items-center gap-3 rounded-2xl border border-line bg-hl/30 p-4 text-sm"><i data-lucide="gift" class="h-5 w-5 flex-none"></i><div class="flex-1"><b class="text-zinc-950">${dias ? `Prueba gratis: te quedan ${dias} día${dias > 1 ? 's' : ''}.` : 'Tu prueba gratis terminó.'}</b> ${dias ? 'Mirá en "Lo que buscan" cuántos compradores te llegaron.' : 'Tus autos dejaron de mostrarse. Escribinos para activar tu plan.'}</div><a class="btn-pr btn-sm" target="_blank" rel="noopener" href="https://wa.me/${CONFIG.WHATSAPP_ADMIN}?text=${encodeURIComponent('Hola! Soy ' + ag.nombre + ', vendedor en Red de Autos. Quiero activar mi plan.')}">Activar mi plan</a></div>`;
+    }
     icons();
   }
 
