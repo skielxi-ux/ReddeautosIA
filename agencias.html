@@ -224,6 +224,7 @@
         <button class="tab" data-t="excel"><i data-lucide="file-spreadsheet" class="h-4 w-4"></i>Subir Excel</button>
         <button class="tab" data-t="fotos"><i data-lucide="images" class="h-4 w-4"></i>Subir fotos</button>
         <button class="tab" data-t="mercado"><i data-lucide="radar" class="h-4 w-4"></i>Lo que buscan</button>
+        <button class="tab" data-t="red"><i data-lucide="handshake" class="h-4 w-4"></i>Red de colegas <span class="n" id="nRed" hidden>0</span></button>
         <button class="tab" data-t="part"><i data-lucide="key-round" class="h-4 w-4"></i>Particulares <span class="n" id="nPart" hidden>0</span></button>
       </nav>
 
@@ -276,6 +277,27 @@
         </div>
         <div id="fotResumen" class="mt-5 text-sm" hidden></div>
         <div id="fotGrid" class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5"></div>
+      </div>
+
+      <!-- Red de colegas: venta compartida -->
+      <div id="tRed" class="mt-6" hidden>
+        <div class="max-w-3xl">
+          <h2 class="font-display text-2xl font-bold text-zinc-950">¿Tu cliente busca un auto que no tenés?</h2>
+          <p class="text-sm text-ink/70">Buscalo en el stock de las otras agencias de la red y compartí la venta. La agencia dueña no ve los datos de tu cliente, y vos ves quién es recién cuando acepta. Comisión sugerida para quien trae el cliente: <b class="text-zinc-950" id="redPct">3</b>% del precio de venta.</p>
+        </div>
+        <form id="fRed" class="box mt-5 p-4 md:p-5">
+          <label for="redQ" class="text-xs font-semibold text-zinc-950">¿Qué busca tu cliente?</label>
+          <div class="mt-2 flex flex-col gap-2 md:flex-row">
+            <input id="redQ" class="inp flex-1" maxlength="300" placeholder="Ej.: Hilux 4x4 automática 2019 en adelante, hasta 35 millones" />
+            <button class="btn-pr justify-center" id="redBtn"><i data-lucide="search" class="h-4 w-4"></i><span>Buscar en la red</span></button>
+          </div>
+          <div id="redPills" class="mt-3 flex flex-wrap gap-1.5"></div>
+        </form>
+        <div id="redRes" class="mt-5"></div>
+        <div class="mt-8 grid gap-5 lg:grid-cols-2">
+          <section><h3 class="font-display text-lg font-bold text-zinc-950">Te piden autos</h3><p class="text-xs text-ink/70">Colegas con un cliente para tu stock.</p><div id="redRecibidas" class="mt-3 space-y-2"></div></section>
+          <section><h3 class="font-display text-lg font-bold text-zinc-950">Tus pedidos</h3><p class="text-xs text-ink/70">Autos que pediste y pedidos que mandaste a todas.</p><div id="redEnviadas" class="mt-3 space-y-2"></div></section>
+        </div>
       </div>
 
       <!-- Autos de particulares -->
@@ -504,6 +526,8 @@
       await cargarStock();
       mostrar('panel');
       if (location.hash === '#particulares') irTab('part');
+      if (location.hash === '#red') irTab('red');
+      cargarRed(true).catch(() => {});
     } catch (e) { toast(e.message, true); mostrar('login'); }
   }
 
@@ -590,8 +614,9 @@
   // Tabs
   function irTab(t) {
     $$('#tabs .tab').forEach((b) => b.classList.toggle('on', b.dataset.t === t));
-    $('#tStock').hidden = t !== 'stock'; $('#tExcel').hidden = t !== 'excel'; $('#tFotos').hidden = t !== 'fotos'; $('#tMercado').hidden = t !== 'mercado'; $('#tPart').hidden = t !== 'part';
+    $('#tStock').hidden = t !== 'stock'; $('#tExcel').hidden = t !== 'excel'; $('#tFotos').hidden = t !== 'fotos'; $('#tMercado').hidden = t !== 'mercado'; $('#tPart').hidden = t !== 'part'; $('#tRed').hidden = t !== 'red';
     if (t === 'mercado') cargarMercado();
+    if (t === 'red') cargarRed();
     if (t === 'part') cargarPart();
   }
   $$('#tabs .tab').forEach((b) => b.addEventListener('click', () => irTab(b.dataset.t)));
@@ -629,6 +654,90 @@
     }
   }
   $('#mercRefresh').addEventListener('click', () => cargarMercado(true));
+
+  // ===================== RED DE COLEGAS =====================
+  const R = { intencion: null, texto: '' };
+  const estSol = { enviada: ['c-warn', 'Esperando respuesta'], aceptada: ['c-ok', 'Aceptada'], rechazada: ['c-mute', 'No puede'], vencida: ['c-mute', 'Vencida'] };
+  const autoR = (v) => [v?.marca, v?.modelo, v?.version, v?.anio].filter(Boolean).join(' ');
+  const nomAg = (a) => a ? (a.tipo === 'vendedor' && a.trabaja_en ? `${a.nombre} (${a.trabaja_en})` : a.nombre) : '';
+  $('#fRed').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const q = $('#redQ').value.trim(); if (q.length < 4) return toast('Contanos qué busca tu cliente.', true);
+    const b = $('#redBtn'); b.disabled = true; $('#redRes').innerHTML = '<div class="grid place-items-center py-10"><span class="spin h-6 w-6 text-pr"></span></div>';
+    try {
+      const r = await fetch(`${CONFIG.SUPABASE_URL}/functions/v1/interpretar-busqueda`, { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: CONFIG.SUPABASE_ANON_KEY, Authorization: 'Bearer ' + CONFIG.SUPABASE_ANON_KEY }, body: JSON.stringify({ texto: q, canal: 'colega' }) });
+      const j = await r.json(); if (!r.ok) throw new Error(j.error || 'No pude entender la búsqueda.');
+      R.intencion = j.intencion; R.texto = q;
+      $('#redPills').innerHTML = (j.intencion?.pills || []).map((p) => `<span class="chip c-mute">${esc(p)}</span>`).join('');
+      if (!j.intencion?.es_busqueda_vehiculo) { $('#redRes').innerHTML = `<p class="text-sm text-ink">${esc(j.intencion?.pregunta_aclaratoria || 'Decime marca, modelo o tipo de auto.')}</p>`; return; }
+      const d = await api('red_buscar', { intencion: j.intencion });
+      $('#redPct').textContent = d.comision_pct;
+      pintarRed(d.resultados);
+    } catch (x) { $('#redRes').innerHTML = ''; toast(x.message, true); } finally { b.disabled = false; }
+  });
+  function pintarRed(lista) {
+    const pedir = `<div class="box mt-4 flex flex-col items-start gap-3 p-4 md:flex-row md:items-center"><i data-lucide="megaphone" class="h-5 w-5 flex-none"></i><p class="flex-1 text-sm text-ink">${lista.length ? '¿Ninguno le sirve?' : 'No hay ese auto publicado en la red ahora.'} Mandale el pedido <b class="text-zinc-950">a todas las agencias</b> por WhatsApp: la que lo tenga te responde.</p><button class="btn-pr btn-sm" id="redTodos"><i data-lucide="send" class="h-4 w-4"></i>Pedir a todas</button></div>`;
+    $('#redRes').innerHTML = (lista.length ? `<p class="mb-3 text-sm text-ink"><b class="text-zinc-950">${lista.length}</b> auto${lista.length > 1 ? 's' : ''} en otras agencias de la red:</p><div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">${lista.map((v) => {
+      const f = (v.fotos || [])[0];
+      const st = v.mi_solicitud ? estSol[v.mi_solicitud] : null;
+      return `<article class="box overflow-hidden">
+        <div class="aspect-[4/3] bg-bg2">${f ? `<img src="${esc(f)}" class="h-full w-full object-cover" loading="lazy" alt="" />` : ''}</div>
+        <div class="p-4">
+          <div class="flex flex-wrap items-center gap-1.5"><span class="chip c-mute"><i data-lucide="map-pin" class="h-3 w-3"></i>${esc(v.zona || 'Tucumán')}</span>${v.tipo_match === 'exacto' ? '<span class="chip c-ok">Coincide</span>' : '<span class="chip c-mute">Parecido</span>'}</div>
+          <h3 class="mt-2 font-display text-lg font-bold text-zinc-950">${esc(v.marca)} ${esc(v.modelo)} <span class="font-sans text-sm font-normal text-ink">${esc(v.version || '')}</span></h3>
+          <p class="text-sm text-ink">${[v.anio, v.km != null ? nf.format(v.km) + ' km' : null, v.transmision === 'automatica' ? 'Automático' : v.transmision === 'manual' ? 'Manual' : null].filter(Boolean).join(' · ')}</p>
+          <p class="mt-2 font-display text-xl font-bold text-zinc-950">${money(v.precio, v.moneda)}</p>
+          ${st ? `<span class="chip ${st[0]} mt-3">${st[1]}</span>` : `<button class="btn-pr btn-sm mt-3 w-full justify-center" data-redpedir="${v.vehiculo_id}"><i data-lucide="handshake" class="h-4 w-4"></i>Pedir para mi cliente</button>`}
+        </div></article>`;
+    }).join('')}</div>` : '') + pedir;
+    $('#redTodos').addEventListener('click', pedirTodos);
+    icons();
+  }
+  async function pedirTodos(e) {
+    if (!confirm('Le mandamos tu pedido por WhatsApp a todas las agencias de la red. ¿Seguimos?')) return;
+    const b = e.currentTarget; b.disabled = true;
+    try { const r = await api('red_pedir_todos', { texto: R.texto, intencion: R.intencion }); toast(`Pedido enviado a ${r.avisadas} agencia${r.avisadas === 1 ? '' : 's'}. Te avisamos por WhatsApp cuando alguna lo tenga.`); cargarRed(); }
+    catch (x) { toast(x.message, true); b.disabled = false; }
+  }
+  document.addEventListener('click', async (e) => {
+    const b = e.target.closest('[data-redpedir]'); if (!b) return;
+    if (S.yo.agencia.verificacion !== 'aprobada') return toast('Tu cuenta tiene que estar verificada para usar la red.', true);
+    b.disabled = true;
+    try { await api('red_solicitar', { vehiculo_id: b.dataset.redpedir, texto: R.texto }); b.outerHTML = '<span class="chip c-warn mt-3">Esperando respuesta</span>'; toast('Listo. Le avisamos a la agencia dueña; si acepta, te pasamos su contacto.'); cargarRed(); }
+    catch (x) { toast(x.message, true); b.disabled = false; }
+  });
+  document.addEventListener('click', async (e) => {
+    const b = e.target.closest('[data-redresp]'); if (!b) return;
+    const acepta = b.dataset.acepta === '1';
+    if (acepta && !confirm('¿Compartís la venta? Le pasamos tu contacto al colega.')) return;
+    b.disabled = true;
+    try { const r = await api('red_responder', { id: b.dataset.redresp, acepta }); toast(acepta ? 'Listo. Ya tenés el contacto del colega abajo.' : 'Listo. Le avisamos.'); cargarRed(); }
+    catch (x) { toast(x.message, true); b.disabled = false; }
+  });
+  async function cargarRed(soloBadge = false) {
+    const d = await api('red_mis');
+    const pend = (d.recibidas || []).filter((s) => s.estado === 'enviada').length;
+    $('#nRed').textContent = pend; $('#nRed').hidden = !pend;
+    if (soloBadge) return;
+    $('#redRecibidas').innerHTML = (d.recibidas || []).length ? d.recibidas.map((s) => `<div class="box p-4 text-sm">
+      <div class="flex flex-wrap items-center justify-between gap-2"><b class="text-zinc-950">${esc(autoR(s.vehiculo))}</b><span class="chip ${estSol[s.estado]?.[0]}">${estSol[s.estado]?.[1]}</span></div>
+      <p class="mt-1 text-ink">${s.texto ? `El cliente busca: “${esc(s.texto)}”` : 'Un colega tiene un cliente para este auto.'}</p>
+      <p class="mt-1 text-xs text-ink/70">${new Date(s.created_at).toLocaleString('es-AR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })} · comisión sugerida ${Number(s.comision_pct)} %</p>
+      ${s.estado === 'enviada' ? `<div class="mt-3 flex gap-2"><button class="btn-pr btn-sm" data-redresp="${s.id}" data-acepta="1"><i data-lucide="check" class="h-4 w-4"></i>Compartir la venta</button><button class="btn-gh btn-sm" data-redresp="${s.id}" data-acepta="0">No puedo</button></div>` : ''}
+      ${s.estado === 'aceptada' && s.pide ? `<p class="mt-3 rounded-xl bg-bg2 p-3">Colega: <b class="text-zinc-950">${esc(nomAg(s.pide))}</b> · <a class="underline" target="_blank" rel="noopener" href="https://wa.me/${esc(s.pide.whatsapp)}">escribirle</a></p>` : ''}
+    </div>`).join('') : '<p class="box p-5 text-sm text-ink/70">Todavía ningún colega te pidió autos.</p>';
+    const env = (d.enviadas || []).map((s) => `<div class="box p-4 text-sm">
+      <div class="flex flex-wrap items-center justify-between gap-2"><b class="text-zinc-950">${esc(autoR(s.vehiculo))} · ${money(s.vehiculo?.precio, s.vehiculo?.moneda)}</b><span class="chip ${estSol[s.estado]?.[0]}">${estSol[s.estado]?.[1]}</span></div>
+      ${s.estado === 'aceptada' && s.duena ? `<p class="mt-3 rounded-xl bg-bg2 p-3"><b class="text-zinc-950">${esc(nomAg(s.duena))}</b> · ${esc([s.duena.direccion, s.duena.ciudad].filter(Boolean).join(', '))} · <a class="underline" target="_blank" rel="noopener" href="https://wa.me/${esc(s.duena.whatsapp)}">escribirles</a></p>` : ''}
+    </div>`);
+    const ped = (d.pedidos || []).map((p) => `<div class="box p-4 text-sm">
+      <div class="flex flex-wrap items-center justify-between gap-2"><b class="text-zinc-950">📣 “${esc(p.texto)}”</b><span class="chip ${p.estado === 'abierto' ? 'c-warn' : 'c-mute'}">${p.estado === 'abierto' ? 'Abierto' : 'Cerrado'}</span></div>
+      <p class="mt-1 text-xs text-ink/70">Avisamos a ${p.agencias_avisadas} agencia${p.agencias_avisadas === 1 ? '' : 's'} · ${p.quienes.length ? `${p.quienes.length} lo tiene${p.quienes.length > 1 ? 'n' : ''}` : 'sin respuestas todavía'}</p>
+      ${p.quienes.map((a) => `<p class="mt-2 rounded-xl bg-bg2 p-3">✅ <b class="text-zinc-950">${esc(nomAg(a))}</b> (${esc(a.ciudad || 'Tucumán')}) · <a class="underline" target="_blank" rel="noopener" href="https://wa.me/${esc(a.whatsapp)}">escribirles</a></p>`).join('')}
+    </div>`);
+    $('#redEnviadas').innerHTML = [...ped, ...env].join('') || '<p class="box p-5 text-sm text-ink/70">Todavía no pediste autos a la red.</p>';
+    icons();
+  }
 
   // ===================== PARTICULARES =====================
   const P = { autos: [], auto: null, tipo: 'compra' };
