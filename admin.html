@@ -52,16 +52,31 @@
   <main class="mx-auto max-w-7xl px-5 pb-20 pt-6">
     <!-- LOGIN -->
     <section id="vLogin" hidden class="mx-auto mt-10 max-w-sm">
-      <div class="box p-6">
+      <form id="fLogin" class="box p-6">
         <h1 class="font-display text-2xl font-bold text-zinc-950">Ingreso admin</h1>
-        <p class="mt-1 text-sm text-ink">Con tu número de WhatsApp de administrador y tu PIN (pedilo escribiéndole <b>PIN</b> al bot).</p>
-        <label class="mt-5 block text-xs font-semibold">WhatsApp</label>
-        <input id="lTel" class="inp mt-1" inputmode="tel" placeholder="381 555-1234" />
-        <label class="mt-4 block text-xs font-semibold">PIN</label>
-        <div class="pin mt-1" id="pinBox"><input maxlength="1" inputmode="numeric" /><input maxlength="1" inputmode="numeric" /><input maxlength="1" inputmode="numeric" /><input maxlength="1" inputmode="numeric" /><input maxlength="1" inputmode="numeric" /><input maxlength="1" inputmode="numeric" /></div>
+        <label class="mt-5 block text-xs font-semibold" for="lTel">WhatsApp de administrador</label>
+        <input id="lTel" class="inp mt-1" inputmode="tel" autocomplete="username" placeholder="381 555-1234" />
+        <label class="mt-4 block text-xs font-semibold" for="lClave">Contraseña</label>
+        <div class="relative mt-1"><input id="lClave" type="password" class="inp pr-10" autocomplete="current-password" /><button type="button" class="ver absolute right-2 top-1/2 -translate-y-1/2 p-1 text-ink" data-ver="lClave" aria-label="Mostrar contraseña"><i data-lucide="eye" class="h-4 w-4"></i></button></div>
         <p id="lErr" class="mt-3 text-sm text-red-600" hidden></p>
         <button id="btnIngresar" class="btn btn-pr mt-5 w-full !py-3 !text-sm"><i data-lucide="log-in" class="h-4 w-4"></i>Ingresar</button>
-      </div>
+        <button type="button" id="btnOlvide" class="mt-4 w-full text-center text-sm text-ink underline underline-offset-4 hover:text-zinc-950">Olvidé mi contraseña</button>
+      </form>
+
+      <form id="fClave" class="box p-6" hidden>
+        <h1 class="font-display text-2xl font-bold text-zinc-950">Nueva contraseña</h1>
+        <p class="mt-1 text-sm text-ink" id="cInfo">Te mandamos un código de 6 números a tu WhatsApp.</p>
+        <label class="mt-5 block text-xs font-semibold" for="cCodigo">Código</label>
+        <input id="cCodigo" class="inp mt-1 font-mono tracking-[.3em]" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="000000" />
+        <label class="mt-4 block text-xs font-semibold" for="cClave">Contraseña nueva</label>
+        <div class="relative mt-1"><input id="cClave" type="password" class="inp pr-10" autocomplete="new-password" /><button type="button" class="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-ink" data-ver="cClave" aria-label="Mostrar contraseña"><i data-lucide="eye" class="h-4 w-4"></i></button></div>
+        <p class="mt-1 text-xs text-ink/70">Texto y números al final, por ejemplo <i>Palabra1</i>. Mínimo 6 caracteres.</p>
+        <label class="mt-4 block text-xs font-semibold" for="cClave2">Repetila</label>
+        <input id="cClave2" type="password" class="inp mt-1" autocomplete="new-password" />
+        <p id="cErr" class="mt-3 text-sm text-red-600" hidden></p>
+        <button id="btnGuardarClave" class="btn btn-pr mt-5 w-full !py-3 !text-sm"><i data-lucide="key-round" class="h-4 w-4"></i>Guardar contraseña</button>
+        <div class="mt-4 flex justify-between text-sm"><button type="button" id="btnReenviar" class="text-ink underline underline-offset-4">Mandarme otro código</button><button type="button" id="btnVolver" class="text-ink underline underline-offset-4">Volver</button></div>
+      </form>
     </section>
 
     <div id="vCarga" class="grid place-items-center py-40"><span class="spin h-6 w-6"></span></div>
@@ -146,7 +161,7 @@
       body: JSON.stringify({ accion, ...datos }),
     });
     const j = await r.json().catch(() => ({}));
-    if ((r.status === 401 || r.status === 403) && accion !== 'login') { await sb.auth.signOut(); mostrar('login'); if (r.status === 403) { $('#lErr').textContent = j.error; $('#lErr').hidden = false; } }
+    if ((r.status === 401 || r.status === 403) && !['login', 'pedir_codigo', 'cambiar_clave'].includes(accion)) { await sb.auth.signOut(); mostrar('login');  }
     if (!r.ok) throw new Error(j.error || 'Algo salió mal.');
     return j;
   }
@@ -154,26 +169,56 @@
   function mostrar(v) { ['vLogin', 'vPanel', 'vCarga'].forEach((id) => $('#' + id).hidden = id !== 'v' + v[0].toUpperCase() + v.slice(1)); $('#btnSalir').hidden = v !== 'panel'; icons(); }
 
   // ---------- Login ----------
-  const pins = $$('#pinBox input');
-  pins.forEach((p, i) => {
-    p.addEventListener('input', () => { p.value = p.value.replace(/\D/g, '').slice(-1); if (p.value && pins[i + 1]) pins[i + 1].focus(); });
-    p.addEventListener('keydown', (e) => { if (e.key === 'Backspace' && !p.value && pins[i - 1]) pins[i - 1].focus(); if (e.key === 'Enter') ingresar(); });
-    p.addEventListener('paste', (e) => { const t = (e.clipboardData.getData('text') || '').replace(/\D/g, '').slice(0, 6); if (t.length === 6) { e.preventDefault(); t.split('').forEach((c, k) => pins[k].value = c); } });
-  });
-  $('#lTel').value = localStorage.getItem('rda-tel') || '';
-  $('#btnIngresar').addEventListener('click', ingresar);
-  async function ingresar() {
-    const tel = $('#lTel').value.trim(), pin = pins.map((p) => p.value).join(''), e = $('#lErr'); e.hidden = true;
-    if (normTel(tel).length < 12 || pin.length !== 6) { e.textContent = 'Completá tu número y los 6 números del PIN.'; e.hidden = false; return; }
+  const CLAVE_OK = /^[A-Za-zÀ-ÿñÑ]+[0-9]+$/;
+  $('#lTel').value = localStorage.getItem('rda-admin-tel') || '';
+  document.addEventListener('click', (e) => { const b = e.target.closest('[data-ver]'); if (!b) return; const i = $('#' + b.dataset.ver); i.type = i.type === 'password' ? 'text' : 'password'; });
+  const errL = (m) => { $('#lErr').textContent = m; $('#lErr').hidden = !m; };
+  const errC = (m) => { $('#cErr').textContent = m; $('#cErr').hidden = !m; };
+  $('#fLogin').addEventListener('submit', async (e) => {
+    e.preventDefault(); errL('');
+    const tel = $('#lTel').value.trim(), clave = $('#lClave').value;
+    if (normTel(tel).length < 12 || !clave) return errL('Completá tu número y tu contraseña.');
     const b = $('#btnIngresar'); b.disabled = true;
     try {
-      const { email, otp } = await call('panel', 'login', { telefono: tel, pin });
+      const { email, otp } = await call('admin', 'login', { telefono: tel, clave });
       let r = await sb.auth.verifyOtp({ email, token: otp, type: 'email' });
       if (r.error) r = await sb.auth.verifyOtp({ email, token: otp, type: 'magiclink' });
       if (r.error) throw new Error('No se pudo iniciar la sesión.');
-      pins.forEach((p) => p.value = ''); await arrancar();
-    } catch (x) { e.textContent = x.message; e.hidden = false; } finally { b.disabled = false; }
+      localStorage.setItem('rda-admin-tel', tel); $('#lClave').value = '';
+      await arrancar();
+    } catch (x) { errL(x.message); } finally { b.disabled = false; }
+  });
+  async function pedirCodigo() {
+    const tel = $('#lTel').value.trim();
+    if (normTel(tel).length < 12) { errL('Escribí primero tu número de WhatsApp de administrador.'); $('#lTel').focus(); return false; }
+    try {
+      const r = await call('admin', 'pedir_codigo', { telefono: tel });
+      $('#cInfo').textContent = r.enviado === false
+        ? 'Generamos tu código. Si no te llega en un minuto, mandale un "hola" al bot de Red de Autos por WhatsApp y te llega enseguida.'
+        : 'Te mandamos un código de 6 números a tu WhatsApp. Vence en 10 minutos.';
+      return true;
+    } catch (x) { errL(x.message); errC(x.message); return false; }
   }
+  $('#btnOlvide').addEventListener('click', async () => {
+    errL('');
+    if (await pedirCodigo()) { $('#fLogin').hidden = true; $('#fClave').hidden = false; errC(''); $('#cCodigo').focus(); icons(); }
+  });
+  $('#btnReenviar').addEventListener('click', async () => { errC(''); if (await pedirCodigo()) toast('Te mandamos otro código.'); });
+  $('#btnVolver').addEventListener('click', () => { $('#fClave').hidden = true; $('#fLogin').hidden = false; });
+  $('#fClave').addEventListener('submit', async (e) => {
+    e.preventDefault(); errC('');
+    const codigo = $('#cCodigo').value.replace(/\D/g, ''), clave = $('#cClave').value;
+    if (codigo.length !== 6) return errC('Escribí los 6 números del código.');
+    if (clave.length < 6 || !CLAVE_OK.test(clave)) return errC('La contraseña tiene que ser texto con números al final (ej. Palabra1), de 6 caracteres o más.');
+    if (clave !== $('#cClave2').value) return errC('Las contraseñas no coinciden.');
+    const b = $('#btnGuardarClave'); b.disabled = true;
+    try {
+      await call('admin', 'cambiar_clave', { telefono: $('#lTel').value.trim(), codigo, clave });
+      ['cCodigo', 'cClave', 'cClave2'].forEach((id) => $('#' + id).value = '');
+      $('#fClave').hidden = true; $('#fLogin').hidden = false; $('#lClave').focus();
+      toast('¡Listo! Contraseña guardada. Ya podés ingresar.');
+    } catch (x) { errC(x.message); } finally { b.disabled = false; }
+  });
   $('#btnSalir').addEventListener('click', async () => { await sb.auth.signOut(); mostrar('login'); });
 
   // ---------- Tabs ----------
