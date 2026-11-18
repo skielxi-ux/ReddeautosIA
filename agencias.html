@@ -78,6 +78,9 @@
     .modal-body{overflow-y:auto;overscroll-behavior:contain;padding:0 1.5rem}
     .modal-foot{flex:none;display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;padding:1rem 1.5rem;border-top:1px solid var(--line);background:#fff}
     .modal.show{display:flex}
+    .sw{position:relative;flex:none;width:46px;height:26px}.sw input{position:absolute;opacity:0;inset:0}.sw span{position:absolute;inset:0;border-radius:99px;background:#e4e4e7;transition:.2s}.sw span::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:.2s}.sw input:checked+span{background:#0b0b0c}.sw input:checked+span::after{transform:translateX(20px);background:#d6f345}.sw input:focus-visible+span{outline:2px solid #0866FF;outline-offset:2px}
+    .seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;border-radius:999px;background:#f4f4f5}.seg button{display:flex;align-items:center;justify-content:center;gap:.4rem;padding:.55rem;border-radius:999px;font-size:.85rem;font-weight:600;color:#52525b}.seg button.on{background:#0b0b0c;color:#fff}.seg button:disabled{opacity:.35;cursor:not-allowed}
+    .pcar{aspect-ratio:4/3;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;border-radius:18px 18px 0 0;background:#f4f4f5}.pcar img{flex:none;width:100%;height:100%;object-fit:cover;scroll-snap-align:start}
     .ed{background:transparent;border:1px solid transparent;border-radius:10px;padding:.25rem .4rem;color:#0b0b0c;width:100%;outline:none;transition:border-color .2s}
     .ed:hover{border-color:var(--line)}
     .ed:focus{border-color:#0b0b0c;background:#fff;box-shadow:0 0 0 3px rgba(214,243,69,.5)}
@@ -212,6 +215,7 @@
         <button class="tab" data-t="excel"><i data-lucide="file-spreadsheet" class="h-4 w-4"></i>Subir Excel</button>
         <button class="tab" data-t="fotos"><i data-lucide="images" class="h-4 w-4"></i>Subir fotos</button>
         <button class="tab" data-t="mercado"><i data-lucide="radar" class="h-4 w-4"></i>Lo que buscan</button>
+        <button class="tab" data-t="part"><i data-lucide="key-round" class="h-4 w-4"></i>Particulares <span class="n" id="nPart" hidden>0</span></button>
       </nav>
 
       <!-- Mi stock -->
@@ -263,6 +267,23 @@
         </div>
         <div id="fotResumen" class="mt-5 text-sm" hidden></div>
         <div id="fotGrid" class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5"></div>
+      </div>
+
+      <!-- Autos de particulares -->
+      <div id="tPart" class="mt-6" hidden>
+        <div class="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h2 class="font-display text-2xl font-bold text-zinc-950">Autos de particulares</h2>
+            <p class="max-w-2xl text-sm text-ink/70">Particulares de Tucumán que quieren vender su auto o dejarlo en consignación. Les mandás una propuesta y ellos eligen. Si te eligen, les pasamos el contacto a los dos.</p>
+          </div>
+          <button class="btn-gh btn-sm" id="partRefresh"><i data-lucide="refresh-cw" class="h-4 w-4"></i>Actualizar</button>
+        </div>
+        <label class="box mt-5 flex cursor-pointer items-center gap-4 p-5">
+          <span class="sw"><input type="checkbox" id="partRecibe" /><span></span></span>
+          <span class="flex-1"><b class="block text-zinc-950">Recibir autos de particulares por WhatsApp</b><span class="text-sm text-ink/70">Te avisamos cada auto nuevo con botones para ofertar. Podés apagarlo cuando quieras.</span></span>
+        </label>
+        <div id="partCarga" class="grid place-items-center py-16"><span class="spin h-6 w-6 text-pr"></span></div>
+        <div id="partGrid" class="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3" hidden></div>
       </div>
 
       <!-- Lo que buscan en Tucumán -->
@@ -335,6 +356,33 @@
         <button class="btn-pr"><i data-lucide="check" class="h-4 w-4"></i>Guardar</button>
         <button type="button" data-cerrar class="btn-gh">Cancelar</button>
         <button type="button" id="btnEliminar" class="btn-gh ml-auto !border-red-400/30 !text-red-600 hover:!bg-red-400/10"><i data-lucide="trash-2" class="h-4 w-4"></i><span>Eliminar</span></button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Modal propuesta a particular -->
+  <div id="mPart" class="modal">
+    <form id="fPart" class="box modal-card w-full max-w-md">
+      <div class="flex flex-none items-start justify-between gap-4 px-6 pb-4 pt-6">
+        <div><h3 class="font-display text-xl font-bold text-zinc-950" id="mpTit">Propuesta</h3><p class="text-sm text-ink" id="mpAuto"></p></div>
+        <button type="button" data-cerrar class="btn-gh btn-sm" aria-label="Cerrar"><i data-lucide="x" class="h-4 w-4"></i></button>
+      </div>
+      <div class="modal-body"><div class="space-y-4 pb-4">
+        <div class="seg" id="mpTipo">
+          <button type="button" data-tipo="compra"><i data-lucide="hand-coins" class="h-4 w-4"></i>Comprarlo</button>
+          <button type="button" data-tipo="consignacion"><i data-lucide="handshake" class="h-4 w-4"></i>Consignación</button>
+        </div>
+        <p class="text-sm text-ink/80" id="mpAyuda"></p>
+        <div class="grid grid-cols-3 gap-3">
+          <div class="fld col-span-2"><label id="mpLblMonto">Monto</label><input name="monto" inputmode="numeric" class="inp" required placeholder="14.500.000" /></div>
+          <div class="fld"><label>Moneda</label><select name="moneda" class="inp"><option value="ARS">$</option><option value="USD">US$</option></select></div>
+          <div class="fld col-span-3" id="mpCom"><label>Tu comisión (%)</label><input name="comision" inputmode="decimal" class="inp" placeholder="5" /></div>
+        </div>
+        <p class="rounded-xl bg-bg2 p-3 text-xs text-ink/80">El particular recibe tu propuesta por WhatsApp con el nombre de tu agencia. Sus datos de contacto te llegan solo si la acepta.</p>
+      </div></div>
+      <div class="modal-foot">
+        <button class="btn-pr" id="mpEnviar"><i data-lucide="send" class="h-4 w-4"></i><span>Enviar propuesta</span></button>
+        <button type="button" data-cerrar class="btn-gh">Cancelar</button>
       </div>
     </form>
   </div>
@@ -444,6 +492,7 @@
       pintarPanel();
       await cargarStock();
       mostrar('panel');
+      if (location.hash === '#particulares') irTab('part');
     } catch (e) { toast(e.message, true); mostrar('login'); }
   }
 
@@ -505,8 +554,9 @@
   // Tabs
   function irTab(t) {
     $$('#tabs .tab').forEach((b) => b.classList.toggle('on', b.dataset.t === t));
-    $('#tStock').hidden = t !== 'stock'; $('#tExcel').hidden = t !== 'excel'; $('#tFotos').hidden = t !== 'fotos'; $('#tMercado').hidden = t !== 'mercado';
+    $('#tStock').hidden = t !== 'stock'; $('#tExcel').hidden = t !== 'excel'; $('#tFotos').hidden = t !== 'fotos'; $('#tMercado').hidden = t !== 'mercado'; $('#tPart').hidden = t !== 'part';
     if (t === 'mercado') cargarMercado();
+    if (t === 'part') cargarPart();
   }
   $$('#tabs .tab').forEach((b) => b.addEventListener('click', () => irTab(b.dataset.t)));
   document.addEventListener('click', (e) => { const g = e.target.closest('[data-goto]'); if (g) irTab(g.dataset.goto); });
@@ -543,6 +593,87 @@
     }
   }
   $('#mercRefresh').addEventListener('click', () => cargarMercado(true));
+
+  // ===================== PARTICULARES =====================
+  const P = { autos: [], auto: null, tipo: 'compra' };
+  const MODAL_TXT = { venta: 'Quiere venderlo', consignacion: 'Quiere dejarlo en consignación', ambas: 'Escucha compra o consignación' };
+  const hace = (iso) => { const h = Math.round((Date.now() - new Date(iso)) / 36e5); return h < 1 ? 'recién' : h < 24 ? `hace ${h} h` : `hace ${Math.round(h / 24)} d`; };
+  async function cargarPart() {
+    $('#partCarga').hidden = false; $('#partGrid').hidden = true;
+    try {
+      const d = await api('particulares');
+      P.autos = d.autos || []; $('#partRecibe').checked = !!d.recibe;
+      pintarPart();
+    } catch (e) { $('#partCarga').innerHTML = `<p class="text-sm text-ink/70">No pude cargar los autos. ${esc(e.message || '')}</p>`; }
+  }
+  function pintarPart() {
+    const abiertos = P.autos.filter((a) => a.estado === 'abierto');
+    $('#nPart').textContent = abiertos.length; $('#nPart').hidden = !abiertos.length;
+    $('#partGrid').innerHTML = P.autos.length ? P.autos.map((a) => {
+      const fotos = (a.fotos || []).map((u) => `<img src="${esc(u)}" loading="lazy" alt="" />`).join('') || '<div class="grid w-full place-items-center text-ink/40"><i data-lucide="image-off" class="h-6 w-6"></i></div>';
+      const mias = a.mis_ofertas || [];
+      const estadoO = { enviada: ['c-warn', 'Esperando respuesta'], aceptada: ['c-ok', '¡Te eligió!'], rechazada: ['c-mute', 'No aceptó'], descartada: ['c-mute', 'Eligió otra'] };
+      const misTxt = mias.map((o) => `<span class="chip ${estadoO[o.estado]?.[0] || 'c-mute'}">${o.tipo === 'compra' ? 'Compra' : 'Consig.'} ${money(o.monto, o.moneda)}${o.tipo === 'consignacion' ? ' · ' + Number(o.comision_pct) + '%' : ''} · ${estadoO[o.estado]?.[1] || o.estado}</span>`).join(' ');
+      const cerrado = a.estado !== 'abierto';
+      return `<article class="box overflow-hidden">
+        <div class="pcar">${fotos}</div>
+        <div class="p-5">
+          <div class="flex flex-wrap items-center gap-2"><span class="chip c-mute"><i data-lucide="map-pin" class="h-3 w-3"></i>${esc(a.zona || 'Tucumán')}</span><span class="text-xs text-ink/60">${hace(a.created_at)}</span>${cerrado ? '<span class="chip c-mute">Cerrado</span>' : ''}</div>
+          <h3 class="mt-2 font-display text-lg font-bold text-zinc-950">${esc(a.marca)} ${esc(a.modelo)} <span class="font-sans text-sm font-normal text-ink">${esc(a.version || '')}</span></h3>
+          <p class="text-sm text-ink">${[a.anio, a.km != null ? nf.format(a.km) + ' km' : null, a.transmision === 'automatica' ? 'Automático' : a.transmision === 'manual' ? 'Manual' : null, a.combustible].filter(Boolean).map(esc).join(' · ')}</p>
+          ${a.estado_auto ? `<p class="mt-2 line-clamp-3 text-sm text-ink/80">${esc(a.estado_auto)}</p>` : ''}
+          <div class="mt-3 flex items-baseline justify-between gap-2 border-t border-line pt-3"><span class="text-xs text-ink/70">${MODAL_TXT[a.modalidad] || ''}</span><b class="text-zinc-950">${a.precio_pretendido ? 'Pide ' + money(a.precio_pretendido, a.moneda) : 'Escucha ofertas'}</b></div>
+          ${misTxt ? `<div class="mt-3 flex flex-wrap gap-1.5">${misTxt}</div>` : ''}
+          ${cerrado ? '' : `<button class="btn-pr mt-4 w-full justify-center" data-ofertar="${a.id}"><i data-lucide="send" class="h-4 w-4"></i>${mias.length ? 'Cambiar propuesta' : 'Hacer propuesta'}</button>`}
+        </div></article>`;
+    }).join('') : `<div class="box col-span-full p-10 text-center text-sm text-ink/70"><i data-lucide="key-round" class="mx-auto mb-3 h-6 w-6 text-ink/40"></i>Todavía no hay autos de particulares abiertos. ${$('#partRecibe').checked ? 'Te avisamos por WhatsApp apenas cargue uno.' : 'Activá el aviso de arriba para enterarte apenas cargue uno.'}</div>`;
+    $('#partCarga').hidden = true; $('#partGrid').hidden = false; icons();
+  }
+  function tipoPart(t) {
+    P.tipo = t;
+    $$('#mpTipo button').forEach((b) => b.classList.toggle('on', b.dataset.tipo === t));
+    $('#mpCom').hidden = t !== 'consignacion';
+    $('#mpLblMonto').textContent = t === 'compra' ? 'Cuánto le pagás' : 'A cuánto lo publicás';
+    $('#mpAyuda').textContent = t === 'compra' ? 'Le comprás el auto y le pagás el monto acordado.' : 'El auto sigue siendo del particular. Vos lo vendés y cobrás tu comisión cuando se vende.';
+  }
+  document.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-ofertar]'); if (!b) return;
+    if (S.yo.agencia.verificacion !== 'aprobada') return toast('Tu agencia tiene que estar verificada para hacer propuestas.', true);
+    const a = P.autos.find((x) => x.id === b.dataset.ofertar); if (!a) return;
+    P.auto = a;
+    $('#mpTit').textContent = 'Propuesta al particular';
+    $('#mpAuto').textContent = [a.marca, a.modelo, a.version, a.anio].filter(Boolean).join(' ') + (a.precio_pretendido ? ` · pide ${money(a.precio_pretendido, a.moneda)}` : '');
+    const f = $('#fPart'); f.reset(); f.moneda.value = a.moneda || 'ARS';
+    $('[data-tipo="compra"]').disabled = a.modalidad === 'consignacion';
+    $('[data-tipo="consignacion"]').disabled = a.modalidad === 'venta';
+    tipoPart(a.modalidad === 'consignacion' ? 'consignacion' : 'compra');
+    $('#mPart').classList.add('show'); icons();
+  });
+  $$('#mpTipo button').forEach((b) => b.addEventListener('click', () => !b.disabled && tipoPart(b.dataset.tipo)));
+  $$('#mPart [data-cerrar]').forEach((b) => b.addEventListener('click', () => $('#mPart').classList.remove('show')));
+  $('#fPart').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const f = e.target, monto = Number(String(f.monto.value).replace(/\D/g, ''));
+    if (!(monto > 0)) return toast('Poné el monto.', true);
+    const comision = Number(String(f.comision.value).replace(',', '.'));
+    if (P.tipo === 'consignacion' && !(comision >= 0 && comision <= 50 && f.comision.value !== '')) return toast('Poné tu comisión (entre 0 y 50 %).', true);
+    const b = $('#mpEnviar'); b.disabled = true;
+    try {
+      await api('ofertar_particular', { auto_id: P.auto.id, tipo: P.tipo, monto, moneda: f.moneda.value, comision });
+      $('#mPart').classList.remove('show'); toast('¡Propuesta enviada! Te avisamos por WhatsApp si la acepta.');
+      cargarPart();
+    } catch (err) { toast(err.message, true); }
+    finally { b.disabled = false; }
+  });
+  $('#fPart').monto.addEventListener('input', (e) => { const d = e.target.value.replace(/\D/g, ''); e.target.value = d ? nf.format(Number(d)) : ''; });
+  $('#partRefresh').addEventListener('click', cargarPart);
+  $('#partRecibe').addEventListener('change', async (e) => {
+    try {
+      const r = await api('recibir_particulares', { activo: e.target.checked });
+      toast(r.recibe_particulares ? 'Listo: te avisamos por WhatsApp cada auto nuevo.' : 'Listo: ya no te avisamos.');
+      pintarPart();
+    } catch (err) { e.target.checked = !e.target.checked; toast(err.message, true); }
+  });
 
   // ===================== STOCK =====================
   async function cargarStock() {

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Vendé o consigná tu auto · Red de Autos Tucumán</title>
+  <meta name="description" content="Cargá tu auto en 2 minutos y las agencias verificadas de Tucumán te hacen propuestas de compra o consignación. Vos elegís. Gratis y sin publicar tu número." />
+  <meta name="theme-color" content="#ffffff" />
+  <meta property="og:title" content="Vendé tu auto sin publicarlo: las agencias te hacen ofertas" />
+  <meta property="og:description" content="Cargá tu auto y recibí propuestas de compra o consignación de agencias verificadas de Tucumán. Gratis." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&family=Mona+Sans:wght@400..900&family=Space+Grotesk:wght@400..700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { bg: '#ffffff', bg2: '#f5f5f2', bg3: '#ebebe6', pr: '#0b0b0c', hl: '#d6f345', ink: '#52525b', line: 'rgba(0,0,0,.1)' },
+      fontFamily: { display: ['"Mona Sans"', 'Inter', 'sans-serif'], sans: ['Inter', 'sans-serif'], mono: ['"Space Grotesk"', 'monospace'] },
+    } } };
+  </script>
+  <style>
+    body{background:#fff;color:#3f3f46;font-family:Inter,sans-serif;-webkit-font-smoothing:antialiased}
+    html,body{overflow-x:clip}
+    ::selection{background:#d6f345;color:#0b0b0c}
+    .hl{background:linear-gradient(transparent 58%,#d6f345 58%,#d6f345 92%,transparent 92%);padding:0 .08em;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;border-radius:999px;font-weight:600;padding:.9rem 1.5rem;transition:background .25s,color .25s,transform .2s}
+    .btn-pr{background:#0b0b0c;color:#fff}.btn-pr:hover{background:#d6f345;color:#0b0b0c}.btn-pr:active{transform:scale(.98)}.btn-pr:disabled{opacity:.5;cursor:wait}
+    .btn-gh{border:1px solid rgba(0,0,0,.14);color:#0b0b0c;background:#fff}.btn-gh:hover{background:#d6f345;border-color:#d6f345}
+    .box{border-radius:24px;background:#fff;border:1px solid rgba(0,0,0,.1);box-shadow:0 1px 2px rgba(0,0,0,.04),0 16px 36px -28px rgba(0,0,0,.25)}
+    .fld label{display:block;font-size:.78rem;font-weight:600;color:#3f3f46;margin-bottom:.35rem}
+    .inp{width:100%;border-radius:14px;border:1px solid rgba(0,0,0,.14);background:#fff;padding:.75rem .9rem;font-size:16px;color:#0b0b0c;outline:none;transition:border-color .2s,box-shadow .2s}
+    .inp:focus{border-color:#0b0b0c;box-shadow:0 0 0 3px rgba(214,243,69,.7)}
+    .inp.bad{border-color:#dc2626}
+    .opt{position:relative;display:block;cursor:pointer}.opt input{position:absolute;opacity:0}
+    .opt span{display:flex;flex-direction:column;gap:.15rem;height:100%;border-radius:16px;border:1px solid rgba(0,0,0,.14);padding:.8rem .9rem;transition:.2s}
+    .opt input:checked+span{border-color:#0b0b0c;background:#0b0b0c;color:#fff}
+    .opt input:checked+span small{color:#d4d4d8}
+    .opt input:focus-visible+span{outline:2px solid #0866FF;outline-offset:2px}
+    .ph{position:relative;aspect-ratio:1;border-radius:14px;overflow:hidden;background:#f4f4f5}
+    .ph img{width:100%;height:100%;object-fit:cover}
+    .ph button{position:absolute;top:6px;right:6px;width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,.65);color:#fff;display:grid;place-items:center}
+    .drop{border:1.5px dashed rgba(0,0,0,.22);border-radius:18px;transition:.2s}.drop.on,.drop:hover{border-color:#0b0b0c;background:#fafaf7}
+    .step-n{display:grid;place-items:center;width:2.25rem;height:2.25rem;border-radius:999px;background:#d6f345;color:#0b0b0c;font-family:"Space Grotesk",monospace;font-weight:700}
+    .reveal{opacity:0;transform:translateY(16px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}.reveal.in{opacity:1;transform:none}
+    details summary{list-style:none;cursor:pointer}details summary::-webkit-details-marker{display:none}
+    details[open] .chev{transform:rotate(45deg)}
+    .spin{display:inline-block;width:1.1rem;height:1.1rem;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;animation:sp .7s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
+    .toast{position:fixed;left:50%;bottom:1.25rem;transform:translate(-50%,150%);z-index:80;display:flex;gap:.5rem;align-items:center;border-radius:999px;background:#0b0b0c;color:#fff;padding:.75rem 1.1rem;font-size:.9rem;font-weight:500;transition:transform .35s;max-width:calc(100vw - 2rem)}
+    .toast.show{transform:translate(-50%,0)}.toast.err{background:#b91c1c}
+    @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+  </style>
+</head>
+<body>
+  <header class="sticky top-0 z-40 border-b border-line bg-white/85 backdrop-blur">
+    <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3.5">
+      <a href="./" class="flex items-center gap-2.5">
+        <span class="grid h-9 w-9 place-items-center rounded-xl bg-pr text-white"><i data-lucide="car-front" class="h-5 w-5"></i></span>
+        <span class="font-display text-lg font-bold text-zinc-950">Red de Autos</span>
+      </a>
+      <a href="#cargar" class="btn btn-pr !px-4 !py-2.5 text-sm" data-cta="header">Cargar mi auto</a>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="relative overflow-clip">
+      <div class="pointer-events-none absolute -right-40 -top-40 h-[34rem] w-[34rem] rounded-full bg-hl/40 blur-3xl"></div>
+      <div class="relative mx-auto grid max-w-6xl items-center gap-10 px-5 pb-14 pt-12 md:grid-cols-[1.15fr_1fr] md:pt-20">
+        <div>
+          <span class="inline-flex items-center gap-2 rounded-full border border-line bg-white px-3 py-1 text-xs font-semibold text-zinc-950"><i data-lucide="map-pin" class="h-3.5 w-3.5"></i>Solo Tucumán · Gratis</span>
+          <h1 class="mt-5 font-display text-[2.4rem] font-extrabold leading-[1.05] tracking-tight text-zinc-950 md:text-6xl">Vendé tu auto sin publicarlo. <span class="hl">Las agencias te hacen ofertas.</span></h1>
+          <p class="mt-5 max-w-xl text-lg text-ink">Cargás tu auto en 2 minutos y las agencias verificadas de Tucumán te mandan propuestas de <b class="text-zinc-950">compra</b> o de <b class="text-zinc-950">consignación</b> por WhatsApp. Vos elegís la que más te conviene.</p>
+          <div class="mt-7 flex flex-wrap gap-3">
+            <a href="#cargar" class="btn btn-pr" data-cta="hero"><i data-lucide="plus" class="h-5 w-5"></i>Cargar mi auto gratis</a>
+            <a href="#como" class="btn btn-gh">Cómo funciona</a>
+          </div>
+          <ul class="mt-7 grid gap-2 text-sm text-zinc-800 sm:grid-cols-3">
+            <li class="flex items-center gap-2"><i data-lucide="shield-check" class="h-4 w-4 flex-none"></i>Tu número no se publica</li>
+            <li class="flex items-center gap-2"><i data-lucide="badge-check" class="h-4 w-4 flex-none"></i>Solo agencias verificadas</li>
+            <li class="flex items-center gap-2"><i data-lucide="ban" class="h-4 w-4 flex-none"></i>Sin curiosos ni llamados</li>
+          </ul>
+        </div>
+        <!-- Ilustración: propuestas que llegan -->
+        <div class="relative mx-auto w-full max-w-sm" aria-hidden="true">
+          <div class="box p-4">
+            <div class="flex items-center gap-3 border-b border-line pb-3">
+              <span class="grid h-10 w-10 place-items-center rounded-full bg-[#25D366] text-white"><i data-lucide="message-circle" class="h-5 w-5"></i></span>
+              <div><b class="block text-sm text-zinc-950">Red de Autos</b><span class="text-xs text-ink/70">Propuestas para tu Etios 2017</span></div>
+            </div>
+            <div class="mt-3 space-y-2.5 text-[13px] leading-snug">
+              <div class="reveal rounded-2xl rounded-tl-sm bg-bg2 p-3"><b class="text-zinc-950">💰 Agencia del Centro</b> ofrece <b class="text-zinc-950">comprártelo</b> por <b class="text-zinc-950">US$ 10.800</b>.<div class="mt-2 flex gap-1.5"><span class="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-zinc-950 shadow-sm">Acepto</span><span class="rounded-full bg-white px-2.5 py-1 text-xs text-ink shadow-sm">No, gracias</span></div></div>
+              <div class="reveal rounded-2xl rounded-tl-sm bg-bg2 p-3" style="transition-delay:.25s"><b class="text-zinc-950">🤝 Autos Yerba Buena</b> te propone <b class="text-zinc-950">consignarlo</b>: lo publica a <b class="text-zinc-950">US$ 12.000</b> y cobra 5 % al venderlo.</div>
+              <div class="reveal rounded-2xl rounded-tl-sm bg-bg2 p-3" style="transition-delay:.5s"><b class="text-zinc-950">💰 Motors Norte</b> ofrece <b class="text-zinc-950">US$ 11.200</b> contado.</div>
+            </div>
+          </div>
+          <div class="absolute -bottom-5 -left-4 flex items-center gap-2 rounded-full bg-pr px-4 py-2 text-sm font-semibold text-white shadow-xl"><i data-lucide="sparkles" class="h-4 w-4 text-hl"></i>3 propuestas · vos elegís</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CÓMO FUNCIONA -->
+    <section id="como" class="border-y border-line bg-bg2">
+      <div class="mx-auto max-w-6xl px-5 py-14">
+        <h2 class="font-display text-3xl font-bold text-zinc-950 md:text-4xl">Así de simple</h2>
+        <div class="mt-8 grid gap-4 md:grid-cols-3">
+          <div class="box reveal p-6"><span class="step-n">1</span><h3 class="mt-4 font-display text-xl font-bold text-zinc-950">Cargás tu auto</h3><p class="mt-2 text-ink">Datos básicos, cuánto pretendés y al menos 3 fotos. Lo confirmás con un mensaje de WhatsApp.</p></div>
+          <div class="box reveal p-6" style="transition-delay:.1s"><span class="step-n">2</span><h3 class="mt-4 font-display text-xl font-bold text-zinc-950">Las agencias ofertan</h3><p class="mt-2 text-ink">Le mostramos tu auto a las agencias verificadas de la red. Cada propuesta te llega por WhatsApp.</p></div>
+          <div class="box reveal p-6" style="transition-delay:.2s"><span class="step-n">3</span><h3 class="mt-4 font-display text-xl font-bold text-zinc-950">Vos elegís</h3><p class="mt-2 text-ink">Aceptás la que te sirve y te pasamos el contacto de la agencia. Hasta ahí, nadie tiene tu número.</p></div>
+        </div>
+        <div class="mt-8 grid gap-4 md:grid-cols-2">
+          <div class="rounded-3xl bg-pr p-6 text-white"><i data-lucide="hand-coins" class="h-6 w-6 text-hl"></i><h3 class="mt-3 font-display text-xl font-bold">Compra directa</h3><p class="mt-1.5 text-zinc-300">La agencia te compra el auto y te paga. Rápido y sin vueltas.</p></div>
+          <div class="rounded-3xl border border-line bg-white p-6"><i data-lucide="handshake" class="h-6 w-6"></i><h3 class="mt-3 font-display text-xl font-bold text-zinc-950">Consignación</h3><p class="mt-1.5 text-ink">Dejás el auto en la agencia, ellos lo venden y cobran una comisión. El auto sigue siendo tuyo hasta la venta y en general sacás un precio mejor.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FORMULARIO -->
+    <section id="cargar" class="scroll-mt-16">
+      <div class="mx-auto max-w-3xl px-5 py-14">
+        <div id="formWrap">
+          <h2 class="font-display text-3xl font-bold text-zinc-950 md:text-4xl">Cargá tu auto</h2>
+          <p class="mt-2 text-ink">Tarda 2 minutos. Es gratis y no te compromete a nada.</p>
+          <form id="fV" class="box mt-7 space-y-7 p-5 md:p-8" novalidate>
+            <input type="text" name="web" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
+            <fieldset>
+              <legend class="mb-3 font-display text-lg font-bold text-zinc-950">¿Qué te interesa?</legend>
+              <div class="grid gap-2.5 sm:grid-cols-3">
+                <label class="opt"><input type="radio" name="modalidad" value="ambas" checked /><span><b>Las dos</b><small class="text-xs text-ink">Escucho compra y consignación</small></span></label>
+                <label class="opt"><input type="radio" name="modalidad" value="venta" /><span><b>Venderlo</b><small class="text-xs text-ink">Que me lo compren</small></span></label>
+                <label class="opt"><input type="radio" name="modalidad" value="consignacion" /><span><b>Consignarlo</b><small class="text-xs text-ink">Que lo vendan por mí</small></span></label>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend class="mb-3 font-display text-lg font-bold text-zinc-950">Tu auto</legend>
+              <div class="grid grid-cols-2 gap-3">
+                <div class="fld"><label for="marca">Marca *</label><input id="marca" name="marca" class="inp" list="lMarcas" placeholder="Toyota" required autocomplete="off" /></div>
+                <div class="fld"><label for="modelo">Modelo *</label><input id="modelo" name="modelo" class="inp" placeholder="Etios" required autocomplete="off" /></div>
+                <div class="fld col-span-2"><label for="version">Versión</label><input id="version" name="version" class="inp" placeholder="XLS 1.5 5 puertas" /></div>
+                <div class="fld"><label for="anio">Año *</label><input id="anio" name="anio" type="number" inputmode="numeric" min="1980" max="2027" class="inp" placeholder="2017" required /></div>
+                <div class="fld"><label for="km">Kilómetros *</label><input id="km" name="km" inputmode="numeric" class="inp" placeholder="86.000" required /></div>
+                <div class="fld"><label for="transmision">Caja</label><select id="transmision" name="transmision" class="inp"><option value="">—</option><option value="manual">Manual</option><option value="automatica">Automática</option></select></div>
+                <div class="fld"><label for="combustible">Combustible</label><select id="combustible" name="combustible" class="inp"><option value="">—</option><option value="nafta">Nafta</option><option value="diesel">Diésel</option><option value="nafta_gnc">Nafta + GNC</option><option value="hibrido">Híbrido</option><option value="electrico">Eléctrico</option></select></div>
+                <div class="fld col-span-2"><label for="estado_auto">Estado y detalles</label><textarea id="estado_auto" name="estado_auto" rows="3" maxlength="400" class="inp" placeholder="Único dueño, service al día, cubiertas nuevas, un rayón en la puerta trasera…"></textarea></div>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend class="mb-1 font-display text-lg font-bold text-zinc-950">¿Cuánto pretendés?</legend>
+              <p class="mb-3 text-sm text-ink/80">Opcional. Si no sabés, dejalo vacío y escuchás ofertas.</p>
+              <div class="grid grid-cols-[1fr_auto] gap-3">
+                <input name="precio" inputmode="numeric" class="inp" placeholder="11.500" aria-label="Precio pretendido" />
+                <select name="moneda" class="inp !w-auto" aria-label="Moneda"><option value="USD">US$</option><option value="ARS">$ pesos</option></select>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend class="mb-1 font-display text-lg font-bold text-zinc-950">Fotos *</legend>
+              <p class="mb-3 text-sm text-ink/80">Mínimo 3, máximo 10: frente, costado, atrás e interior. Con buena luz y sin texto encima.</p>
+              <label id="drop" class="drop flex cursor-pointer flex-col items-center gap-2 p-6 text-center">
+                <i data-lucide="camera" class="h-7 w-7"></i>
+                <b class="text-zinc-950">Elegí o arrastrá las fotos</b>
+                <span class="text-xs text-ink/70">JPG o PNG · las achicamos solas</span>
+                <input id="fotos" type="file" accept="image/*" multiple class="sr-only" />
+              </label>
+              <div id="thumbs" class="mt-3 grid grid-cols-3 gap-2 sm:grid-cols-5"></div>
+              <p id="fotosN" class="mt-2 text-sm text-ink/80"></p>
+            </fieldset>
+
+            <fieldset>
+              <legend class="mb-3 font-display text-lg font-bold text-zinc-950">Tus datos</legend>
+              <div class="grid grid-cols-2 gap-3">
+                <div class="fld"><label for="nombre">Nombre *</label><input id="nombre" name="nombre" class="inp" placeholder="Martina" required autocomplete="given-name" /></div>
+                <div class="fld"><label for="zona">Zona</label><select id="zona" name="zona" class="inp"><option>San Miguel de Tucumán</option><option>Yerba Buena</option><option>Tafí Viejo</option><option>Banda del Río Salí</option><option>Lules</option><option>Concepción</option><option>Famaillá</option><option>Otra de Tucumán</option></select></div>
+              </div>
+              <p class="mt-3 flex gap-2 rounded-2xl bg-bg2 p-3 text-sm text-ink"><i data-lucide="lock" class="mt-0.5 h-4 w-4 flex-none"></i>No te pedimos el teléfono acá: lo confirmás mandando un mensaje de WhatsApp en el paso siguiente. Las agencias no ven tu número hasta que aceptes una propuesta.</p>
+            </fieldset>
+
+            <div>
+              <button id="btnEnviar" class="btn btn-pr w-full text-base"><i data-lucide="arrow-right" class="h-5 w-5"></i><span>Continuar</span></button>
+              <p class="mt-3 text-center text-xs text-ink/70">Al continuar aceptás la <a href="privacidad.html" class="underline">política de privacidad</a>.</p>
+            </div>
+          </form>
+        </div>
+
+        <!-- Paso 2: confirmar por WhatsApp -->
+        <div id="ok" class="box hidden p-6 text-center md:p-10">
+          <span class="mx-auto grid h-14 w-14 place-items-center rounded-full bg-hl"><i data-lucide="check" class="h-7 w-7 text-zinc-950"></i></span>
+          <h2 class="mt-5 font-display text-3xl font-bold text-zinc-950">¡Último paso!</h2>
+          <p class="mx-auto mt-2 max-w-md text-ink">Confirmá tu auto mandándonos este código por WhatsApp. Así sabemos que el número es tuyo y te pueden llegar las propuestas.</p>
+          <div class="mx-auto mt-6 inline-flex items-center gap-3 rounded-2xl border border-line bg-bg2 px-6 py-4"><span class="text-sm text-ink">Tu código</span><b id="codigo" class="font-mono text-3xl tracking-[.2em] text-zinc-950">000000</b></div>
+          <div class="mt-6"><a id="btnWa" href="#" target="_blank" rel="noopener" class="btn !bg-[#25D366] text-white hover:!bg-hl hover:text-zinc-950"><i data-lucide="message-circle" class="h-5 w-5"></i>Confirmar por WhatsApp</a></div>
+          <p class="mx-auto mt-4 max-w-sm text-xs text-ink/70">Se abre WhatsApp con el mensaje <b>CONFIRMAR</b> y tu código ya escrito: solo tocá enviar. Si no lo confirmás, tu auto no se muestra a las agencias.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="border-t border-line bg-bg2">
+      <div class="mx-auto max-w-3xl px-5 py-14">
+        <h2 class="font-display text-3xl font-bold text-zinc-950">Preguntas frecuentes</h2>
+        <div class="mt-6 divide-y divide-line rounded-3xl border border-line bg-white">
+          <details class="p-5"><summary class="flex items-center justify-between gap-4 font-semibold text-zinc-950">¿Cuánto me cuesta?<i data-lucide="plus" class="chev h-5 w-5 flex-none transition"></i></summary><p class="mt-3 text-ink">Nada. Para vos es gratis. Si elegís consignación, la comisión la cobra la agencia cuando vende el auto y está escrita en la propuesta antes de que aceptes.</p></details>
+          <details class="p-5"><summary class="flex items-center justify-between gap-4 font-semibold text-zinc-950">¿Quién ve mi número?<i data-lucide="plus" class="chev h-5 w-5 flex-none transition"></i></summary><p class="mt-3 text-ink">Nadie, hasta que aceptes una propuesta. Recién ahí le pasamos tu contacto a esa agencia y a vos el de ellos.</p></details>
+          <details class="p-5"><summary class="flex items-center justify-between gap-4 font-semibold text-zinc-950">¿Qué agencias me van a ofertar?<i data-lucide="plus" class="chev h-5 w-5 flex-none transition"></i></summary><p class="mt-3 text-ink">Agencias de Tucumán que forman parte de Red de Autos y verificamos una por una. Cada propuesta dice qué agencia es.</p></details>
+          <details class="p-5"><summary class="flex items-center justify-between gap-4 font-semibold text-zinc-950">¿Estoy obligado a aceptar?<i data-lucide="plus" class="chev h-5 w-5 flex-none transition"></i></summary><p class="mt-3 text-ink">No. Podés rechazar todas, esperar más propuestas o sacar el auto cuando quieras escribiendo <b>YA LO VENDÍ</b> por WhatsApp.</p></details>
+          <details class="p-5"><summary class="flex items-center justify-between gap-4 font-semibold text-zinc-950">¿Qué diferencia hay entre venta y consignación?<i data-lucide="plus" class="chev h-5 w-5 flex-none transition"></i></summary><p class="mt-3 text-ink">En la venta la agencia te compra el auto y cobrás enseguida. En la consignación el auto sigue siendo tuyo, la agencia lo vende por vos y cobra una comisión: suele ser más lento, pero en general sacás más plata.</p></details>
+        </div>
+        <p class="mt-8 text-center text-sm text-ink">¿Buscás comprar un auto? <a href="./" class="font-semibold text-zinc-950 underline">Decinos qué buscás</a> · ¿Tenés una agencia? <a href="sumate.html" class="font-semibold text-zinc-950 underline">Sumate a la red</a></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-line"><div class="mx-auto flex max-w-6xl flex-wrap justify-between gap-3 px-5 py-6 text-xs text-ink/70"><span>© Red de Autos · Tucumán</span><a href="privacidad.html" class="underline">Privacidad</a></div></footer>
+
+  <datalist id="lMarcas"><option>Chevrolet</option><option>Citroën</option><option>Fiat</option><option>Ford</option><option>Honda</option><option>Hyundai</option><option>Jeep</option><option>Nissan</option><option>Peugeot</option><option>Renault</option><option>Toyota</option><option>Volkswagen</option></datalist>
+  <div id="toast" class="toast" role="status"><span></span></div>
+
+  <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+  <script>
+  const CONFIG = {
+    SUPABASE_URL: 'https://ytuecptdgtmrbiddyzht.supabase.co',
+    SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl0dWVjcHRkZ3RtcmJpZGR5emh0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ0MTMxNTMsImV4cCI6MjEwOTk4OTE1M30.H-Yi5dwDW8TvZfFWvP3dquHnCeQNtHTf8MO6i5v02VA',
+    WHATSAPP: '15551478965',   // número del bot
+    META_PIXEL_ID: '',          // ej. '123456789012345'
+    GA4_ID: '',                 // ej. 'G-XXXXXXXXXX'
+    MIN_FOTOS: 3, MAX_FOTOS: 10,
+  };
+  const $ = (s) => document.querySelector(s);
+  const nf = new Intl.NumberFormat('es-AR');
+  window.lucide && lucide.createIcons();
+
+  // Tracking (solo si hay IDs)
+  if (CONFIG.META_PIXEL_ID) {
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', CONFIG.META_PIXEL_ID); fbq('track', 'PageView');
+  }
+  if (CONFIG.GA4_ID) {
+    const s = document.createElement('script'); s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=' + CONFIG.GA4_ID; document.head.appendChild(s);
+    window.dataLayer = window.dataLayer || []; window.gtag = function(){ dataLayer.push(arguments) };
+    gtag('js', new Date()); gtag('config', CONFIG.GA4_ID);
+  }
+  const track = (ev, params = {}) => { try { window.fbq && fbq('trackCustom', ev, params); window.gtag && gtag('event', ev, params); } catch {} };
+
+  // UTM
+  const qs = new URLSearchParams(location.search);
+  const UTM = {};
+  ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'fbclid', 'gclid'].forEach((k) => { if (qs.get(k)) UTM[k] = qs.get(k); });
+  try { if (Object.keys(UTM).length) sessionStorage.setItem('rda-utm-v', JSON.stringify(UTM)); else Object.assign(UTM, JSON.parse(sessionStorage.getItem('rda-utm-v') || '{}')); } catch {}
+  if (document.referrer) UTM.referrer = document.referrer.slice(0, 200);
+
+  function toast(msg, err = false) { const t = $('#toast'); t.firstElementChild.textContent = msg; t.classList.toggle('err', err); t.classList.add('show'); clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('show'), 4200); }
+  document.querySelectorAll('[data-cta]').forEach((a) => a.addEventListener('click', () => track('cta_click', { lugar: a.dataset.cta })));
+
+  // Reveal
+  const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .15 });
+  document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+
+  // Miles en km y precio
+  const f = $('#fV');
+  [f.km, f.precio].forEach((i) => i.addEventListener('input', () => { const d = i.value.replace(/\D/g, '').slice(0, 12); i.value = d ? nf.format(Number(d)) : ''; }));
+  f.addEventListener('input', (e) => e.target.classList?.remove('bad'));
+  let empezo = false;
+  f.addEventListener('input', () => { if (!empezo) { empezo = true; track('form_start'); } }, { once: false });
+
+  // Fotos: achicar en el navegador
+  const FOTOS = [];
+  async function achicar(file) {
+    const url = URL.createObjectURL(file);
+    try {
+      const img = await new Promise((ok, ko) => { const i = new Image(); i.onload = () => ok(i); i.onerror = ko; i.src = url; });
+      const max = 1400, k = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+      const c = document.createElement('canvas'); c.width = Math.round(img.naturalWidth * k); c.height = Math.round(img.naturalHeight * k);
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      const dataUrl = c.toDataURL('image/jpeg', .8);
+      return { dataUrl, base64: dataUrl.split(',')[1], mime: 'image/jpeg' };
+    } finally { URL.revokeObjectURL(url); }
+  }
+  function pintarFotos() {
+    $('#thumbs').innerHTML = FOTOS.map((x, i) => `<div class="ph"><img src="${x.dataUrl}" alt="Foto ${i + 1}" /><button type="button" data-q="${i}" aria-label="Quitar foto"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>`).join('');
+    const n = FOTOS.length;
+    $('#fotosN').textContent = n ? (n < CONFIG.MIN_FOTOS ? `${n} foto${n > 1 ? 's' : ''}. Te falta${CONFIG.MIN_FOTOS - n > 1 ? 'n' : ''} ${CONFIG.MIN_FOTOS - n}.` : `${n} fotos ✓`) : '';
+  }
+  async function agregar(files) {
+    const lista = [...files].filter((x) => x.type.startsWith('image/'));
+    const lugar = CONFIG.MAX_FOTOS - FOTOS.length;
+    if (lista.length > lugar) toast(`Máximo ${CONFIG.MAX_FOTOS} fotos.`, true);
+    for (const file of lista.slice(0, Math.max(0, lugar))) {
+      try { FOTOS.push(await achicar(file)); pintarFotos(); } catch { toast('No pude leer una de las fotos.', true); }
+    }
+  }
+  $('#fotos').addEventListener('change', (e) => { agregar(e.target.files); e.target.value = ''; });
+  $('#thumbs').addEventListener('click', (e) => { const b = e.target.closest('[data-q]'); if (b) { FOTOS.splice(Number(b.dataset.q), 1); pintarFotos(); } });
+  const drop = $('#drop');
+  ['dragenter', 'dragover'].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add('on'); }));
+  ['dragleave', 'drop'].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.remove('on'); }));
+  drop.addEventListener('drop', (e) => agregar(e.dataTransfer.files));
+
+  // Enviar
+  f.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    f.querySelectorAll('.bad').forEach((x) => x.classList.remove('bad'));
+    const falta = ['marca', 'modelo', 'anio', 'km', 'nombre'].filter((k) => !f[k].value.trim());
+    const anio = Number(f.anio.value);
+    if (f.anio.value && (anio < 1980 || anio > 2027)) falta.push('anio');
+    if (falta.length) { falta.forEach((k) => f[k].classList.add('bad')); f[falta[0]].focus(); return toast('Completá los datos marcados.', true); }
+    if (FOTOS.length < CONFIG.MIN_FOTOS) { $('#drop').scrollIntoView({ behavior: 'smooth', block: 'center' }); return toast(`Subí al menos ${CONFIG.MIN_FOTOS} fotos.`, true); }
+    const b = $('#btnEnviar'), txt = b.querySelector('span').textContent;
+    b.disabled = true; b.querySelector('span').textContent = 'Subiendo fotos…';
+    const datos = {
+      accion: 'registrar', web: f.web.value,
+      modalidad: f.modalidad.value, marca: f.marca.value.trim(), modelo: f.modelo.value.trim(), version: f.version.value.trim(),
+      anio, km: f.km.value.replace(/\D/g, ''), transmision: f.transmision.value, combustible: f.combustible.value,
+      estado_auto: f.estado_auto.value.trim(), precio: f.precio.value.replace(/\D/g, ''), moneda: f.moneda.value,
+      nombre: f.nombre.value.trim(), zona: f.zona.value, utm: UTM,
+      fotos: FOTOS.map((x) => ({ base64: x.base64, mime: x.mime })),
+    };
+    try {
+      const r = await fetch(CONFIG.SUPABASE_URL + '/functions/v1/particular', {
+        method: 'POST', headers: { 'Content-Type': 'application/json', apikey: CONFIG.SUPABASE_ANON_KEY, Authorization: 'Bearer ' + CONFIG.SUPABASE_ANON_KEY },
+        body: JSON.stringify(datos),
+      });
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok || !d.ok) throw new Error(d.error || 'No pudimos guardar tu auto. Probá de nuevo.');
+      $('#codigo').textContent = d.codigo;
+      $('#btnWa').href = `https://wa.me/${CONFIG.WHATSAPP}?text=${encodeURIComponent('CONFIRMAR ' + d.codigo)}`;
+      $('#formWrap').classList.add('hidden'); $('#ok').classList.remove('hidden');
+      $('#cargar').scrollIntoView({ behavior: 'smooth' });
+      track('Lead', { tipo: 'particular', modalidad: datos.modalidad });
+      if (window.fbq) fbq('track', 'Lead', { content_category: 'particular' });
+      if (window.gtag) gtag('event', 'generate_lead', { lead_type: 'particular' });
+    } catch (err) { toast(err.message, true); }
+    finally { b.disabled = false; b.querySelector('span').textContent = txt; }
+  });
+  $('#btnWa').addEventListener('click', () => { track('Contact', { tipo: 'particular_confirmar' }); if (window.fbq) fbq('track', 'Contact'); });
+  </script>
+</body>
+</html>
