@@ -88,6 +88,11 @@
     @keyframes dotfill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
     .hero-nav{display:grid;place-items:center;width:42px;height:42px;border-radius:999px;border:1px solid rgba(255,255,255,.3);color:#fff;transition:all .35s var(--ease)}
     .hero-nav:hover{background:#d6f345;border-color:#d6f345;color:#0b0b0c}
+    .cmp td.rda{background:#fbfee8;box-shadow:inset 2px 0 0 #0b0b0c,inset -2px 0 0 #0b0b0c}
+    .cmp tr:last-child td.rda{box-shadow:inset 2px 0 0 #0b0b0c,inset -2px 0 0 #0b0b0c,inset 0 -2px 0 #0b0b0c}
+    .cmp th.rda-head{background:#0b0b0c}
+    .cmp tbody tr{transition:background .25s}
+    .cmp tbody tr:hover td:not(.rda),.cmp tbody tr:hover th{background:#fafaf8}
     /* ===== Cuerpo claro ===== */
     @media (min-width:1024px){.step:not(:last-child):after{content:"";position:absolute;top:88px;left:calc(50% + 100px);width:calc(100% - 200px + 2rem);border-top:2px dashed #0b0b0c;opacity:.35}}
     .light{background:#fff;color:#3f3f46}
@@ -295,53 +300,105 @@
   </div>
 </section>
 
-<!-- ============ COMPARATIVA ============ -->
-<section class="alt py-12 sm:py-14">
+<!-- ============ POR QUÉ RED DE AUTOS (comparativa) ============ -->
+<section class="alt py-12 sm:py-14" id="porque">
   <div class="mx-auto max-w-6xl px-5">
     <div class="reveal mx-auto max-w-3xl text-center">
-      <p class="chip-l bg-hl text-zinc-950">La solución</p>
-      <h2 class="mt-4 font-display text-3xl font-extrabold leading-tight text-zinc-950 sm:text-4xl">La solución no es meterle más plata a los mismos avisos de siempre.</h2>
-      <p class="mt-4 text-lg text-zinc-600">Es cambiar de sistema: dejar de publicar para ver quién chusmea y empezar a trabajar con <b class="text-zinc-950">intención de compra real</b>.</p>
+      <p class="chip-l bg-hl text-zinc-950">Por qué Red de Autos</p>
+      <h2 class="mt-4 font-display text-3xl font-extrabold leading-tight text-zinc-950 sm:text-4xl">No somos una plataforma más para subir tu stock.</h2>
+      <p class="mt-4 text-lg text-zinc-600">Te resolvemos dos cosas: <b class="text-zinc-950">tiempo operativo</b> y <b class="text-zinc-950">calidad de cierre</b>.</p>
     </div>
 
-    <div class="mt-9 grid gap-5 lg:grid-cols-2">
-      <div class="reveal rounded-3xl border border-zinc-200 bg-white p-7">
-        <div class="flex items-center gap-4">
-          <svg viewBox="0 0 120 90" class="h-20 w-28 shrink-0" fill="none" aria-hidden="true">
-            <path d="M8 8h104L72 50v26l-24 10V50z" fill="#f1f5f9" stroke="#94a3b8" stroke-width="2.5" stroke-linejoin="round"/>
-            <g fill="#94a3b8"><circle cx="24" cy="18" r="4"/><circle cx="40" cy="22" r="4"/><circle cx="58" cy="16" r="4"/><circle cx="76" cy="22" r="4"/><circle cx="94" cy="17" r="4"/><circle cx="50" cy="32" r="4"/><circle cx="68" cy="34" r="4"/></g>
-            <g fill="#fda4af"><circle cx="6" cy="40" r="3.5"/><circle cx="112" cy="44" r="3.5"/><circle cx="14" cy="60" r="3.5"/><circle cx="104" cy="66" r="3.5"/></g>
-            <circle cx="60" cy="72" r="4" fill="#64748b"/>
-          </svg>
-          <div><p class="text-xs font-semibold uppercase tracking-widest text-zinc-500">Lo de siempre</p><h3 class="font-display text-2xl font-bold text-zinc-950">Avisos en redes y portales</h3></div>
-        </div>
-        <ul class="mt-6 divide-y divide-zinc-100">
-          <li class="flex gap-3 py-3.5"><i data-lucide="x-circle" class="mt-0.5 h-5 w-5 shrink-0 text-rose-500"></i><p class="text-zinc-600"><b class="text-zinc-800">Te escribe cualquiera:</b> curiosos que preguntan precio y desaparecen.</p></li>
-          <li class="flex gap-3 py-3.5"><i data-lucide="x-circle" class="mt-0.5 h-5 w-5 shrink-0 text-rose-500"></i><p class="text-zinc-600"><b class="text-zinc-800">Pagás por alcance y clics,</b> vendas o no vendas.</p></li>
-          <li class="flex gap-3 py-3.5"><i data-lucide="x-circle" class="mt-0.5 h-5 w-5 shrink-0 text-rose-500"></i><p class="text-zinc-600"><b class="text-zinc-800">Ofertas absurdas</b> que tenés que contestar igual.</p></li>
-          <li class="flex gap-3 py-3.5"><i data-lucide="x-circle" class="mt-0.5 h-5 w-5 shrink-0 text-rose-500"></i><p class="text-zinc-600"><b class="text-zinc-800">Editás el aviso</b> en cada sitio cuando vendés o cambiás el precio.</p></li>
-          <li class="flex gap-3 py-3.5"><i data-lucide="x-circle" class="mt-0.5 h-5 w-5 shrink-0 text-rose-500"></i><p class="text-zinc-600"><b class="text-zinc-800">No sabés qué busca la gente</b> hasta que ya compraste el stock.</p></li>
-        </ul>
-      </div>
+    <div class="mt-10 grid gap-5 md:grid-cols-3">
+      <article class="reveal card-l rounded-3xl p-6">
+        <span class="grid h-11 w-11 place-items-center rounded-2xl bg-rose-50 text-rose-600 ring-1 ring-rose-100"><i data-lucide="messages-square" class="h-5 w-5"></i></span>
+        <h3 class="mt-4 font-display text-lg font-bold text-zinc-950">El problema de los portales gratis</h3>
+        <p class="mt-2 leading-relaxed text-zinc-600">Generan mucho volumen de curiosos: «¿precio?», «¿permutas?», «¿financiás el 100%?». Te pasás horas respondiendo y filtrando gente sin plata o sin intención de compra.</p>
+      </article>
+      <article class="reveal card-l rounded-3xl p-6">
+        <span class="grid h-11 w-11 place-items-center rounded-2xl bg-hl text-zinc-950 ring-1 ring-black/10"><i data-lucide="filter" class="h-5 w-5"></i></span>
+        <h3 class="mt-4 font-display text-lg font-bold text-zinc-950">El buscador hace el trabajo sucio</h3>
+        <p class="mt-2 leading-relaxed text-zinc-600">Antes de que el cliente toque el WhatsApp de tu agencia ya escribió <b class="text-zinc-950">«Busco un Toyota Etios 2016 hasta $14.000.000»</b>. No te entregamos curiosos: te entregamos un comprador con plata e intención.</p>
+      </article>
+      <article class="reveal card-l rounded-3xl p-6">
+        <span class="grid h-11 w-11 place-items-center rounded-2xl bg-zinc-950 text-hl"><i data-lucide="timer" class="h-5 w-5"></i></span>
+        <h3 class="mt-4 font-display text-lg font-bold text-zinc-950">Te ahorrás tiempo de verdad</h3>
+        <p class="mt-2 leading-relaxed text-zinc-600">En otros portales alguien tiene que subir fotos, redactar y actualizar precios y estados. Acá subís tu stock en un Excel y todas las fotos juntas: <b class="text-zinc-950">la IA agrupa cada foto en la publicación que le corresponde.</b></p>
+      </article>
+    </div>
 
-      <div class="reveal relative rounded-3xl border-2 border-zinc-950 bg-white p-7 shadow-xl shadow-black/5">
-        <span class="absolute -top-3 right-6 rounded-full bg-hl px-3 py-1 text-xs font-bold text-zinc-950">Red de Autos</span>
-        <div class="flex items-center gap-4">
-          <svg viewBox="0 0 120 90" class="h-20 w-28 shrink-0" fill="none" aria-hidden="true">
-            <path d="M8 8h104L72 50v26l-24 10V50z" fill="#eef6cf" stroke="#0b0b0c" stroke-width="2.5" stroke-linejoin="round"/>
-            <g fill="#0b0b0c"><circle cx="30" cy="18" r="4"/><circle cx="60" cy="18" r="4"/><circle cx="90" cy="18" r="4"/><circle cx="60" cy="34" r="4"/></g>
-            <circle cx="60" cy="68" r="9" fill="#d6f345" stroke="#0b0b0c" stroke-width="2"/><path d="M56 68l3 3 6-6" stroke="#0b0b0c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <div><p class="text-xs font-semibold uppercase tracking-widest text-zinc-950">Intención de compra</p><h3 class="font-display text-2xl font-bold text-zinc-950">Compradores que ya dijeron qué quieren</h3></div>
-        </div>
-        <ul class="mt-6 divide-y divide-zinc-100">
-          <li class="flex gap-3 py-3.5"><i data-lucide="check-circle-2" class="mt-0.5 h-5 w-5 shrink-0 text-zinc-950"></i><p class="text-zinc-600"><b class="text-zinc-800">Te llega quien busca tu auto,</b> con modelo, año y presupuesto.</p></li>
-          <li class="flex gap-3 py-3.5"><i data-lucide="check-circle-2" class="mt-0.5 h-5 w-5 shrink-0 text-zinc-950"></i><p class="text-zinc-600"><b class="text-zinc-800">Un abono mensual fijo,</b> sin pagar por cada clic.</p></li>
-          <li class="flex gap-3 py-3.5"><i data-lucide="check-circle-2" class="mt-0.5 h-5 w-5 shrink-0 text-zinc-950"></i><p class="text-zinc-600"><b class="text-zinc-800">El termómetro frena</b> las ofertas fuera de mercado antes de llegarte.</p></li>
-          <li class="flex gap-3 py-3.5"><i data-lucide="check-circle-2" class="mt-0.5 h-5 w-5 shrink-0 text-zinc-950"></i><p class="text-zinc-600"><b class="text-zinc-800">Un audio al bot</b> y el auto vendido se baja solo.</p></li>
-          <li class="flex gap-3 py-3.5"><i data-lucide="check-circle-2" class="mt-0.5 h-5 w-5 shrink-0 text-zinc-950"></i><p class="text-zinc-600"><b class="text-zinc-800">Ves qué se busca en Tucumán</b> antes de salir a comprar.</p></li>
-        </ul>
+    <div class="reveal mt-10 overflow-hidden rounded-3xl bg-white ring-1 ring-black/10">
+      <div class="overflow-x-auto">
+        <table class="cmp w-full min-w-[860px] border-collapse">
+          <caption class="sr-only">Comparación entre Red de Autos, Marketplace, Mercado Libre y Andaremos para agencias</caption>
+          <thead>
+            <tr class="text-left">
+              <th scope="col" class="sticky left-0 z-10 w-[170px] bg-white px-4 py-4 text-xs font-semibold uppercase tracking-wider text-zinc-500 sm:px-5">Para tu agencia</th>
+              <th scope="col" class="rda-head w-[250px] px-4 py-4 sm:px-5"><span class="inline-flex items-center gap-2 font-display text-base font-extrabold text-white"><span class="grid h-6 w-6 place-items-center rounded-md bg-hl text-zinc-950"><i data-lucide="car-front" class="h-4 w-4"></i></span>Red de Autos</span></th>
+              <th scope="col" class="px-4 py-4 font-display text-base font-bold text-zinc-950 sm:px-5">Marketplace</th>
+              <th scope="col" class="px-4 py-4 font-display text-base font-bold text-zinc-950 sm:px-5">Mercado Libre</th>
+              <th scope="col" class="px-4 py-4 font-display text-base font-bold text-zinc-950 sm:px-5">Andaremos</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-t border-black/[.07]">
+              <th scope="row" class="sticky left-0 z-10 bg-white px-4 py-4 text-left align-top text-sm font-semibold text-zinc-950 sm:px-5">Quién te escribe</th>
+              <td class="rda px-4 py-4 align-top text-sm font-medium text-zinc-950 sm:px-5"><i data-lucide="check" class="mr-1 inline h-4 w-4 -translate-y-px text-zinc-950"></i>Compradores que ya dijeron qué auto quieren, de qué año y cuánto pueden pagar</td>
+              <td class="px-4 py-4 align-top text-sm text-zinc-600 sm:px-5"><i data-lucide="x" class="mr-1 inline h-4 w-4 -translate-y-px text-rose-500"></i>Cualquiera: «¿precio?», «¿permutás?», «¿financiás el 100%?»</td>
+              <td class="px-4 py-4 align-top text-sm text-zinc-600 sm:px-5"><i data-lucide="x" class="mr-1 inline h-4 w-4 -translate-y-px text-rose-500"></i>Preguntas abiertas de cualquier usuario</td>
+              <td class="px-4 py-4 align-top text-sm text-zinc-600 sm:px-5">Compradores que compran créditos para poder ofertar</td>
+            </tr>
+            <tr class="border-t border-black/[.07]">
+              <th scope="row" class="sticky left-0 z-10 bg-white px-4 py-4 text-left align-top text-sm font-semibold text-zinc-950 sm:px-5">Filtro antes de tu WhatsApp</th>
+              <td class="rda px-4 py-4 align-top text-sm font-medium text-zinc-950 sm:px-5"><i data-lucide="check" class="mr-1 inline h-4 w-4 -translate-y-px text-zinc-950"></i>Buscador por prompt + termómetro que frena ofertas fuera de mercado</td>
+              <td class="px-4 py-4 align-top text-sm text-zinc-600 sm:px-5"><i data-lucide="x" class="mr-1 inline h-4 w-4 -translate-y-px text-rose-500"></i>Ninguno: filtrás vos</td>
+              <td class="px-4 py-4 align-top text-sm text-zinc-600 sm:px-5"><i data-lucide="x" class="mr-1 inline h-4 w-4 -translate-y-px text-rose-500"></i>Ninguno: filtrás vos</td>
+              <td class="px-4 py-4 align-top text-sm text-zinc-600 sm:px-5">Los créditos para ofertar</td>
+            </tr>
+            <tr class="border-t border-black/[.07]">
+              <th scope="row" class="sticky left-0 z-10 bg-white px-4 py-4 text-left align-top text-sm font-semibold text-zinc-950 sm:px-5">Cargar el stock</th>
+              <td class="rda px-4 py-4 align-top text-sm font-medium text-zinc-950 sm:px-5"><i data-lucide="check" class="mr-1 inline h-4 w-4 -translate-y-px text-zinc-950"></i>Un Excel y todas las fotos juntas: la IA asigna cada foto a su auto</td>
+              <td class="px-4 py-4 align-top text-sm text-zinc-600 sm:px-5">Aviso por aviso: fotos, texto y precio</td>
+              <td class="px-4 py-4 align-top text-sm text-zinc-600 sm:px-5">Aviso por aviso: fotos, texto y precio</td>
+              <td class="px-4 py-4 align-top text-sm text-zinc-600 sm:px-5">Vehículo por vehículo, con verificación previa</td>
+            </tr>
+            <tr class="border-t border-black/[.07]">
+              <th scope="row" class="sticky left-0 z-10 bg-white px-4 py-4 text-left align-top text-sm font-semibold text-zinc-950 sm:px-5">Precios y vendidos</th>
+              <td class="rda px-4 py-4 align-top text-sm font-medium text-zinc-950 sm:px-5"><i data-lucide="check" class="mr-1 inline h-4 w-4 -translate-y-px text-zinc-950"></i>Un audio al bot y se actualiza solo</td>
+              <td class="px-4 py-4 align-top text-sm text-zinc-600 sm:px-5">Editás o bajás cada aviso a mano</td>
+              <td class="px-4 py-4 align-top text-sm text-zinc-600 sm:px-5">Editás o pausás cada publicación</td>
+              <td class="px-4 py-4 align-top text-sm text-zinc-600 sm:px-5">Lo gestionás en cada publicación</td>
+            </tr>
+            <tr class="border-t border-black/[.07]">
+              <th scope="row" class="sticky left-0 z-10 bg-white px-4 py-4 text-left align-top text-sm font-semibold text-zinc-950 sm:px-5">Cómo te llega el negocio</th>
+              <td class="rda px-4 py-4 align-top text-sm font-medium text-zinc-950 sm:px-5"><i data-lucide="check" class="mr-1 inline h-4 w-4 -translate-y-px text-zinc-950"></i>Una oferta con monto a tu WhatsApp: aceptás, contraofertás o rechazás</td>
+              <td class="px-4 py-4 align-top text-sm text-zinc-600 sm:px-5">Chats sueltos en Messenger</td>
+              <td class="px-4 py-4 align-top text-sm text-zinc-600 sm:px-5">Preguntas y mensajes dentro de la plataforma</td>
+              <td class="px-4 py-4 align-top text-sm text-zinc-600 sm:px-5">Subasta o venta directa</td>
+            </tr>
+            <tr class="border-t border-black/[.07]">
+              <th scope="row" class="sticky left-0 z-10 bg-white px-4 py-4 text-left align-top text-sm font-semibold text-zinc-950 sm:px-5">Qué buscan y no tenés</th>
+              <td class="rda px-4 py-4 align-top text-sm font-medium text-zinc-950 sm:px-5"><i data-lucide="check" class="mr-1 inline h-4 w-4 -translate-y-px text-zinc-950"></i>Radar de demanda y alertas de compra en Tucumán</td>
+              <td class="px-4 py-4 align-top text-sm text-zinc-600 sm:px-5">—</td>
+              <td class="px-4 py-4 align-top text-sm text-zinc-600 sm:px-5">—</td>
+              <td class="px-4 py-4 align-top text-sm text-zinc-600 sm:px-5">—</td>
+            </tr>
+            <tr class="border-t border-black/[.07]">
+              <th scope="row" class="sticky left-0 z-10 bg-white px-4 py-4 text-left align-top text-sm font-semibold text-zinc-950 sm:px-5">Costo</th>
+              <td class="rda px-4 py-4 align-top text-sm font-medium text-zinc-950 sm:px-5">Abono mensual fijo · 30 días para probarlo</td>
+              <td class="px-4 py-4 align-top text-sm text-zinc-600 sm:px-5">Gratis</td>
+              <td class="px-4 py-4 align-top text-sm text-zinc-600 sm:px-5">Según el plan de publicación</td>
+              <td class="px-4 py-4 align-top text-sm text-zinc-600 sm:px-5">Publicar es gratis</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
+      <p class="border-t border-black/[.07] px-5 py-3 text-xs text-zinc-500 md:hidden"><i data-lucide="move-horizontal" class="mr-1 inline h-3.5 w-3.5"></i>Deslizá la tabla para ver todas las plataformas.</p>
+    </div>
+
+    <div class="reveal mt-10 flex flex-col items-center gap-5 text-center">
+      <p class="max-w-2xl font-display text-xl font-bold text-zinc-950 sm:text-2xl">Cero fricción, cero trabajo administrativo. Te ofrecemos <span class="hl">eficiencia comercial</span>, no una vitrina pasiva.</p>
+      <a href="#form" data-cta="comparativa" class="btn-cta inline-flex items-center gap-2 rounded-2xl px-7 py-4 font-bold">Quiero sumar mi agencia <i data-lucide="arrow-right" class="h-5 w-5"></i></a>
     </div>
   </div>
 </section>
