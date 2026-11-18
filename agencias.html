@@ -351,6 +351,7 @@
         <div class="fld"><label>Carrocería</label><select name="carroceria" class="inp"><option value="">—</option><option value="hatchback">Hatchback</option><option value="sedan">Sedán</option><option value="suv">SUV</option><option value="pickup">Pickup</option><option value="utilitario">Utilitario</option><option value="rural">Rural</option><option value="monovolumen">Monovolumen</option><option value="coupe">Coupé</option></select></div>
         <label class="col-span-1 flex items-center gap-2 text-sm"><input type="checkbox" name="acepta_permuta" class="accent-[#0b0b0c]" />Toma usado</label>
         <label class="col-span-1 flex items-center gap-2 text-sm"><input type="checkbox" name="financiacion" class="accent-[#0b0b0c]" />Financiación</label>
+        <label class="col-span-1 flex items-center gap-2 text-sm"><input type="checkbox" name="consignacion" class="accent-[#0b0b0c]" />En consignación</label>
       </div></div>
       <div class="modal-foot">
         <button class="btn-pr"><i data-lucide="check" class="h-4 w-4"></i>Guardar</button>
@@ -706,7 +707,7 @@
     <article class="row fade p-4 ${S.nuevos.has(v.id) ? 'nuevo' : ''}" data-row="${v.id}">
       <div class="flex flex-col gap-4 lg:flex-row lg:items-center">
         <div class="min-w-0 flex-1">
-          <div class="flex flex-wrap items-center gap-2">${estadoChip(v)}${dudosos}</div>
+          <div class="flex flex-wrap items-center gap-2">${estadoChip(v)}${v.consignacion ? `<span class="chip c-mute"><i data-lucide="handshake" class="h-3 w-3"></i>Consignación</span>` : ""}${dudosos}</div>
           <h3 class="mt-2 truncate font-display text-lg font-bold text-zinc-950">${esc(v.marca)} ${esc(v.modelo)} <span class="font-sans text-sm font-normal text-ink">${esc(v.version || '')}</span></h3>
           <p class="mt-0.5 text-sm text-ink">${[v.anio, v.km != null ? nf.format(v.km) + ' km' : null, v.color, v.transmision === 'automatica' ? 'Automático' : null].filter(Boolean).map(esc).join(' · ') || '—'}</p>
         </div>
@@ -833,7 +834,7 @@
   function abrirEdit(v) {
     S.editando = v.id; const f = $('#fEdit');
     ['marca', 'modelo', 'version', 'anio', 'km', 'precio', 'moneda', 'combustible', 'transmision', 'color', 'carroceria'].forEach((k) => f[k].value = v[k] ?? (k === 'moneda' ? 'ARS' : ''));
-    f.acepta_permuta.checked = !!v.acepta_permuta; f.financiacion.checked = !!v.financiacion;
+    f.acepta_permuta.checked = !!v.acepta_permuta; f.financiacion.checked = !!v.financiacion; f.consignacion.checked = !!v.consignacion;
     $('#btnEliminar span').textContent = v.estado === 'borrador' ? 'Eliminar' : 'Dar de baja';
     $('#mEdit').classList.add('show'); $('#mEdit .modal-body').scrollTop = 0; icons();
   }
@@ -855,7 +856,7 @@
     e.preventDefault(); const f = e.target;
     const cambios = Object.fromEntries(['marca', 'modelo', 'version', 'anio', 'km', 'moneda', 'combustible', 'transmision', 'color', 'carroceria'].map((k) => [k, f[k].value]));
     cambios.precio = String(f.precio.value).replace(/\D/g, '');
-    cambios.acepta_permuta = f.acepta_permuta.checked; cambios.financiacion = f.financiacion.checked;
+    cambios.acepta_permuta = f.acepta_permuta.checked; cambios.financiacion = f.financiacion.checked; cambios.consignacion = f.consignacion.checked;
     try { const r = await api('actualizar', { id: S.editando, cambios }); reemplazar(r.vehiculo); $('#mEdit').classList.remove('show'); toast('Guardado.'); }
     catch (err) { toast(err.message, true); }
   });
@@ -880,7 +881,7 @@
         datos = { archivo: { base64: aBase64(buf), mime: 'application/pdf' } };
       } else {
         const wb = XLSX.read(buf, { type: 'array' });
-        const texto = wb.SheetNames.map((n) => { const csv = XLSX.utils.sheet_to_csv(wb.Sheets[n], { blankrows: false }).trim(); return csv ? `### Hoja "${n}"\n${csv}` : ''; }).filter(Boolean).join('\n\n');
+        const texto = wb.SheetNames.filter((n) => !/c[oó]mo completar/i.test(n)).map((n) => { const csv = XLSX.utils.sheet_to_csv(wb.Sheets[n], { blankrows: false }).trim(); return csv ? `### Hoja "${n}"\n${csv}` : ''; }).filter(Boolean).join('\n\n');
         if (!texto) throw new Error('La planilla está vacía.');
         datos = { texto };
       }
@@ -899,12 +900,31 @@
 
   $('#btnModelo').addEventListener('click', () => {
     const filas = [
-      ['Marca', 'Modelo', 'Versión', 'Año', 'Km', 'Precio', 'Moneda', 'Combustible', 'Caja', 'Color', 'Toma usado', 'Financiación'],
-      ['Toyota', 'Etios', 'XLS 1.5 5P', 2016, 98000, 13800000, 'ARS', 'Nafta', 'Manual', 'Blanco', 'Sí', 'Sí'],
-      ['Ford', 'Ranger', 'XLT 3.2 4x4 AT', 2019, 98000, 36500, 'USD', 'Diésel', 'Automática', 'Gris', 'No', 'Sí'],
+      ['Marca', 'Modelo', 'Versión', 'Tipo', 'Condición', 'Año', 'Kilometraje', 'Motor', 'Combustible', 'Transmisión', 'Color', 'Precio', 'Moneda', 'Financiación', 'Consignación'],
+      ['Toyota', 'Etios', 'XLS 5P', 'Hatchback', 'Usado', 2016, 98000, '1.5', 'Nafta', 'Manual', 'Blanco', 13800000, 'ARS', 'Sí', 'No'],
+      ['Ford', 'Ranger', 'XLT 4x4', 'Pickup', 'Usado', 2019, 98000, '3.2', 'Diésel', 'Automática', 'Gris', 36500, 'USD', 'No', 'Sí'],
+      ['Fiat', 'Cronos', 'Drive', 'Sedán', '0 km', 2026, 0, '1.3', 'Nafta', 'Manual', 'Rojo', 28900000, 'ARS', 'Sí', 'No'],
     ];
-    const ws = XLSX.utils.aoa_to_sheet(filas); ws['!cols'] = filas[0].map((h) => ({ wch: Math.max(10, h.length + 2) }));
-    const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Stock');
+    const ws = XLSX.utils.aoa_to_sheet(filas); ws['!cols'] = filas[0].map((h) => ({ wch: Math.max(11, h.length + 3) }));
+    const ayuda = [
+      ['Columna', 'Qué poner'],
+      ['Marca / Modelo / Versión', 'Como lo publicás. Ej.: Toyota · Etios · XLS 5P'],
+      ['Tipo', 'Sedán, Hatchback, SUV, Pickup, Utilitario, Rural, Monovolumen o Coupé'],
+      ['Condición', 'Usado o 0 km'],
+      ['Año', 'Año del modelo. Ej.: 2019'],
+      ['Kilometraje', 'Solo el número, sin puntos ni "km". Ej.: 98000 (0 si es 0 km)'],
+      ['Motor', 'Cilindrada. Ej.: 1.5 · 2.0 TDI · 3.2'],
+      ['Combustible', 'Nafta, Diésel, Nafta + GNC, Híbrido o Eléctrico'],
+      ['Transmisión', 'Manual o Automática'],
+      ['Precio', 'Solo el número, sin puntos ni signos. Ej.: 13800000'],
+      ['Moneda', 'ARS (pesos) o USD (dólares)'],
+      ['Financiación', 'Sí o No'],
+      ['Consignación', 'Sí si el auto está en consignación en tu agencia; si no, No'],
+      ['', ''],
+      ['Tip', 'Borrá las filas de ejemplo y cargá un auto por fila. Después subí el archivo en "Subir Excel": los autos quedan sin publicar hasta que los revises.'],
+    ];
+    const wa = XLSX.utils.aoa_to_sheet(ayuda); wa['!cols'] = [{ wch: 26 }, { wch: 90 }];
+    const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Stock'); XLSX.utils.book_append_sheet(wb, wa, 'Cómo completarla');
     XLSX.writeFile(wb, 'red-de-autos-stock.xlsx');
   });
 
