@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Admin · Red de Autos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&family=Mona+Sans:wght@400..900&family=Space+Grotesk:wght@400..700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { bg: '#ffffff', bg2: '#f5f5f2', bg3: '#ebebe6', pr: '#0b0b0c', hl: '#d6f345', ink: '#52525b', line: 'rgba(0,0,0,.1)' },
+      fontFamily: { display: ['"Mona Sans"', 'Inter', 'sans-serif'], sans: ['Inter', 'sans-serif'], mono: ['"Space Grotesk"', 'monospace'] },
+    } } };
+  </script>
+  <style>
+    body{background:#fafaf8;color:#3f3f46;font-family:Inter,sans-serif;-webkit-font-smoothing:antialiased}
+    .box{border-radius:20px;background:#fff;border:1px solid rgba(0,0,0,.1);box-shadow:0 1px 2px rgba(0,0,0,.04)}
+    .inp{width:100%;border-radius:12px;border:1px solid rgba(0,0,0,.14);background:#fff;padding:.6rem .8rem;font-size:15px;color:#0b0b0c;outline:none}
+    .inp:focus{border-color:#0b0b0c;box-shadow:0 0 0 3px rgba(214,243,69,.7)}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;border-radius:999px;font-weight:600;font-size:.82rem;padding:.45rem .85rem;transition:.2s;white-space:nowrap}
+    .btn-pr{background:#0b0b0c;color:#fff}.btn-pr:hover{background:#d6f345;color:#0b0b0c}
+    .btn-gh{border:1px solid rgba(0,0,0,.14);background:#fff;color:#0b0b0c}.btn-gh:hover{background:#d6f345;border-color:#d6f345}
+    .btn-ok{background:#16a34a;color:#fff}.btn-ok:hover{background:#15803d}
+    .btn-no{border:1px solid #fecaca;color:#b91c1c;background:#fff}.btn-no:hover{background:#fef2f2}
+    .btn:disabled{opacity:.5;cursor:wait}
+    .tab{display:flex;align-items:center;gap:.4rem;padding:.55rem .95rem;border-radius:999px;font-size:.86rem;font-weight:500;color:#52525b;white-space:nowrap}
+    .tab.on{background:#0b0b0c;color:#fff}.tab .n{font-size:.7rem;font-weight:700;border-radius:99px;padding:0 .4rem;background:#d6f345;color:#0b0b0c}
+    .chip{display:inline-flex;align-items:center;gap:.25rem;font-size:.7rem;font-weight:600;padding:.18rem .5rem;border-radius:999px;white-space:nowrap}
+    .c-ok{background:#dcfce7;color:#166534}.c-warn{background:#fef3c7;color:#92400e}.c-no{background:#fee2e2;color:#991b1b}.c-mute{background:#f4f4f5;color:#52525b}.c-hl{background:#d6f345;color:#0b0b0c}.c-blue{background:#dbeafe;color:#1e40af}
+    .kpi b{font-family:"Mona Sans",Inter,sans-serif;font-size:1.8rem;color:#0b0b0c;line-height:1}
+    table{width:100%;border-collapse:collapse;font-size:.86rem}th{font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:#71717a;text-align:left;font-weight:600;padding:.6rem .8rem;border-bottom:1px solid rgba(0,0,0,.08)}td{padding:.7rem .8rem;border-top:1px solid rgba(0,0,0,.06);vertical-align:top}
+    .spin{display:inline-block;width:1.1rem;height:1.1rem;border-radius:50%;border:2px solid currentColor;border-right-color:transparent;animation:sp .7s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
+    .toast{position:fixed;left:50%;bottom:1.25rem;transform:translate(-50%,160%);z-index:80;border-radius:999px;background:#0b0b0c;color:#fff;padding:.7rem 1.1rem;font-size:.9rem;transition:transform .3s;max-width:calc(100vw - 2rem)}
+    .toast.show{transform:translate(-50%,0)}.toast.err{background:#b91c1c}
+    .pin{display:flex;gap:.5rem}.pin input{width:2.6rem;height:3rem;text-align:center;font-size:1.3rem;font-family:"Space Grotesk",monospace;border-radius:12px;border:1px solid rgba(0,0,0,.14)}
+    .modal{position:fixed;inset:0;z-index:70;display:none;align-items:center;justify-content:center;padding:1rem;background:rgba(10,10,10,.5)}.modal.show{display:flex}
+    [hidden]{display:none!important}
+    pre{white-space:pre-wrap;font-family:Inter,sans-serif;font-size:.85rem}
+  </style>
+</head>
+<body>
+  <header class="sticky top-0 z-40 border-b border-line bg-white/90 backdrop-blur">
+    <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3">
+      <a href="./" class="flex items-center gap-2.5"><span class="grid h-8 w-8 place-items-center rounded-lg bg-pr text-white"><i data-lucide="shield" class="h-4 w-4"></i></span><b class="font-display text-zinc-950">Red de Autos</b><span class="chip c-hl">Admin</span></a>
+      <button id="btnSalir" class="btn btn-gh" hidden><i data-lucide="log-out" class="h-3.5 w-3.5"></i>Salir</button>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-7xl px-5 pb-20 pt-6">
+    <!-- LOGIN -->
+    <section id="vLogin" hidden class="mx-auto mt-10 max-w-sm">
+      <div class="box p-6">
+        <h1 class="font-display text-2xl font-bold text-zinc-950">Ingreso admin</h1>
+        <p class="mt-1 text-sm text-ink">Con tu número de WhatsApp de administrador y tu PIN (pedilo escribiéndole <b>PIN</b> al bot).</p>
+        <label class="mt-5 block text-xs font-semibold">WhatsApp</label>
+        <input id="lTel" class="inp mt-1" inputmode="tel" placeholder="381 555-1234" />
+        <label class="mt-4 block text-xs font-semibold">PIN</label>
+        <div class="pin mt-1" id="pinBox"><input maxlength="1" inputmode="numeric" /><input maxlength="1" inputmode="numeric" /><input maxlength="1" inputmode="numeric" /><input maxlength="1" inputmode="numeric" /><input maxlength="1" inputmode="numeric" /><input maxlength="1" inputmode="numeric" /></div>
+        <p id="lErr" class="mt-3 text-sm text-red-600" hidden></p>
+        <button id="btnIngresar" class="btn btn-pr mt-5 w-full !py-3 !text-sm"><i data-lucide="log-in" class="h-4 w-4"></i>Ingresar</button>
+      </div>
+    </section>
+
+    <div id="vCarga" class="grid place-items-center py-40"><span class="spin h-6 w-6"></span></div>
+
+    <!-- PANEL -->
+    <section id="vPanel" hidden>
+      <nav class="flex gap-1 overflow-x-auto rounded-full border border-line bg-white p-1" id="tabs">
+        <button class="tab on" data-t="resumen"><i data-lucide="layout-dashboard" class="h-4 w-4"></i>Resumen</button>
+        <button class="tab" data-t="cuentas"><i data-lucide="store" class="h-4 w-4"></i>Agencias y vendedores <span class="n" id="nCuentas" hidden></span></button>
+        <button class="tab" data-t="leads"><i data-lucide="inbox" class="h-4 w-4"></i>Leads <span class="n" id="nLeads" hidden></span></button>
+        <button class="tab" data-t="autos"><i data-lucide="car-front" class="h-4 w-4"></i>Autos</button>
+        <button class="tab" data-t="particulares"><i data-lucide="key-round" class="h-4 w-4"></i>Particulares</button>
+        <button class="tab" data-t="informes"><i data-lucide="file-bar-chart" class="h-4 w-4"></i>Informes</button>
+        <button class="tab" data-t="fallidos"><i data-lucide="message-square-warning" class="h-4 w-4"></i>WhatsApp fallidos</button>
+      </nav>
+
+      <div id="tResumen" class="mt-6"></div>
+
+      <div id="tCuentas" class="mt-6" hidden>
+        <div class="flex flex-wrap items-center gap-2">
+          <select id="fCEstado" class="inp !w-auto"><option value="">Todas</option><option value="pendiente">Pendientes</option><option value="aprobada">Aprobadas</option><option value="rechazada">Rechazadas</option><option value="pausada">Pausadas</option><option value="prueba">En prueba</option></select>
+          <select id="fCTipo" class="inp !w-auto"><option value="">Agencias y vendedores</option><option value="agencia">Solo agencias</option><option value="vendedor">Solo vendedores</option></select>
+          <input id="fCQ" class="inp !w-56" placeholder="Buscar nombre o número…" />
+        </div>
+        <div id="cuentasList" class="mt-4 grid gap-3"></div>
+      </div>
+
+      <div id="tLeads" class="mt-6" hidden><div class="box overflow-x-auto"><table><thead><tr><th>Fecha</th><th>Agencia</th><th>Contacto</th><th>Zona · autos</th><th>Origen</th><th>Estado</th></tr></thead><tbody id="leadsBody"></tbody></table></div></div>
+
+      <div id="tAutos" class="mt-6" hidden>
+        <div class="flex flex-wrap items-center gap-2">
+          <select id="fAEstado" class="inp !w-auto"><option value="">Todos (sin bajas)</option><option value="disponible">Disponibles</option><option value="borrador">Sin publicar</option><option value="pausado">Pausados</option><option value="reservado">Reservados</option><option value="vendido">Vendidos</option><option value="baja">Bajas</option></select>
+          <input id="fAQ" class="inp !w-56" placeholder="Marca o modelo…" />
+          <button id="fABuscar" class="btn btn-gh"><i data-lucide="search" class="h-3.5 w-3.5"></i>Buscar</button>
+        </div>
+        <div class="box mt-4 overflow-x-auto"><table><thead><tr><th>Auto</th><th>Cuenta</th><th>Precio</th><th>Fotos</th><th>Estado</th><th></th></tr></thead><tbody id="autosBody"></tbody></table></div>
+      </div>
+
+      <div id="tParticulares" class="mt-6" hidden><div class="box overflow-x-auto"><table><thead><tr><th>Fecha</th><th>Auto</th><th>Particular</th><th>Pretende</th><th>Modalidad</th><th>Propuestas</th><th>Estado</th><th></th></tr></thead><tbody id="partBody"></tbody></table></div></div>
+
+      <div id="tInformes" class="mt-6" hidden>
+        <div class="flex flex-wrap items-center justify-between gap-3"><p class="text-sm text-ink">Se envían solos el último día de cada mes a las 20:00. También podés mandarte uno ahora.</p><button id="btnInforme" class="btn btn-pr"><i data-lucide="send" class="h-3.5 w-3.5"></i>Mandarme el informe ahora</button></div>
+        <div id="infList" class="mt-4 grid gap-3"></div>
+      </div>
+
+      <div id="tFallidos" class="mt-6" hidden>
+        <p class="text-sm text-ink">Mensajes que WhatsApp no entregó. Lo más común: número fuera de la lista de prueba o plantilla sin aprobar. Se reenvían solos cuando la persona le escribe al bot.</p>
+        <div class="box mt-4 overflow-x-auto"><table><thead><tr><th>Fecha</th><th>Número</th><th>Tipo</th><th>Motivo</th></tr></thead><tbody id="falBody"></tbody></table></div>
+      </div>
+    </section>
+  </main>
+
+  <div id="mFoto" class="modal"><div class="box max-w-2xl overflow-hidden p-2"><img id="mFotoImg" class="max-h-[80vh] w-full rounded-2xl object-contain" alt="" /><div class="p-3 text-right"><button class="btn btn-gh" onclick="document.getElementById('mFoto').classList.remove('show')">Cerrar</button></div></div></div>
+  <div id="toast" class="toast"></div>
+
+  <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+  <script>
+  const CONFIG = {
+    SUPABASE_URL: 'https://ytuecptdgtmrbiddyzht.supabase.co',
+    SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl0dWVjcHRkZ3RtcmJpZGR5emh0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ0MTMxNTMsImV4cCI6MjEwOTk4OTE1M30.H-Yi5dwDW8TvZfFWvP3dquHnCeQNtHTf8MO6i5v02VA',
+  };
+  const $ = (s, el = document) => el.querySelector(s), $$ = (s, el = document) => [...el.querySelectorAll(s)];
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const nf = new Intl.NumberFormat('es-AR', { maximumFractionDigits: 0 });
+  const money = (n, c) => n == null ? '—' : (c === 'USD' ? 'US$ ' : '$ ') + nf.format(n);
+  const fecha = (iso) => iso ? new Date(iso).toLocaleDateString('es-AR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : '—';
+  const icons = () => window.lucide && lucide.createIcons();
+  const sb = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY, { auth: { persistSession: true, storageKey: 'rda-admin' } });
+  const D = { cuentas: [], cargado: {} };
+
+  function toast(m, err = false) { const t = $('#toast'); t.textContent = m; t.classList.toggle('err', err); t.classList.add('show'); clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('show'), 3500); }
+  function normTel(t) {
+    let d = String(t || '').replace(/\D/g, ''); if (d.startsWith('00')) d = d.slice(2); if (d.startsWith('0')) d = d.slice(1); if (!d.startsWith('54')) d = '54' + d;
+    let n = d.slice(2); if (n.length === 12 && !n.startsWith('9')) { for (const a of [3, 4, 2]) if (n.slice(a, a + 2) === '15') { n = n.slice(0, a) + n.slice(a + 2); break; } }
+    return n.startsWith('9') ? '54' + n : '549' + n;
+  }
+  async function call(fn, accion, datos = {}) {
+    const { data: { session } } = await sb.auth.getSession();
+    const r = await fetch(`${CONFIG.SUPABASE_URL}/functions/v1/${fn}`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json', apikey: CONFIG.SUPABASE_ANON_KEY, ...(session ? { Authorization: `Bearer ${session.access_token}` } : {}) },
+      body: JSON.stringify({ accion, ...datos }),
+    });
+    const j = await r.json().catch(() => ({}));
+    if ((r.status === 401 || r.status === 403) && accion !== 'login') { await sb.auth.signOut(); mostrar('login'); if (r.status === 403) { $('#lErr').textContent = j.error; $('#lErr').hidden = false; } }
+    if (!r.ok) throw new Error(j.error || 'Algo salió mal.');
+    return j;
+  }
+  const api = (accion, datos) => call('admin', accion, datos);
+  function mostrar(v) { ['vLogin', 'vPanel', 'vCarga'].forEach((id) => $('#' + id).hidden = id !== 'v' + v[0].toUpperCase() + v.slice(1)); $('#btnSalir').hidden = v !== 'panel'; icons(); }
+
+  // ---------- Login ----------
+  const pins = $$('#pinBox input');
+  pins.forEach((p, i) => {
+    p.addEventListener('input', () => { p.value = p.value.replace(/\D/g, '').slice(-1); if (p.value && pins[i + 1]) pins[i + 1].focus(); });
+    p.addEventListener('keydown', (e) => { if (e.key === 'Backspace' && !p.value && pins[i - 1]) pins[i - 1].focus(); if (e.key === 'Enter') ingresar(); });
+    p.addEventListener('paste', (e) => { const t = (e.clipboardData.getData('text') || '').replace(/\D/g, '').slice(0, 6); if (t.length === 6) { e.preventDefault(); t.split('').forEach((c, k) => pins[k].value = c); } });
+  });
+  $('#lTel').value = localStorage.getItem('rda-tel') || '';
+  $('#btnIngresar').addEventListener('click', ingresar);
+  async function ingresar() {
+    const tel = $('#lTel').value.trim(), pin = pins.map((p) => p.value).join(''), e = $('#lErr'); e.hidden = true;
+    if (normTel(tel).length < 12 || pin.length !== 6) { e.textContent = 'Completá tu número y los 6 números del PIN.'; e.hidden = false; return; }
+    const b = $('#btnIngresar'); b.disabled = true;
+    try {
+      const { email, otp } = await call('panel', 'login', { telefono: tel, pin });
+      let r = await sb.auth.verifyOtp({ email, token: otp, type: 'email' });
+      if (r.error) r = await sb.auth.verifyOtp({ email, token: otp, type: 'magiclink' });
+      if (r.error) throw new Error('No se pudo iniciar la sesión.');
+      pins.forEach((p) => p.value = ''); await arrancar();
+    } catch (x) { e.textContent = x.message; e.hidden = false; } finally { b.disabled = false; }
+  }
+  $('#btnSalir').addEventListener('click', async () => { await sb.auth.signOut(); mostrar('login'); });
+
+  // ---------- Tabs ----------
+  const TABS = { resumen: cargarResumen, cuentas: cargarCuentas, leads: cargarLeads, autos: cargarAutos, particulares: cargarPart, informes: cargarInformes, fallidos: cargarFallidos };
+  function irTab(t) {
+    $$('#tabs .tab').forEach((b) => b.classList.toggle('on', b.dataset.t === t));
+    Object.keys(TABS).forEach((k) => $('#t' + k[0].toUpperCase() + k.slice(1)).hidden = k !== t);
+    TABS[t]().catch((e) => toast(e.message, true)).finally(icons);
+    history.replaceState(null, '', '#' + t);
+  }
+  $$('#tabs .tab').forEach((b) => b.addEventListener('click', () => irTab(b.dataset.t)));
+
+  // ---------- Resumen ----------
+  async function cargarResumen() {
+    $('#tResumen').innerHTML = '<div class="grid place-items-center py-16"><span class="spin"></span></div>';
+    const { mes: m, pendientes: p } = await api('resumen');
+    $('#nCuentas').textContent = p.cuentas; $('#nCuentas').hidden = !p.cuentas;
+    $('#nLeads').textContent = p.leads; $('#nLeads').hidden = !p.leads;
+    const k = (t, v, s = '') => `<div class="box kpi p-4"><p class="text-xs font-semibold text-ink">${t}</p><b class="mt-2 block">${v}</b>${s ? `<p class="mt-1 text-xs text-ink/70">${s}</p>` : ''}</div>`;
+    const pend = [
+      p.cuentas ? `<button class="btn btn-pr" data-go="cuentas">${p.cuentas} cuenta${p.cuentas > 1 ? 's' : ''} para aprobar</button>` : '',
+      p.leads ? `<button class="btn btn-gh" data-go="leads">${p.leads} lead${p.leads > 1 ? 's' : ''} sin contactar</button>` : '',
+      p.fallidos_7d ? `<button class="btn btn-gh" data-go="fallidos">${p.fallidos_7d} WhatsApp fallidos (7 días)</button>` : '',
+    ].join('');
+    const top = (m.top_buscados || []).map((t, i) => `<li class="flex justify-between text-sm"><span>${i + 1}. ${esc(t.que)}</span><b>${t.n}</b></li>`).join('') || '<li class="text-sm text-ink/60">Sin búsquedas todavía.</li>';
+    $('#tResumen').innerHTML = `
+      ${pend ? `<div class="box mb-5 flex flex-wrap items-center gap-2 p-4"><span class="mr-2 text-sm font-semibold text-zinc-950">Para hacer:</span>${pend}</div>` : ''}
+      <h2 class="mb-3 text-xs font-semibold uppercase tracking-widest text-ink/60">Este mes</h2>
+      <div class="grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-6">
+        ${k('Búsquedas con IA', nf.format(m.busquedas), `${nf.format(m.compradores)} personas`)}
+        ${k('Encontraron autos', m.busquedas ? Math.round(100 * m.con_resultados / m.busquedas) + '%' : '—')}
+        ${k('Alertas de compra', nf.format(m.alertas))}
+        ${k('Ofertas', nf.format(m.ofertas), money(m.ofertas_monto_ars, 'ARS'))}
+        ${k('Visitas pedidas', nf.format(m.visitas))}
+        ${k('Contactos compartidos', nf.format(m.contactos), 'leads reales a agencias')}
+        ${k('Agencias activas', nf.format(m.agencias_activas), `${nf.format(m.agencias_nuevas)} nuevas`)}
+        ${k('Autos en la web', nf.format(m.autos_en_web), `${nf.format(m.autos_cargados)} cargados`)}
+        ${k('Vendidos', nf.format(m.autos_vendidos))}
+        ${k('Particulares', nf.format(m.particulares), `${nf.format(m.particulares_propuestas)} propuestas`)}
+        ${k('Leads landing', nf.format(m.leads_agencias))}
+        ${k('WhatsApp', nf.format(m.wa_enviados), `${nf.format(m.wa_fallidos)} fallidos`)}
+      </div>
+      <div class="box mt-5 max-w-md p-5"><h3 class="font-semibold text-zinc-950">Más buscados</h3><ol class="mt-3 space-y-1.5">${top}</ol></div>`;
+  }
+  document.addEventListener('click', (e) => { const g = e.target.closest('[data-go]'); if (g) irTab(g.dataset.go); });
+
+  // ---------- Cuentas ----------
+  async function cargarCuentas() {
+    $('#cuentasList').innerHTML = '<div class="grid place-items-center py-16"><span class="spin"></span></div>';
+    D.cuentas = (await api('cuentas')).cuentas; pintarCuentas();
+  }
+  function estadoCuenta(a) {
+    if (a.verificacion === 'pendiente') return '<span class="chip c-warn">Pendiente de aprobación</span>';
+    if (a.verificacion === 'rechazada') return '<span class="chip c-no">Rechazada</span>';
+    if (!a.activa) return '<span class="chip c-mute">Pausada</span>';
+    return '<span class="chip c-ok">Activa</span>';
+  }
+  function planTxt(a) {
+    if (a.plan === 'prueba') { const d = Math.ceil((new Date(a.prueba_hasta) - Date.now()) / 864e5); return `<span class="chip c-blue">Prueba · ${a.prueba_hasta ? (d > 0 ? d + ' días' : 'vencida') : 'sin empezar'}</span>`; }
+    return `<span class="chip c-mute">Plan ${esc(a.plan)}</span>`;
+  }
+  function pintarCuentas() {
+    const est = $('#fCEstado').value, tipo = $('#fCTipo').value, q = $('#fCQ').value.trim().toLowerCase();
+    const lista = D.cuentas.filter((a) =>
+      (!tipo || (a.tipo || 'agencia') === tipo) &&
+      (!est || (est === 'pausada' ? a.verificacion === 'aprobada' && !a.activa : est === 'prueba' ? a.plan === 'prueba' : a.verificacion === est)) &&
+      (!q || `${a.nombre} ${a.trabaja_en || ''} ${a.whatsapp}`.toLowerCase().includes(q)));
+    $('#cuentasList').innerHTML = lista.length ? lista.map((a) => {
+      const v = a.tipo === 'vendedor';
+      const acc = [];
+      if (a.verificacion !== 'aprobada') acc.push(`<button class="btn btn-ok" data-c="aprobar" data-id="${a.id}"><i data-lucide="check" class="h-3.5 w-3.5"></i>Aprobar</button>`);
+      if (a.verificacion === 'pendiente') acc.push(`<button class="btn btn-no" data-c="rechazar" data-id="${a.id}">Rechazar</button>`);
+      if (a.verificacion === 'aprobada') acc.push(a.activa ? `<button class="btn btn-gh" data-c="pausar" data-id="${a.id}"><i data-lucide="pause" class="h-3.5 w-3.5"></i>Pausar</button>` : `<button class="btn btn-gh" data-c="reactivar" data-id="${a.id}"><i data-lucide="play" class="h-3.5 w-3.5"></i>Reactivar</button>`);
+      if (a.verificacion === 'aprobada' && (a.plan === 'prueba' || a.plan === 'piloto')) acc.push(`<button class="btn btn-pr" data-c="activar_plan" data-id="${a.id}"><i data-lucide="badge-check" class="h-3.5 w-3.5"></i>Activar plan pago</button>`);
+      if (v && a.verificacion === 'aprobada') acc.push(`<button class="btn btn-gh" data-c="extender_prueba" data-id="${a.id}"><i data-lucide="gift" class="h-3.5 w-3.5"></i>+7 días prueba</button>`);
+      acc.push(`<button class="btn btn-gh" data-c="alertas" data-id="${a.id}">${a.recibe_alertas ? '🔔 Alertas sí' : '🔕 Alertas no'}</button>`);
+      acc.push(`<button class="btn btn-gh" data-c="particulares" data-id="${a.id}">${a.recibe_particulares ? '🔑 Particulares sí' : 'Particulares no'}</button>`);
+      if (a.tiene_foto) acc.push(`<button class="btn btn-gh" data-foto="${a.id}"><i data-lucide="image" class="h-3.5 w-3.5"></i>Ver foto</button>`);
+      acc.push(`<a class="btn btn-gh" target="_blank" rel="noopener" href="https://wa.me/${esc(a.whatsapp)}"><i data-lucide="message-circle" class="h-3.5 w-3.5"></i>WhatsApp</a>`);
+      acc.push(`<button class="btn btn-gh" data-verautos="${a.id}"><i data-lucide="car-front" class="h-3.5 w-3.5"></i>Autos</button>`);
+      return `<article class="box p-4">
+        <div class="flex flex-wrap items-start justify-between gap-3">
+          <div class="min-w-0">
+            <div class="flex flex-wrap items-center gap-1.5">${estadoCuenta(a)}<span class="chip ${v ? 'c-hl' : 'c-mute'}">${v ? 'Vendedor' : 'Agencia'}</span>${planTxt(a)}${a.demo ? '<span class="chip c-mute">demo</span>' : ''}</div>
+            <h3 class="mt-2 font-display text-lg font-bold text-zinc-950">${esc(a.nombre)}${v && a.trabaja_en ? ` <span class="font-sans text-sm font-normal text-ink">· ${esc(a.trabaja_en)}</span>` : ''}</h3>
+            <p class="text-sm text-ink">${esc([a.direccion, a.ciudad].filter(Boolean).join(', '))} · +${esc(a.whatsapp)}${a.cuit ? ' · CUIT ' + esc(a.cuit) : ''}${a.razon_social ? ' · ' + esc(a.razon_social) : ''}</p>
+            <p class="mt-1 text-xs text-ink/70">Alta ${fecha(a.created_at)} · ${a.autos.total} autos (${a.autos.web} en la web) · ${a.autos.vendidos} vendidos</p>
+          </div>
+        </div>
+        <div class="mt-3 flex flex-wrap gap-1.5">${acc.join('')}</div>
+      </article>`;
+    }).join('') : '<p class="py-10 text-center text-sm text-ink/60">No hay cuentas con ese filtro.</p>';
+    icons();
+  }
+  ['fCEstado', 'fCTipo'].forEach((id) => $('#' + id).addEventListener('change', pintarCuentas));
+  $('#fCQ').addEventListener('input', pintarCuentas);
+  const CONFIRMA = { aprobar: '¿Aprobar esta cuenta? Le avisamos por WhatsApp.', rechazar: '¿Rechazar? Le pedimos que revise sus datos.', pausar: '¿Pausar? Sus autos dejan de mostrarse y no recibe pedidos.', activar_plan: '¿Activar el plan pago? Le avisamos por WhatsApp.' };
+  document.addEventListener('click', async (e) => {
+    const b = e.target.closest('[data-c]'); if (!b) return;
+    const op = b.dataset.c; if (CONFIRMA[op] && !confirm(CONFIRMA[op])) return;
+    b.disabled = true;
+    try {
+      const r = await api('cuenta', { id: b.dataset.id, op, dias: 7 });
+      Object.assign(D.cuentas.find((a) => a.id === b.dataset.id), r.cuenta);
+      toast(r.avisado === false ? 'Hecho. Ojo: el aviso por WhatsApp no salió.' : 'Hecho ✓'); pintarCuentas();
+    } catch (x) { toast(x.message, true); b.disabled = false; }
+  });
+  document.addEventListener('click', async (e) => {
+    const b = e.target.closest('[data-foto]'); if (!b) return;
+    const { url } = await api('foto_local', { id: b.dataset.foto }).catch((x) => { toast(x.message, true); return {}; });
+    if (url) { $('#mFotoImg').src = url; $('#mFoto').classList.add('show'); }
+  });
+  document.addEventListener('click', (e) => { const b = e.target.closest('[data-verautos]'); if (b) { D.agFiltro = b.dataset.verautos; irTab('autos'); } });
+
+  // ---------- Leads ----------
+  async function cargarLeads() {
+    const { leads } = await api('leads');
+    const EST = { nuevo: 'c-warn', contactado: 'c-blue', sumada: 'c-ok', descartado: 'c-mute' };
+    $('#leadsBody').innerHTML = leads.length ? leads.map((l) => `<tr>
+      <td class="whitespace-nowrap">${fecha(l.created_at)}</td>
+      <td><b class="text-zinc-950">${esc(l.agencia)}</b></td>
+      <td>${esc(l.nombre)}<br><a class="text-xs underline" target="_blank" rel="noopener" href="https://wa.me/${esc(l.whatsapp)}">+${esc(l.whatsapp)}</a></td>
+      <td>${esc(l.zona || '—')}<br><span class="text-xs text-ink/70">${esc(l.autos_aprox || '')}</span></td>
+      <td class="text-xs">${esc([l.utm_source, l.utm_campaign].filter(Boolean).join(' / ') || (l.fbclid ? 'Meta' : l.gclid ? 'Google' : 'directo'))}</td>
+      <td><select class="inp !w-auto !py-1 !text-xs" data-lead="${l.id}">${['nuevo', 'contactado', 'sumada', 'descartado'].map((s) => `<option ${s === l.estado ? 'selected' : ''}>${s}</option>`).join('')}</select> <span class="chip ${EST[l.estado]}">${l.estado}</span></td></tr>`).join('')
+      : '<tr><td colspan="6" class="py-10 text-center text-ink/60">Todavía no llegaron leads desde la landing.</td></tr>';
+  }
+  document.addEventListener('change', async (e) => {
+    const s = e.target.closest('[data-lead]'); if (!s) return;
+    try { await api('lead', { id: s.dataset.lead, estado: s.value }); toast('Lead actualizado ✓'); cargarLeads(); } catch (x) { toast(x.message, true); }
+  });
+
+  // ---------- Autos ----------
+  async function cargarAutos() {
+    $('#autosBody').innerHTML = '<tr><td colspan="6" class="py-10 text-center"><span class="spin"></span></td></tr>';
+    const { autos } = await api('autos', { estado: $('#fAEstado').value || null, q: $('#fAQ').value.trim() || null, agencia_id: D.agFiltro || null });
+    const EST = { disponible: 'c-ok', borrador: 'c-mute', pausado: 'c-mute', reservado: 'c-warn', vendido: 'c-blue', baja: 'c-no' };
+    $('#autosBody').innerHTML = (D.agFiltro ? `<tr><td colspan="6" class="bg-bg2 text-xs">Mostrando autos de una cuenta · <button class="underline" id="quitarFiltro">ver todos</button></td></tr>` : '') + (autos.length ? autos.map((v) => {
+      const ag = v.agencias || {};
+      const nf_ = (v.fotos_publicas || []).length;
+      return `<tr>
+        <td><b class="text-zinc-950">${esc(v.marca)} ${esc(v.modelo)}</b> <span class="text-ink">${esc(v.version || '')}</span><br><span class="text-xs text-ink/70">${[v.anio, v.km != null ? nf.format(v.km) + ' km' : null].filter(Boolean).join(' · ')} · ${fecha(v.created_at)}</span></td>
+        <td>${esc(ag.nombre || '—')}${ag.tipo === 'vendedor' ? ' <span class="chip c-hl">vend.</span>' : ''}</td>
+        <td class="whitespace-nowrap">${money(v.precio, v.moneda)}</td>
+        <td>${nf_ ? `<a href="${esc(v.fotos_publicas[0])}" target="_blank" class="underline">${nf_}</a>` : '0'}</td>
+        <td><span class="chip ${EST[v.estado] || 'c-mute'}">${v.estado}</span></td>
+        <td class="whitespace-nowrap text-right">${v.estado === 'disponible' ? `<button class="btn btn-gh" data-a="pausar" data-id="${v.id}">Pausar</button>` : ''}${['pausado', 'baja'].includes(v.estado) ? `<button class="btn btn-gh" data-a="reactivar" data-id="${v.id}">Reactivar</button>` : ''}${v.estado !== 'baja' ? ` <button class="btn btn-no" data-a="baja" data-id="${v.id}">Dar de baja</button>` : ''}</td></tr>`;
+    }).join('') : '<tr><td colspan="6" class="py-10 text-center text-ink/60">No hay autos con ese filtro.</td></tr>');
+    $('#quitarFiltro')?.addEventListener('click', () => { D.agFiltro = null; cargarAutos(); });
+  }
+  $('#fABuscar').addEventListener('click', () => cargarAutos().catch((e) => toast(e.message, true)));
+  $('#fAEstado').addEventListener('change', () => cargarAutos().catch((e) => toast(e.message, true)));
+  document.addEventListener('click', async (e) => {
+    const b = e.target.closest('[data-a]'); if (!b) return;
+    if (b.dataset.a === 'baja' && !confirm('¿Dar de baja este auto? Deja de mostrarse.')) return;
+    b.disabled = true;
+    try { await api('auto', { id: b.dataset.id, op: b.dataset.a }); toast('Hecho ✓'); cargarAutos(); } catch (x) { toast(x.message, true); b.disabled = false; }
+  });
+
+  // ---------- Particulares ----------
+  async function cargarPart() {
+    const { autos } = await api('particulares');
+    const EST = { pendiente_verificacion: ['c-mute', 'Sin confirmar'], abierto: ['c-ok', 'Abierto'], cerrado: ['c-blue', 'Cerrado'], cancelado: ['c-no', 'Cancelado'] };
+    $('#partBody').innerHTML = autos.length ? autos.map((a) => `<tr>
+      <td class="whitespace-nowrap">${fecha(a.created_at)}</td>
+      <td><b class="text-zinc-950">${esc(a.marca)} ${esc(a.modelo)}</b> ${esc(a.version || '')} ${a.anio || ''}<br><span class="text-xs text-ink/70">${a.km != null ? nf.format(a.km) + ' km · ' : ''}${esc(a.zona || '')} · ${(a.fotos || []).length} fotos</span></td>
+      <td>${esc(a.nombre)}${a.whatsapp ? `<br><a class="text-xs underline" target="_blank" rel="noopener" href="https://wa.me/${esc(a.whatsapp)}">+${esc(a.whatsapp)}</a>` : `<br><span class="text-xs text-ink/60">código ${esc(a.codigo)}</span>`}</td>
+      <td class="whitespace-nowrap">${a.precio_pretendido ? money(a.precio_pretendido, a.moneda) : 'Escucha ofertas'}</td>
+      <td>${esc(a.modalidad)}</td>
+      <td>${a.propuestas} <span class="text-xs text-ink/60">· ${a.agencias_notificadas || 0} agencias avisadas</span></td>
+      <td><span class="chip ${EST[a.estado]?.[0]}">${EST[a.estado]?.[1] || a.estado}</span></td>
+      <td>${['abierto', 'pendiente_verificacion'].includes(a.estado) ? `<button class="btn btn-no" data-p="${a.id}">Cancelar</button>` : ''}</td></tr>`).join('')
+      : '<tr><td colspan="8" class="py-10 text-center text-ink/60">Todavía no hay autos de particulares.</td></tr>';
+  }
+  document.addEventListener('click', async (e) => {
+    const b = e.target.closest('[data-p]'); if (!b) return;
+    if (!confirm('¿Cancelar este auto de particular? Deja de recibir propuestas.')) return;
+    try { await api('particular', { id: b.dataset.p, op: 'cancelar' }); toast('Cancelado ✓'); cargarPart(); } catch (x) { toast(x.message, true); }
+  });
+
+  // ---------- Informes ----------
+  async function cargarInformes() {
+    const { informes } = await api('informes');
+    $('#infList').innerHTML = informes.length ? informes.map((i) => `<details class="box p-4"><summary class="flex cursor-pointer items-center justify-between gap-3"><b class="text-zinc-950">${new Date(i.created_at).toLocaleDateString('es-AR', { day: 'numeric', month: 'long', year: 'numeric' })}</b><span class="chip ${i.enviado ? 'c-ok' : 'c-warn'}">${i.enviado ? 'Enviado' : 'Pendiente de entrega'}</span></summary><pre class="mt-3">${esc((i.texto || '').replace(/\*/g, ''))}</pre></details>`).join('')
+      : '<p class="py-10 text-center text-sm text-ink/60">Todavía no hay informes.</p>';
+  }
+  $('#btnInforme').addEventListener('click', async (e) => {
+    const b = e.currentTarget; b.disabled = true;
+    try { const r = await api('informe_ahora'); toast(r.enviado ? 'Te lo mandamos por WhatsApp ✓' : 'Quedó guardado; te llega cuando le escribas al bot.'); cargarInformes(); } catch (x) { toast(x.message, true); } finally { b.disabled = false; }
+  });
+
+  // ---------- Fallidos ----------
+  async function cargarFallidos() {
+    const { mensajes } = await api('fallidos');
+    const motivo = (e) => { try { const j = JSON.parse(e); return j.code === 131030 ? 'Número fuera de la lista de prueba' : j.code === 132001 ? 'Plantilla no aprobada / inexistente' : j.message || e; } catch { return e; } };
+    $('#falBody').innerHTML = mensajes.length ? mensajes.map((m) => `<tr><td class="whitespace-nowrap">${fecha(m.created_at)}</td><td>+${esc(m.telefono)}</td><td>${esc(m.tipo)}</td><td class="text-xs">${esc(motivo(m.error))}</td></tr>`).join('')
+      : '<tr><td colspan="4" class="py-10 text-center text-ink/60">Sin errores 🎉</td></tr>';
+  }
+
+  // ---------- Arranque ----------
+  async function arrancar() {
+    mostrar('carga');
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) return mostrar('login');
+    try { await api('yo'); mostrar('panel'); const t = location.hash.slice(1); irTab(TABS[t] ? t : 'resumen'); }
+    catch { mostrar('login'); }
+  }
+  arrancar();
+  </script>
+</body>
+</html>
