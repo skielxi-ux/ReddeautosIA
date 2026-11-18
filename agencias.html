@@ -54,6 +54,7 @@
     .drop:hover,.drop.over{border-color:#0b0b0c;background:rgba(214,243,69,.25)}
     .chip{display:inline-flex;align-items:center;gap:.3rem;font-size:.72rem;font-weight:600;padding:.25rem .55rem;border-radius:999px;white-space:nowrap}
     .c-ok{background:#d6f345;color:#0b0b0c}
+    .c-hl{background:#d6f345;color:#0b0b0c}
     .c-warn{background:#fef3c7;color:#92400e}
     .c-mute{background:#f4f4f5;color:#52525b}
     .c-bad{background:#fee2e2;color:#b91c1c}
@@ -224,6 +225,7 @@
         <button class="tab" data-t="excel"><i data-lucide="file-spreadsheet" class="h-4 w-4"></i>Subir Excel</button>
         <button class="tab" data-t="fotos"><i data-lucide="images" class="h-4 w-4"></i>Subir fotos</button>
         <button class="tab" data-t="mercado"><i data-lucide="radar" class="h-4 w-4"></i>Lo que buscan</button>
+        <button class="tab" data-t="feria" id="tabFeria" hidden><i data-lucide="tent" class="h-4 w-4"></i>Feria online <span class="n" id="nFeria" hidden>0</span></button>
         <button class="tab" data-t="red"><i data-lucide="handshake" class="h-4 w-4"></i>Red de colegas <span class="n" id="nRed" hidden>0</span></button>
         <button class="tab" data-t="part"><i data-lucide="key-round" class="h-4 w-4"></i>Particulares <span class="n" id="nPart" hidden>0</span></button>
       </nav>
@@ -277,6 +279,12 @@
         </div>
         <div id="fotResumen" class="mt-5 text-sm" hidden></div>
         <div id="fotGrid" class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5"></div>
+      </div>
+
+      <!-- Feria de Usados Online -->
+      <div id="tFeria" class="mt-6" hidden>
+        <div id="feInfo"></div>
+        <div id="feLista" class="mt-5 space-y-2"></div>
       </div>
 
       <!-- Red de colegas: venta compartida -->
@@ -528,6 +536,7 @@
       if (location.hash === '#particulares') irTab('part');
       if (location.hash === '#red') irTab('red');
       cargarRed(true).catch(() => {});
+      cargarFeria(true).then(() => { if (location.hash === '#feria' && FER.f) irTab('feria'); }).catch(() => {});
     } catch (e) { toast(e.message, true); mostrar('login'); }
   }
 
@@ -608,13 +617,15 @@
       const dias = Math.max(0, Math.ceil((new Date(ag.prueba_hasta) - Date.now()) / 864e5));
       $('#banner').innerHTML += `<div class="mt-3 flex flex-wrap items-center gap-3 rounded-2xl border border-line bg-hl/30 p-4 text-sm"><i data-lucide="gift" class="h-5 w-5 flex-none"></i><div class="flex-1"><b class="text-zinc-950">${dias ? `Prueba gratis: te quedan ${dias} día${dias > 1 ? 's' : ''}.` : 'Tu prueba gratis terminó.'}</b> ${dias ? 'Mirá en "Lo que buscan" cuántos compradores te llegaron.' : 'Tus autos dejaron de mostrarse. Escribinos para activar tu plan.'}</div><a class="btn-pr btn-sm" target="_blank" rel="noopener" href="https://wa.me/${CONFIG.WHATSAPP_ADMIN}?text=${encodeURIComponent('Hola! Soy ' + ag.nombre + ', vendedor en Red de Autos. Quiero activar mi plan.')}">Activar mi plan</a></div>`;
     }
+    if (ag.verificacion === 'aprobada') { cargarFeria(true).catch(() => {}); cargarRed(true).catch(() => {}); }
     icons();
   }
 
   // Tabs
   function irTab(t) {
     $$('#tabs .tab').forEach((b) => b.classList.toggle('on', b.dataset.t === t));
-    $('#tStock').hidden = t !== 'stock'; $('#tExcel').hidden = t !== 'excel'; $('#tFotos').hidden = t !== 'fotos'; $('#tMercado').hidden = t !== 'mercado'; $('#tPart').hidden = t !== 'part'; $('#tRed').hidden = t !== 'red';
+    $('#tStock').hidden = t !== 'stock'; $('#tExcel').hidden = t !== 'excel'; $('#tFotos').hidden = t !== 'fotos'; $('#tMercado').hidden = t !== 'mercado'; $('#tPart').hidden = t !== 'part'; $('#tRed').hidden = t !== 'red'; $('#tFeria').hidden = t !== 'feria';
+    if (t === 'feria') cargarFeria();
     if (t === 'mercado') cargarMercado();
     if (t === 'red') cargarRed();
     if (t === 'part') cargarPart();
@@ -654,6 +665,68 @@
     }
   }
   $('#mercRefresh').addEventListener('click', () => cargarMercado(true));
+
+  // ===================== FERIA ONLINE =====================
+  const FER = { f: null, autos: [] };
+  async function apiFeria(accion, datos = {}) {
+    const { data: { session } } = await sb.auth.getSession();
+    const r = await fetch(`${CONFIG.SUPABASE_URL}/functions/v1/feria`, { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: CONFIG.SUPABASE_ANON_KEY, ...(session ? { Authorization: `Bearer ${session.access_token}` } : {}) }, body: JSON.stringify({ accion, ...datos }) });
+    const j = await r.json().catch(() => ({})); if (!r.ok) throw new Error(j.error || 'Algo salió mal.'); return j;
+  }
+  const fFecha = (iso) => new Date(iso).toLocaleString('es-AR', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', hour12: false }) + ' hs';
+  async function cargarFeria(soloTab = false) {
+    const d = await apiFeria('mis_unidades');
+    FER.f = d.feria; FER.autos = d.autos || [];
+    $('#tabFeria').hidden = !FER.f;
+    if (!FER.f) return;
+    const dentro = FER.autos.filter((a) => a.feria).length;
+    $('#nFeria').textContent = dentro; $('#nFeria').hidden = !dentro;
+    if (soloTab) return;
+    const f = FER.f, enCurso = new Date(f.inicio) <= new Date(), min = Number(f.descuento_min_pct);
+    $('#feInfo').innerHTML = `<div class="rounded-[24px] bg-pr p-5 text-white md:p-6">
+      <span class="chip c-hl">${enCurso ? '🔴 En curso' : 'Próxima'}</span>
+      <h2 class="mt-3 font-display text-2xl font-bold">${esc(f.nombre)}</h2>
+      ${f.descripcion ? `<p class="mt-1 text-sm text-zinc-300">${esc(f.descripcion)}</p>` : ''}
+      <p class="mt-3 text-sm text-zinc-300">📅 ${fFecha(f.inicio)} → ${fFecha(f.fin)}${min ? ` · Descuento mínimo <b class="text-white">${min} %</b>` : ''}</p>
+      <p class="mt-1 text-sm text-zinc-300">Tenés <b class="text-white">${dentro}</b> auto${dentro === 1 ? '' : 's'} en la feria · <b class="text-white">${d.contactos}</b> comprador${d.contactos === 1 ? '' : 'es'} congelaron precio.</p>
+      <p class="mt-3 text-xs text-zinc-400">Poné un precio de feria${min ? ` (al menos ${min} % menos)` : ''} a los autos que quieras liquidar. Se muestran destacados con contador y precio tachado. El precio vale mientras dure la feria.</p></div>`;
+    $('#feLista').innerHTML = FER.autos.length ? FER.autos.map((v) => {
+      const maxP = Math.floor(Number(v.precio) * (1 - min / 100) - (min ? 0 : 1));
+      const ok = v.fotos >= 3;
+      return `<div class="box flex flex-col gap-3 p-3 md:flex-row md:items-center">
+        <div class="flex min-w-0 flex-1 items-center gap-3">
+          <div class="h-14 w-20 flex-none overflow-hidden rounded-xl bg-bg2">${v.foto ? `<img src="${esc(v.foto)}" class="h-full w-full object-cover" alt="" loading="lazy" />` : ''}</div>
+          <div class="min-w-0"><b class="block truncate text-zinc-950">${esc(v.marca)} ${esc(v.modelo)} ${esc(v.version || '')} ${v.anio || ''}</b>
+          <span class="text-sm text-ink">Publicado ${money(v.precio, v.moneda)}${v.feria ? ` · <b class="text-zinc-950">Feria ${money(v.feria.precio_feria, v.feria.moneda)}</b> <span class="chip c-ok">-${Math.round(100 * (1 - v.feria.precio_feria / v.precio))}%</span>` : ''}</span>
+          ${ok ? '' : '<span class="block text-xs text-amber-700">Necesita 3 fotos para entrar</span>'}</div>
+        </div>
+        ${ok ? `<div class="flex items-center gap-2">
+          <input class="inp !w-40" inputmode="numeric" data-fe-precio="${v.id}" placeholder="${nf.format(Math.max(maxP, 0))}" value="${v.feria ? nf.format(v.feria.precio_feria) : ''}" aria-label="Precio de feria" />
+          <button class="btn-pr btn-sm" data-fe-sumar="${v.id}">${v.feria ? 'Actualizar' : 'Sumar'}</button>
+          ${v.feria ? `<button class="btn-gh btn-sm" data-fe-quitar="${v.id}" aria-label="Quitar de la feria"><i data-lucide="x" class="h-4 w-4"></i></button>` : ''}
+        </div>` : ''}
+      </div>`;
+    }).join('') : '<p class="box p-5 text-sm text-ink/70">No tenés autos publicados para sumar.</p>';
+    icons();
+  }
+  document.addEventListener('input', (e) => { const i = e.target.closest('[data-fe-precio]'); if (i) { const d = i.value.replace(/\D/g, ''); i.value = d ? nf.format(Number(d)) : ''; } });
+  document.addEventListener('click', async (e) => {
+    const s = e.target.closest('[data-fe-sumar]'), q = e.target.closest('[data-fe-quitar]');
+    if (!s && !q) return;
+    const b = s || q; b.disabled = true;
+    try {
+      if (s) {
+        const precio = $(`[data-fe-precio="${s.dataset.feSumar}"]`).value.replace(/\D/g, '');
+        if (!precio) throw new Error('Poné el precio de feria.');
+        await apiFeria('sumar', { feria_id: FER.f.id, vehiculo_id: s.dataset.feSumar, precio_feria: precio });
+        toast('¡Listo! El auto está en la feria.');
+      } else {
+        await apiFeria('quitar', { feria_id: FER.f.id, vehiculo_id: q.dataset.feQuitar });
+        toast('Lo sacamos de la feria.');
+      }
+      await cargarFeria();
+    } catch (x) { toast(x.message, true); b.disabled = false; }
+  });
 
   // ===================== RED DE COLEGAS =====================
   const R = { intencion: null, texto: '' };

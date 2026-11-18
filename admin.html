@@ -88,6 +88,7 @@
         <button class="tab" data-t="cuentas"><i data-lucide="store" class="h-4 w-4"></i>Agencias y vendedores <span class="n" id="nCuentas" hidden></span></button>
         <button class="tab" data-t="leads"><i data-lucide="inbox" class="h-4 w-4"></i>Leads <span class="n" id="nLeads" hidden></span></button>
         <button class="tab" data-t="autos"><i data-lucide="car-front" class="h-4 w-4"></i>Autos</button>
+        <button class="tab" data-t="ferias"><i data-lucide="tent" class="h-4 w-4"></i>Ferias</button>
         <button class="tab" data-t="particulares"><i data-lucide="key-round" class="h-4 w-4"></i>Particulares</button>
         <button class="tab" data-t="informes"><i data-lucide="file-bar-chart" class="h-4 w-4"></i>Informes</button>
         <button class="tab" data-t="fallidos"><i data-lucide="message-square-warning" class="h-4 w-4"></i>WhatsApp fallidos</button>
@@ -113,6 +114,20 @@
           <button id="fABuscar" class="btn btn-gh"><i data-lucide="search" class="h-3.5 w-3.5"></i>Buscar</button>
         </div>
         <div class="box mt-4 overflow-x-auto"><table><thead><tr><th>Auto</th><th>Cuenta</th><th>Precio</th><th>Fotos</th><th>Estado</th><th></th></tr></thead><tbody id="autosBody"></tbody></table></div>
+      </div>
+
+      <div id="tFerias" class="mt-6" hidden>
+        <form id="fFeria" class="box grid gap-3 p-5 md:grid-cols-2">
+          <h2 class="font-display text-xl font-bold text-zinc-950 md:col-span-2">Nueva feria online</h2>
+          <div class="md:col-span-2"><label class="text-xs font-semibold">Nombre</label><input name="nombre" class="inp mt-1" maxlength="80" placeholder="Feria de Usados Tucumán: Fin de semana XXL" required /></div>
+          <div class="md:col-span-2"><label class="text-xs font-semibold">Descripción corta (opcional)</label><input name="descripcion" class="inp mt-1" maxlength="240" placeholder="Unidades seleccionadas con precios de feria por tiempo limitado." /></div>
+          <div><label class="text-xs font-semibold">Empieza</label><input name="inicio" type="datetime-local" class="inp mt-1" required /></div>
+          <div><label class="text-xs font-semibold">Termina</label><input name="fin" type="datetime-local" class="inp mt-1" required /></div>
+          <div><label class="text-xs font-semibold">Descuento mínimo (%)</label><input name="descuento_min_pct" type="number" min="0" max="50" step="1" class="inp mt-1" value="5" /></div>
+          <div class="flex items-end"><button class="btn btn-pr !py-3"><i data-lucide="plus" class="h-4 w-4"></i>Crear feria</button></div>
+          <p class="text-xs text-ink/70 md:col-span-2">Después de crearla, tocá "Invitar agencias" para avisarles por WhatsApp. La feria aparece en la home 7 días antes (con cuenta regresiva) y el buscador se habilita al empezar.</p>
+        </form>
+        <div id="ferList" class="mt-4 grid gap-3"></div>
       </div>
 
       <div id="tParticulares" class="mt-6" hidden><div class="box overflow-x-auto"><table><thead><tr><th>Fecha</th><th>Auto</th><th>Particular</th><th>Pretende</th><th>Modalidad</th><th>Propuestas</th><th>Estado</th><th></th></tr></thead><tbody id="partBody"></tbody></table></div></div>
@@ -222,7 +237,7 @@
   $('#btnSalir').addEventListener('click', async () => { await sb.auth.signOut(); mostrar('login'); });
 
   // ---------- Tabs ----------
-  const TABS = { resumen: cargarResumen, cuentas: cargarCuentas, leads: cargarLeads, autos: cargarAutos, particulares: cargarPart, informes: cargarInformes, fallidos: cargarFallidos };
+  const TABS = { resumen: cargarResumen, cuentas: cargarCuentas, leads: cargarLeads, autos: cargarAutos, ferias: cargarFerias, particulares: cargarPart, informes: cargarInformes, fallidos: cargarFallidos };
   function irTab(t) {
     $$('#tabs .tab').forEach((b) => b.classList.toggle('on', b.dataset.t === t));
     Object.keys(TABS).forEach((k) => $('#t' + k[0].toUpperCase() + k.slice(1)).hidden = k !== t);
@@ -376,6 +391,44 @@
     if (b.dataset.a === 'baja' && !confirm('¿Dar de baja este auto? Deja de mostrarse.')) return;
     b.disabled = true;
     try { await api('auto', { id: b.dataset.id, op: b.dataset.a }); toast('Hecho ✓'); cargarAutos(); } catch (x) { toast(x.message, true); b.disabled = false; }
+  });
+
+  // ---------- Ferias ----------
+  const apiF = (accion, datos) => call('feria', accion, datos);
+  async function cargarFerias() {
+    const { ferias } = await apiF('listar');
+    const ahora = Date.now();
+    $('#ferList').innerHTML = ferias.length ? ferias.map((f) => {
+      const ini = new Date(f.inicio), fin = new Date(f.fin);
+      const est = f.cancelada ? ['c-no', 'Cancelada'] : fin < ahora ? ['c-mute', 'Terminada'] : ini <= ahora ? ['c-ok', 'En curso'] : ['c-blue', 'Programada'];
+      const viva = !f.cancelada && fin > ahora;
+      return `<article class="box p-4"><div class="flex flex-wrap items-start justify-between gap-3"><div>
+        <span class="chip ${est[0]}">${est[1]}</span>
+        <h3 class="mt-2 font-display text-lg font-bold text-zinc-950">${esc(f.nombre)}</h3>
+        <p class="text-sm text-ink">${fecha(f.inicio)} → ${fecha(f.fin)} · descuento mínimo ${Number(f.descuento_min_pct)} %</p>
+        <p class="mt-1 text-xs text-ink/70">${f.unidades} autos · ${f.agencias} agencias · <b>${f.contactos}</b> compradores congelaron precio${f.invitacion_enviada_at ? ` · invitación enviada ${fecha(f.invitacion_enviada_at)}` : ''}</p></div>
+        <div class="flex flex-wrap gap-1.5">${viva ? `<button class="btn btn-pr" data-fer-inv="${f.id}"><i data-lucide="send" class="h-3.5 w-3.5"></i>Invitar agencias</button><button class="btn btn-no" data-fer-can="${f.id}">Cancelar</button>` : ''}</div></div></article>`;
+    }).join('') : '<p class="py-8 text-center text-sm text-ink/60">Todavía no creaste ferias.</p>';
+    icons();
+  }
+  $('#fFeria').addEventListener('submit', async (e) => {
+    e.preventDefault(); const f = e.target;
+    try {
+      await apiF('crear', { nombre: f.nombre.value, descripcion: f.descripcion.value, inicio: new Date(f.inicio.value).toISOString(), fin: new Date(f.fin.value).toISOString(), descuento_min_pct: f.descuento_min_pct.value });
+      f.reset(); f.descuento_min_pct.value = 5; toast('Feria creada ✓'); cargarFerias();
+    } catch (x) { toast(x.message, true); }
+  });
+  document.addEventListener('click', async (e) => {
+    const i = e.target.closest('[data-fer-inv]'), c = e.target.closest('[data-fer-can]');
+    if (!i && !c) return;
+    if (c && !confirm('¿Cancelar esta feria? Deja de mostrarse en la web.')) return;
+    if (i && !confirm('Le mandamos la invitación por WhatsApp a todas las agencias activas. ¿Seguimos?')) return;
+    const b = i || c; b.disabled = true;
+    try {
+      if (i) { const r = await apiF('invitar', { id: i.dataset.ferInv }); toast(`Invitación entregada a ${r.entregados} de ${r.avisadas} agencias.`, !r.entregados); }
+      else { await apiF('cancelar', { id: c.dataset.ferCan }); toast('Feria cancelada.'); }
+      cargarFerias();
+    } catch (x) { toast(x.message, true); b.disabled = false; }
   });
 
   // ---------- Particulares ----------
