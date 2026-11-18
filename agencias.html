@@ -696,7 +696,7 @@
   async function pedirTodos(e) {
     if (!confirm('Le mandamos tu pedido por WhatsApp a todas las agencias de la red. ¿Seguimos?')) return;
     const b = e.currentTarget; b.disabled = true;
-    try { const r = await api('red_pedir_todos', { texto: R.texto, intencion: R.intencion }); toast(`Pedido enviado a ${r.avisadas} agencia${r.avisadas === 1 ? '' : 's'}. Te avisamos por WhatsApp cuando alguna lo tenga.`); cargarRed(); }
+    try { const r = await api('red_pedir_todos', { texto: R.texto, intencion: R.intencion }); toast(r.entregados ? `Pedido entregado a ${r.entregados} de ${r.avisadas} agencia${r.avisadas === 1 ? '' : 's'}. Te avisamos por WhatsApp cuando alguna lo tenga.` : `El pedido quedó guardado, pero no le llegó a ninguna agencia por WhatsApp (números sin habilitar o sin conversación abierta).`, !r.entregados); cargarRed(); }
     catch (x) { toast(x.message, true); b.disabled = false; }
   }
   document.addEventListener('click', async (e) => {
