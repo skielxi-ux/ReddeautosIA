@@ -225,6 +225,7 @@
         <button class="tab" data-t="excel"><i data-lucide="file-spreadsheet" class="h-4 w-4"></i>Subir Excel</button>
         <button class="tab" data-t="fotos"><i data-lucide="images" class="h-4 w-4"></i>Subir fotos</button>
         <button class="tab" data-t="mercado"><i data-lucide="radar" class="h-4 w-4"></i>Lo que buscan</button>
+        <button class="tab" data-t="perfil" id="tabPerfil" hidden><i data-lucide="circle-user-round" class="h-4 w-4"></i>Mi perfil público</button>
         <button class="tab" data-t="feria" id="tabFeria" hidden><i data-lucide="tent" class="h-4 w-4"></i>Feria online <span class="n" id="nFeria" hidden>0</span></button>
         <button class="tab" data-t="red"><i data-lucide="handshake" class="h-4 w-4"></i>Red de colegas <span class="n" id="nRed" hidden>0</span></button>
         <button class="tab" data-t="part"><i data-lucide="key-round" class="h-4 w-4"></i>Particulares <span class="n" id="nPart" hidden>0</span></button>
@@ -279,6 +280,38 @@
         </div>
         <div id="fotResumen" class="mt-5 text-sm" hidden></div>
         <div id="fotGrid" class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5"></div>
+      </div>
+
+      <!-- Perfil público del vendedor -->
+      <div id="tPerfil" class="mt-6" hidden>
+        <div class="grid gap-5 lg:grid-cols-[1fr_320px]">
+          <form id="fPub" class="box space-y-4 p-5 md:p-6">
+            <div>
+              <h2 class="font-display text-2xl font-bold text-zinc-950">Tu perfil en la página de vendedores</h2>
+              <p class="text-sm text-ink/70">Los compradores ven tu foto, tu experiencia y tus autos, y te pueden pedir que les escribas. <a href="vendedores.html" target="_blank" class="underline">Ver la página</a></p>
+            </div>
+            <label class="flex cursor-pointer items-center gap-4 rounded-2xl bg-bg2 p-4">
+              <span class="sw"><input type="checkbox" name="perfil_publico" /><span></span></span>
+              <span><b class="block text-zinc-950">Mostrar mi perfil</b><span class="text-sm text-ink/70">Podés ocultarlo cuando quieras.</span></span>
+            </label>
+            <div class="flex items-center gap-4">
+              <div class="grid h-24 w-24 flex-none place-items-center overflow-hidden rounded-2xl bg-bg2" id="pubFotoPrev"><i data-lucide="user-round" class="h-8 w-8 text-ink/40"></i></div>
+              <div><label class="btn-gh btn-sm cursor-pointer"><i data-lucide="camera" class="h-4 w-4"></i>Subir foto<input type="file" accept="image/*" id="pubFoto" class="sr-only" /></label>
+              <p class="mt-1 text-xs text-ink/70">Una foto tuya, de frente y con buena luz. Si es en la agencia, mejor.</p></div>
+            </div>
+            <div class="grid gap-3 md:grid-cols-2">
+              <div class="fld"><label>Concesionario oficial de la marca</label><select name="marca_oficial" class="inp"><option value="">No es concesionario oficial</option></select></div>
+              <div class="fld"><label>Años vendiendo autos</label><input name="anios_experiencia" type="number" min="0" max="60" class="inp" placeholder="8" /></div>
+            </div>
+            <p class="-mt-1 text-xs text-ink/70" id="pubSelloInfo">Si elegís una marca, verificamos que seas vendedor oficial y te ponemos el sello <b>✓ Oficial</b>.</p>
+            <div class="fld"><label>Tu reseña (hasta 280 caracteres)</label><textarea name="bio" rows="4" maxlength="280" class="inp" placeholder="Vendo Toyota hace 8 años. Te ayudo a encontrar el usado que buscás, con financiación y permuta. Atiendo también los sábados."></textarea><p class="mt-1 text-right text-xs text-ink/60" id="pubBioN">0/280</p></div>
+            <button class="btn-pr" id="pubGuardar"><i data-lucide="save" class="h-4 w-4"></i>Guardar</button>
+          </form>
+          <aside class="space-y-4">
+            <div class="box p-5"><p class="text-xs font-semibold uppercase tracking-widest text-ink/60">Así te ven</p><div id="pubPreview" class="mt-3"></div></div>
+            <div class="box p-5"><p class="text-xs font-semibold uppercase tracking-widest text-ink/60">Contactos desde tu perfil</p><p class="mt-2 font-display text-3xl font-bold text-zinc-950" id="pubContactos">0</p><p class="text-xs text-ink/70">Compradores que te pidieron que les escribas.</p></div>
+          </aside>
+        </div>
       </div>
 
       <!-- Feria de Usados Online -->
@@ -618,13 +651,15 @@
       $('#banner').innerHTML += `<div class="mt-3 flex flex-wrap items-center gap-3 rounded-2xl border border-line bg-hl/30 p-4 text-sm"><i data-lucide="gift" class="h-5 w-5 flex-none"></i><div class="flex-1"><b class="text-zinc-950">${dias ? `Prueba gratis: te quedan ${dias} día${dias > 1 ? 's' : ''}.` : 'Tu prueba gratis terminó.'}</b> ${dias ? 'Mirá en "Lo que buscan" cuántos compradores te llegaron.' : 'Tus autos dejaron de mostrarse. Escribinos para activar tu plan.'}</div><a class="btn-pr btn-sm" target="_blank" rel="noopener" href="https://wa.me/${CONFIG.WHATSAPP_ADMIN}?text=${encodeURIComponent('Hola! Soy ' + ag.nombre + ', vendedor en Red de Autos. Quiero activar mi plan.')}">Activar mi plan</a></div>`;
     }
     if (ag.verificacion === 'aprobada') { cargarFeria(true).catch(() => {}); cargarRed(true).catch(() => {}); }
+    $('#tabPerfil').hidden = !esV;
     icons();
   }
 
   // Tabs
   function irTab(t) {
     $$('#tabs .tab').forEach((b) => b.classList.toggle('on', b.dataset.t === t));
-    $('#tStock').hidden = t !== 'stock'; $('#tExcel').hidden = t !== 'excel'; $('#tFotos').hidden = t !== 'fotos'; $('#tMercado').hidden = t !== 'mercado'; $('#tPart').hidden = t !== 'part'; $('#tRed').hidden = t !== 'red'; $('#tFeria').hidden = t !== 'feria';
+    $('#tStock').hidden = t !== 'stock'; $('#tExcel').hidden = t !== 'excel'; $('#tFotos').hidden = t !== 'fotos'; $('#tMercado').hidden = t !== 'mercado'; $('#tPart').hidden = t !== 'part'; $('#tRed').hidden = t !== 'red'; $('#tFeria').hidden = t !== 'feria'; $('#tPerfil').hidden = t !== 'perfil';
+    if (t === 'perfil') cargarPerfilPub().catch((x) => toast(x.message, true));
     if (t === 'feria') cargarFeria();
     if (t === 'mercado') cargarMercado();
     if (t === 'red') cargarRed();
@@ -665,6 +700,59 @@
     }
   }
   $('#mercRefresh').addEventListener('click', () => cargarMercado(true));
+
+  // ===================== PERFIL PÚBLICO (vendedores) =====================
+  const PUB = { perfil: null, foto: null, quitar: false };
+  async function apiVend(accion, datos = {}) {
+    const { data: { session } } = await sb.auth.getSession();
+    const r = await fetch(`${CONFIG.SUPABASE_URL}/functions/v1/vendedores`, { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: CONFIG.SUPABASE_ANON_KEY, ...(session ? { Authorization: `Bearer ${session.access_token}` } : {}) }, body: JSON.stringify({ accion, ...datos }) });
+    const j = await r.json().catch(() => ({})); if (!r.ok) throw new Error(j.error || 'Algo salió mal.'); return j;
+  }
+  function previewPub() {
+    const f = $('#fPub'), p = PUB.perfil || {};
+    const foto = PUB.foto?.dataUrl || (PUB.quitar ? null : p.foto_perfil);
+    const marca = f.marca_oficial.value;
+    $('#pubFotoPrev').innerHTML = foto ? `<img src="${esc(foto)}" class="h-full w-full object-cover" alt="" />` : '<i data-lucide="user-round" class="h-8 w-8 text-ink/40"></i>';
+    $('#pubPreview').innerHTML = `<div class="overflow-hidden rounded-2xl border border-line"><div class="grid aspect-square place-items-center bg-bg2">${foto ? `<img src="${esc(foto)}" class="h-full w-full object-cover" alt="" />` : '<span class="font-display text-4xl font-extrabold text-ink/40">?</span>'}</div>
+      <div class="p-3"><div class="flex flex-wrap gap-1">${marca && p.oficial_verificado && marca === p.marca_oficial ? `<span class="chip c-hl">✓ Oficial ${esc(marca)}</span>` : marca ? `<span class="chip c-warn">Oficial ${esc(marca)} · por verificar</span>` : ''}<span class="chip c-mute">Verificado</span></div>
+      <p class="mt-2 font-display font-bold text-zinc-950">${esc(p.nombre || '')}</p><p class="text-xs text-ink">${esc(p.trabaja_en || '')}</p>
+      ${f.bio.value ? `<p class="mt-2 text-sm text-zinc-700">${esc(f.bio.value)}</p>` : ''}</div></div>
+      ${f.perfil_publico.checked ? '' : '<p class="mt-2 text-xs text-ink/70">Oculto: activá "Mostrar mi perfil" para aparecer.</p>'}`;
+    $('#pubBioN').textContent = `${f.bio.value.length}/280`;
+    icons();
+  }
+  async function cargarPerfilPub() {
+    const d = await apiVend('mi_perfil');
+    PUB.perfil = d.perfil; PUB.foto = null; PUB.quitar = false;
+    const f = $('#fPub');
+    f.marca_oficial.innerHTML = '<option value="">No es concesionario oficial</option>' + d.marcas.filter((m) => m !== 'Otra').map((m) => `<option>${esc(m)}</option>`).join('');
+    f.perfil_publico.checked = !!d.perfil.perfil_publico;
+    f.marca_oficial.value = d.perfil.marca_oficial || '';
+    f.anios_experiencia.value = d.perfil.anios_experiencia ?? '';
+    f.bio.value = d.perfil.bio || '';
+    $('#pubContactos').textContent = d.contactos;
+    previewPub();
+  }
+  ['input', 'change'].forEach((ev) => $('#fPub').addEventListener(ev, previewPub));
+  $('#pubFoto').addEventListener('change', async (e) => {
+    const file = e.target.files[0]; if (!file) return;
+    const url = URL.createObjectURL(file);
+    try {
+      const img = await new Promise((ok, ko) => { const i = new Image(); i.onload = () => ok(i); i.onerror = ko; i.src = url; });
+      const lado = Math.min(img.naturalWidth, img.naturalHeight), c = document.createElement('canvas'); c.width = c.height = Math.min(800, lado);
+      c.getContext('2d').drawImage(img, (img.naturalWidth - lado) / 2, (img.naturalHeight - lado) / 2, lado, lado, 0, 0, c.width, c.height);
+      const dataUrl = c.toDataURL('image/jpeg', .85);
+      PUB.foto = { dataUrl, base64: dataUrl.split(',')[1] }; PUB.quitar = false; previewPub();
+    } catch { toast('No pude leer esa foto.', true); } finally { URL.revokeObjectURL(url); e.target.value = ''; }
+  });
+  $('#fPub').addEventListener('submit', async (e) => {
+    e.preventDefault(); const f = e.target, b = $('#pubGuardar'); b.disabled = true;
+    try {
+      const r = await apiVend('guardar', { perfil_publico: f.perfil_publico.checked, marca_oficial: f.marca_oficial.value, anios_experiencia: f.anios_experiencia.value, bio: f.bio.value, foto: PUB.foto ? { base64: PUB.foto.base64 } : null });
+      PUB.perfil = r.perfil; PUB.foto = null; previewPub();
+      toast(r.perfil.perfil_publico ? '¡Listo! Tu perfil ya está en la página de vendedores.' : 'Guardado. Tu perfil está oculto.');
+    } catch (x) { toast(x.message, true); } finally { b.disabled = false; }
+  });
 
   // ===================== FERIA ONLINE =====================
   const FER = { f: null, autos: [] };

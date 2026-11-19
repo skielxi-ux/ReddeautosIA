@@ -88,6 +88,7 @@
         <button class="tab" data-t="cuentas"><i data-lucide="store" class="h-4 w-4"></i>Agencias y vendedores <span class="n" id="nCuentas" hidden></span></button>
         <button class="tab" data-t="leads"><i data-lucide="inbox" class="h-4 w-4"></i>Leads <span class="n" id="nLeads" hidden></span></button>
         <button class="tab" data-t="autos"><i data-lucide="car-front" class="h-4 w-4"></i>Autos</button>
+        <button class="tab" data-t="vendedores"><i data-lucide="badge-check" class="h-4 w-4"></i>Vendedores <span class="n" id="nVend" hidden></span></button>
         <button class="tab" data-t="ferias"><i data-lucide="tent" class="h-4 w-4"></i>Ferias</button>
         <button class="tab" data-t="particulares"><i data-lucide="key-round" class="h-4 w-4"></i>Particulares</button>
         <button class="tab" data-t="informes"><i data-lucide="file-bar-chart" class="h-4 w-4"></i>Informes</button>
@@ -114,6 +115,14 @@
           <button id="fABuscar" class="btn btn-gh"><i data-lucide="search" class="h-3.5 w-3.5"></i>Buscar</button>
         </div>
         <div class="box mt-4 overflow-x-auto"><table><thead><tr><th>Auto</th><th>Cuenta</th><th>Precio</th><th>Fotos</th><th>Estado</th><th></th></tr></thead><tbody id="autosBody"></tbody></table></div>
+      </div>
+
+      <div id="tVendedores" class="mt-6" hidden>
+        <div class="flex flex-wrap items-end justify-between gap-3">
+          <div><h2 class="font-display text-xl font-bold text-zinc-950">Perfiles de vendedores</h2><p class="text-sm text-ink/70">Verificá el sello <b>✓ Oficial</b> antes de que se muestre. <a href="vendedores.html" target="_blank" class="underline">Ver la página pública</a></p></div>
+          <label class="flex items-center gap-2 text-sm"><input type="checkbox" id="vendSoloPend" /> Solo sellos por verificar</label>
+        </div>
+        <div id="vendList" class="mt-4 grid gap-3 md:grid-cols-2"></div>
       </div>
 
       <div id="tFerias" class="mt-6" hidden>
@@ -237,7 +246,7 @@
   $('#btnSalir').addEventListener('click', async () => { await sb.auth.signOut(); mostrar('login'); });
 
   // ---------- Tabs ----------
-  const TABS = { resumen: cargarResumen, cuentas: cargarCuentas, leads: cargarLeads, autos: cargarAutos, ferias: cargarFerias, particulares: cargarPart, informes: cargarInformes, fallidos: cargarFallidos };
+  const TABS = { resumen: cargarResumen, cuentas: cargarCuentas, leads: cargarLeads, autos: cargarAutos, vendedores: cargarVend, ferias: cargarFerias, particulares: cargarPart, informes: cargarInformes, fallidos: cargarFallidos };
   function irTab(t) {
     $$('#tabs .tab').forEach((b) => b.classList.toggle('on', b.dataset.t === t));
     Object.keys(TABS).forEach((k) => $('#t' + k[0].toUpperCase() + k.slice(1)).hidden = k !== t);
@@ -391,6 +400,40 @@
     if (b.dataset.a === 'baja' && !confirm('¿Dar de baja este auto? Deja de mostrarse.')) return;
     b.disabled = true;
     try { await api('auto', { id: b.dataset.id, op: b.dataset.a }); toast('Hecho ✓'); cargarAutos(); } catch (x) { toast(x.message, true); b.disabled = false; }
+  });
+
+  // ---------- Vendedores ----------
+  let VEND = [];
+  async function cargarVend() {
+    VEND = (await call('vendedores', 'lista')).vendedores;
+    pintarVend();
+  }
+  function pintarVend() {
+    const pend = VEND.filter((v) => v.marca_oficial && !v.oficial_verificado);
+    $('#nVend').textContent = pend.length; $('#nVend').hidden = !pend.length;
+    const lista = $('#vendSoloPend').checked ? pend : VEND;
+    $('#vendList').innerHTML = lista.length ? lista.map((v) => `
+      <div class="box flex gap-4 p-4">
+        <div class="grid h-20 w-20 flex-none place-items-center overflow-hidden rounded-2xl bg-bg2">${v.foto_perfil ? `<a href="${esc(v.foto_perfil)}" target="_blank"><img src="${esc(v.foto_perfil)}" class="h-20 w-20 object-cover" alt="" /></a>` : '<i data-lucide="user-round" class="h-7 w-7 text-ink/40"></i>'}</div>
+        <div class="min-w-0 flex-1">
+          <div class="flex flex-wrap gap-1">
+            ${v.perfil_publico && v.activa && v.verificacion === 'aprobada' ? '<span class="chip c-ok">Perfil visible</span>' : `<span class="chip c-mute">${v.perfil_publico ? 'No visible (cuenta ' + esc(v.verificacion) + (v.activa ? '' : ', pausada') + ')' : 'Perfil oculto'}</span>`}
+            ${v.marca_oficial ? (v.oficial_verificado ? `<span class="chip c-hl">✓ Oficial ${esc(v.marca_oficial)}</span>` : `<span class="chip c-warn">Dice: oficial ${esc(v.marca_oficial)}</span>`) : ''}
+          </div>
+          <p class="mt-1 font-semibold text-zinc-950">${esc(v.nombre)} <span class="font-normal text-ink">· ${esc(v.trabaja_en || '—')}${v.ciudad ? ' · ' + esc(v.ciudad) : ''}</span></p>
+          ${v.bio ? `<p class="mt-1 text-sm text-zinc-700">${esc(v.bio)}</p>` : '<p class="mt-1 text-sm text-ink/50">Sin reseña.</p>'}
+          <p class="mt-1 text-xs text-ink/70">${v.anios_experiencia != null ? v.anios_experiencia + ' años · ' : ''}${v.contactos} contacto${v.contactos == 1 ? '' : 's'} desde el perfil · <a href="https://wa.me/${esc(v.whatsapp)}" target="_blank" class="underline">WhatsApp</a></p>
+          ${v.marca_oficial ? `<div class="mt-2">${v.oficial_verificado ? `<button class="btn btn-gh btn-sm" data-vver="${v.id}" data-ok="0">Quitar sello</button>` : `<button class="btn btn-pr btn-sm" data-vver="${v.id}" data-ok="1">Verificar oficial ${esc(v.marca_oficial)}</button>`}</div>` : ''}
+        </div>
+      </div>`).join('') : '<p class="py-8 text-center text-sm text-ink/60 md:col-span-2">No hay vendedores para mostrar.</p>';
+    icons();
+  }
+  $('#vendSoloPend').addEventListener('change', pintarVend);
+  document.addEventListener('click', async (e) => {
+    const b = e.target.closest('[data-vver]'); if (!b) return;
+    b.disabled = true;
+    try { await call('vendedores', 'verificar', { id: b.dataset.vver, ok: b.dataset.ok === '1' }); toast(b.dataset.ok === '1' ? 'Sello verificado ✓ (le avisamos por WhatsApp)' : 'Sello quitado'); await cargarVend(); }
+    catch (x) { toast(x.message, true); b.disabled = false; }
   });
 
   // ---------- Ferias ----------

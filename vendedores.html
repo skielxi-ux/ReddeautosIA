@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Vendedores de la red · Red de Autos Tucumán</title>
+  <meta name="description" content="Conocé a los vendedores de concesionarios y agencias de Tucumán que usan Red de Autos. Gente real, verificada, con su foto y su experiencia." />
+  <meta name="theme-color" content="#ffffff" />
+  <meta property="og:title" content="Vendedores de la red · Red de Autos Tucumán" />
+  <meta property="og:description" content="Gente real de concesionarios y agencias de Tucumán, verificada por Red de Autos." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&family=Mona+Sans:wght@400..900&family=Space+Grotesk:wght@400..700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { bg: '#ffffff', bg2: '#f5f5f2', bg3: '#ebebe6', pr: '#0b0b0c', hl: '#d6f345', ink: '#52525b', line: 'rgba(0,0,0,.1)' },
+      fontFamily: { display: ['"Mona Sans"', 'Inter', 'sans-serif'], sans: ['Inter', 'sans-serif'], mono: ['"Space Grotesk"', 'monospace'] },
+    } } };
+  </script>
+  <style>
+    body{background:#fff;color:#3f3f46;font-family:Inter,sans-serif;-webkit-font-smoothing:antialiased}
+    html,body{overflow-x:clip}
+    ::selection{background:#d6f345;color:#0b0b0c}
+    [hidden]{display:none!important}
+    .hl{background:linear-gradient(transparent 58%,#d6f345 58%,#d6f345 92%,transparent 92%);padding:0 .08em}
+    .chipf{border:1px solid rgba(0,0,0,.14);border-radius:999px;padding:.45rem .9rem;font-size:.85rem;font-weight:500;color:#3f3f46;transition:.2s;white-space:nowrap}
+    .chipf:hover{border-color:#0b0b0c}.chipf.on{background:#0b0b0c;color:#fff;border-color:#0b0b0c}
+    .vcard{border-radius:24px;background:#fff;border:1px solid rgba(0,0,0,.1);overflow:hidden;transition:transform .25s,box-shadow .25s;text-align:left;width:100%}
+    .vcard:hover{transform:translateY(-3px);box-shadow:0 18px 40px -24px rgba(0,0,0,.35)}
+    .foto{aspect-ratio:1;background:#f4f4f5;display:grid;place-items:center;overflow:hidden}
+    .foto img{width:100%;height:100%;object-fit:cover}
+    .ini{font-family:"Mona Sans",Inter,sans-serif;font-weight:800;font-size:3rem;color:#a1a1aa}
+    .sello{display:inline-flex;align-items:center;gap:.3rem;border-radius:999px;font-size:.72rem;font-weight:700;padding:.22rem .55rem;white-space:nowrap}
+    .s-of{background:#d6f345;color:#0b0b0c}.s-ver{background:#e8f0ff;color:#0846c7}
+    .inp{width:100%;border-radius:14px;border:1px solid rgba(0,0,0,.14);padding:.7rem .9rem;font-size:16px;color:#0b0b0c;outline:none}
+    .inp:focus{border-color:#0b0b0c;box-shadow:0 0 0 3px rgba(214,243,69,.7)}
+    .modal{position:fixed;inset:0;z-index:70;display:none;align-items:flex-end;justify-content:center;background:rgba(10,10,10,.5);backdrop-filter:blur(4px)}
+    .modal.on{display:flex}
+    .sheet{width:100%;max-width:880px;max-height:92vh;overflow:auto;background:#fff;border-radius:28px 28px 0 0}
+    @media (min-width:768px){.modal{align-items:center;padding:1.5rem}.sheet{border-radius:28px}}
+    .line-clamp-3{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+    .reveal{opacity:0;transform:translateY(14px);transition:opacity .6s,transform .6s}.reveal.in{opacity:1;transform:none}
+    @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+  </style>
+</head>
+<body>
+  <header class="sticky top-0 z-40 border-b border-line bg-white/85 backdrop-blur">
+    <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3.5">
+      <a href="./" class="flex items-center gap-2.5"><span class="grid h-9 w-9 place-items-center rounded-xl bg-pr text-white"><i data-lucide="car-front" class="h-5 w-5"></i></span><span class="font-display text-lg font-bold text-zinc-950">Red de Autos</span></a>
+      <a href="./" class="rounded-full bg-pr px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-hl hover:text-zinc-950">Buscar mi auto</a>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-6xl px-5 pb-20">
+    <section class="pb-8 pt-10 md:pt-16">
+      <span class="inline-flex items-center gap-2 rounded-full border border-line px-3 py-1 text-xs font-semibold text-zinc-950"><i data-lucide="users" class="h-3.5 w-3.5"></i>Vendedores de la red</span>
+      <h1 class="mt-4 max-w-3xl font-display text-[2.3rem] font-extrabold leading-[1.05] tracking-tight text-zinc-950 md:text-6xl">Gente real, de <span class="hl">concesionarios y agencias</span> de Tucumán.</h1>
+      <p class="mt-4 max-w-2xl text-lg text-ink">Cada vendedor de esta página está verificado por Red de Autos. Los que tienen el sello <span class="sello s-of align-middle">✓ Oficial</span> son vendedores de concesionarios oficiales de esa marca.</p>
+      <div class="mt-7 flex flex-col gap-3 md:flex-row md:items-center">
+        <div class="relative md:w-80"><i data-lucide="search" class="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-ink/60"></i><input id="q" class="inp !pl-10" placeholder="Buscar por nombre o concesionario" /></div>
+        <div id="marcas" class="flex gap-2 overflow-x-auto pb-1"></div>
+      </div>
+    </section>
+
+    <div id="grid" class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4"></div>
+    <div id="vacio" class="rounded-[28px] border border-line bg-bg2 p-10 text-center" hidden>
+      <p class="font-display text-2xl font-bold text-zinc-950">Muy pronto vas a conocer acá a los vendedores de la red.</p>
+      <p class="mx-auto mt-2 max-w-lg text-ink">Mientras tanto, contanos qué auto buscás y te mostramos opciones reales de agencias verificadas.</p>
+      <a href="./" class="mt-5 inline-flex rounded-full bg-pr px-5 py-3 font-semibold text-white transition hover:bg-hl hover:text-zinc-950">Buscar mi auto</a>
+    </div>
+
+    <section class="mt-14 flex flex-col items-start gap-4 rounded-[28px] bg-pr p-6 text-white md:flex-row md:items-center md:justify-between md:p-8">
+      <div><p class="font-display text-2xl font-bold">¿Sos vendedor de una agencia o concesionario?</p><p class="mt-1 max-w-xl text-zinc-300">Sumate con tu propia cuenta: te llegan compradores por WhatsApp y tenés tu perfil acá. 30 días gratis.</p></div>
+      <a href="agencias.html" class="inline-flex flex-none items-center gap-2 rounded-full bg-hl px-5 py-3 font-semibold text-zinc-950 transition hover:bg-white">Quiero sumarme<i data-lucide="arrow-right" class="h-4 w-4"></i></a>
+    </section>
+  </main>
+
+  <footer class="border-t border-line"><div class="mx-auto flex max-w-6xl flex-wrap justify-between gap-3 px-5 py-6 text-xs text-ink/70"><span>© Red de Autos · Tucumán</span><span><a href="vender.html" class="underline">Vendé tu auto</a> · <a href="privacidad.html" class="underline">Privacidad</a></span></div></footer>
+
+  <!-- Perfil -->
+  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="pNom">
+    <div class="sheet">
+      <div class="sticky top-0 z-10 flex justify-end bg-white/90 p-3 backdrop-blur"><button class="grid h-10 w-10 place-items-center rounded-full border border-line" data-cerrar aria-label="Cerrar"><i data-lucide="x" class="h-5 w-5"></i></button></div>
+      <div class="grid gap-6 px-5 pb-6 md:grid-cols-[260px_1fr] md:px-8 md:pb-8">
+        <div><div class="foto rounded-[24px]" id="pFoto"></div></div>
+        <div>
+          <div id="pSellos" class="flex flex-wrap gap-1.5"></div>
+          <h2 id="pNom" class="mt-2 font-display text-3xl font-bold text-zinc-950"></h2>
+          <p id="pDonde" class="text-ink"></p>
+          <p id="pBio" class="mt-4 whitespace-pre-line text-zinc-800"></p>
+          <div id="pForm" class="mt-6 rounded-[22px] border border-line bg-bg2 p-4">
+            <p class="font-semibold text-zinc-950" id="pFormTit">Hablá con este vendedor</p>
+            <form id="fC" class="mt-3 grid gap-2.5 sm:grid-cols-2">
+              <input type="text" name="web" class="hidden" tabindex="-1" autocomplete="off" aria-hidden="true" />
+              <input name="nombre" class="inp" placeholder="Tu nombre" required autocomplete="given-name" />
+              <input name="whatsapp" class="inp" inputmode="tel" placeholder="Tu WhatsApp (381 555-1234)" required autocomplete="tel" />
+              <input name="mensaje" class="inp sm:col-span-2" maxlength="300" placeholder="¿Qué estás buscando? (opcional)" />
+              <button class="rounded-full bg-pr px-5 py-3 font-semibold text-white transition hover:bg-hl hover:text-zinc-950 sm:col-span-2" id="btnC">Quiero que me escriba</button>
+              <p class="text-xs text-ink/70 sm:col-span-2">Le pasamos tu nombre y WhatsApp a este vendedor para que te contacte.</p>
+            </form>
+            <div id="okC" class="text-center" hidden>
+              <p class="font-display text-xl font-bold text-zinc-950">¡Listo! Le avisamos.</p>
+              <p class="mt-1 text-sm text-ink">Te va a escribir por WhatsApp.</p>
+              <a id="waC" href="#" target="_blank" rel="noopener" class="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-3 font-semibold text-white transition hover:bg-hl hover:text-zinc-950"><i data-lucide="message-circle" class="h-5 w-5"></i>Recibir la confirmación por WhatsApp</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="border-t border-line px-5 py-6 md:px-8">
+        <h3 class="font-display text-xl font-bold text-zinc-950" id="pAutosTit">Sus autos</h3>
+        <div id="pAutos" class="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3"></div>
+      </div>
+    </div>
+  </div>
+  <div id="toast" class="fixed bottom-5 left-1/2 z-[80] hidden -translate-x-1/2 rounded-full bg-pr px-5 py-3 text-sm text-white"></div>
+
+  <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+  <script>
+  const CONFIG = {
+    SUPABASE_URL: 'https://ytuecptdgtmrbiddyzht.supabase.co',
+    SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl0dWVjcHRkZ3RtcmJpZGR5emh0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ0MTMxNTMsImV4cCI6MjEwOTk4OTE1M30.H-Yi5dwDW8TvZfFWvP3dquHnCeQNtHTf8MO6i5v02VA',
+    WHATSAPP_BOT: '15551478965',
+  };
+  const $ = (s) => document.querySelector(s);
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const nf = new Intl.NumberFormat('es-AR');
+  const money = (n, c) => n == null ? 'Consultar' : (c === 'USD' ? 'US$ ' : '$ ') + nf.format(Math.round(n));
+  const icons = () => window.lucide && lucide.createIcons();
+  const H = { 'Content-Type': 'application/json', apikey: CONFIG.SUPABASE_ANON_KEY, Authorization: 'Bearer ' + CONFIG.SUPABASE_ANON_KEY };
+  const rpc = (fn, args = {}) => fetch(`${CONFIG.SUPABASE_URL}/rest/v1/rpc/${fn}`, { method: 'POST', headers: H, body: JSON.stringify(args) }).then((r) => r.ok ? r.json() : Promise.reject(new Error('No pudimos cargar los datos.')));
+  const iniciales = (n) => String(n || '?').split(/\s+/).slice(0, 2).map((x) => x[0]).join('').toUpperCase();
+  function toast(m) { const t = $('#toast'); t.textContent = m; t.classList.remove('hidden'); clearTimeout(t._t); t._t = setTimeout(() => t.classList.add('hidden'), 3500); }
+  const S = { todos: [], marca: '', q: '', sel: null };
+
+  const sellos = (v) => `${v.oficial_verificado ? `<span class="sello s-of">✓ Oficial ${esc(v.marca_oficial)}</span>` : ''}<span class="sello s-ver"><svg viewBox="0 0 24 24" class="h-3 w-3" fill="currentColor"><path d="M12 1.6l2.2 1.5 2.6-.2 1 2.4 2.4 1-.2 2.6 1.5 2.2-1.5 2.2.2 2.6-2.4 1-1 2.4-2.6-.2L12 22.4l-2.2-1.5-2.6.2-1-2.4-2.4-1 .2-2.6L2.6 12.9l1.5-2.2-.2-2.6 2.4-1 1-2.4 2.6.2z"/></svg>Verificado</span>`;
+  function pintar() {
+    const q = S.q.toLowerCase();
+    const lista = S.todos.filter((v) => (!S.marca || v.marca_oficial === S.marca) && (!q || `${v.nombre} ${v.trabaja_en || ''}`.toLowerCase().includes(q)));
+    $('#vacio').hidden = S.todos.length > 0;
+    $('#grid').innerHTML = S.todos.length && !lista.length ? '<p class="col-span-full py-10 text-center text-ink">No encontramos vendedores con ese filtro.</p>' : lista.map((v) => `
+      <button class="vcard reveal" data-v="${v.id}">
+        <div class="foto">${v.foto_url ? `<img src="${esc(v.foto_url)}" alt="Foto de ${esc(v.nombre)}" loading="lazy" />` : `<span class="ini">${esc(iniciales(v.nombre))}</span>`}</div>
+        <div class="p-4">
+          <div class="flex flex-wrap gap-1">${sellos(v)}</div>
+          <p class="mt-2 font-display text-lg font-bold leading-tight text-zinc-950">${esc(v.nombre)}</p>
+          <p class="text-sm text-ink">${esc(v.trabaja_en || '')}${v.ciudad ? ` · ${esc(v.ciudad)}` : ''}</p>
+          ${v.bio ? `<p class="line-clamp-3 mt-2 text-sm text-zinc-700">${esc(v.bio)}</p>` : ''}
+          <p class="mt-3 flex flex-wrap gap-x-3 text-xs text-ink/80">${v.anios_experiencia ? `<span>${v.anios_experiencia} año${v.anios_experiencia > 1 ? 's' : ''} vendiendo</span>` : ''}<span>${v.autos} auto${v.autos == 1 ? '' : 's'} publicados</span></p>
+        </div>
+      </button>`).join('');
+    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .1 });
+    document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+  }
+  function filtrosMarca() {
+    const marcas = [...new Set(S.todos.filter((v) => v.marca_oficial).map((v) => v.marca_oficial))].sort();
+    $('#marcas').innerHTML = marcas.length ? ['', ...marcas].map((m) => `<button class="chipf ${m === S.marca ? 'on' : ''}" data-m="${esc(m)}">${m ? 'Oficiales ' + esc(m) : 'Todos'}</button>`).join('') : '';
+  }
+  document.addEventListener('click', (e) => {
+    const m = e.target.closest('[data-m]'); if (m) { S.marca = m.dataset.m; filtrosMarca(); pintar(); return; }
+    const c = e.target.closest('[data-v]'); if (c) { abrir(c.dataset.v); return; }
+    if (e.target.closest('[data-cerrar]') || e.target.id === 'modal') cerrar();
+  });
+  $('#q').addEventListener('input', (e) => { S.q = e.target.value.trim(); pintar(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') cerrar(); });
+
+  async function abrir(id) {
+    const v = S.todos.find((x) => x.id === id); if (!v) return;
+    S.sel = v;
+    $('#pFoto').innerHTML = v.foto_url ? `<img src="${esc(v.foto_url)}" alt="Foto de ${esc(v.nombre)}" />` : `<span class="ini">${esc(iniciales(v.nombre))}</span>`;
+    $('#pSellos').innerHTML = sellos(v);
+    $('#pNom').textContent = v.nombre;
+    $('#pDonde').textContent = [v.trabaja_en, v.ciudad, v.anios_experiencia ? `${v.anios_experiencia} año${v.anios_experiencia > 1 ? 's' : ''} vendiendo` : null].filter(Boolean).join(' · ');
+    $('#pBio').textContent = v.bio || '';
+    $('#pFormTit').textContent = `Hablá con ${v.nombre.split(' ')[0]}`;
+    $('#fC').hidden = false; $('#okC').hidden = true; $('#fC').reset();
+    $('#pAutosTit').textContent = `Autos de ${v.nombre.split(' ')[0]}`;
+    $('#pAutos').innerHTML = '<p class="col-span-full text-sm text-ink">Cargando…</p>';
+    $('#modal').classList.add('on'); document.body.style.overflow = 'hidden';
+    history.replaceState(null, '', '#' + id); icons();
+    try {
+      const autos = await rpc('vendedor_autos', { p_id: id });
+      $('#pAutos').innerHTML = autos.length ? autos.map((a) => `<a href="./" class="block overflow-hidden rounded-[18px] border border-line">
+        <div class="aspect-[4/3] bg-bg2">${a.fotos?.[0] ? `<img src="${esc(a.fotos[0])}" class="h-full w-full object-cover" loading="lazy" alt="" />` : ''}</div>
+        <div class="p-3"><p class="font-semibold text-zinc-950">${esc(a.marca)} ${esc(a.modelo)}</p><p class="text-xs text-ink">${[a.anio, a.km != null ? nf.format(a.km) + ' km' : null].filter(Boolean).join(' · ')}</p><p class="mt-1 font-display font-bold text-zinc-950">${money(a.precio, a.moneda)}</p></div></a>`).join('')
+        : '<p class="col-span-full text-sm text-ink">Todavía no tiene autos publicados. Escribile: puede conseguirte lo que buscás.</p>';
+    } catch { $('#pAutos').innerHTML = ''; }
+  }
+  function cerrar() { $('#modal').classList.remove('on'); document.body.style.overflow = ''; history.replaceState(null, '', location.pathname); }
+
+  $('#fC').addEventListener('submit', async (e) => {
+    e.preventDefault(); const f = e.target, b = $('#btnC'); b.disabled = true; b.textContent = 'Enviando…';
+    try {
+      const r = await fetch(`${CONFIG.SUPABASE_URL}/functions/v1/vendedores`, { method: 'POST', headers: H, body: JSON.stringify({ accion: 'contactar', vendedor_id: S.sel.id, nombre: f.nombre.value, whatsapp: f.whatsapp.value, mensaje: f.mensaje.value, web: f.web.value }) });
+      const j = await r.json().catch(() => ({})); if (!r.ok) throw new Error(j.error || 'No pudimos enviar tu pedido.');
+      $('#waC').href = `https://wa.me/${CONFIG.WHATSAPP_BOT}?text=${encodeURIComponent(j.mensaje_bot || 'Hola Red de Autos!')}`;
+      f.hidden = true; $('#okC').hidden = false; icons();
+      try { window.fbq && fbq('track', 'Contact'); window.gtag && gtag('event', 'generate_lead', { lead_type: 'vendedor' }); } catch {}
+    } catch (x) { toast(x.message); } finally { b.disabled = false; b.textContent = 'Quiero que me escriba'; }
+  });
+
+  (async () => {
+    icons();
+    try { S.todos = await rpc('vendedores_publicos'); } catch { S.todos = []; }
+    filtrosMarca(); pintar(); icons();
+    const id = location.hash.slice(1); if (id) abrir(id);
+  })();
+  </script>
+  <script src="feria-bar.js" defer></script>
+</body>
+</html>
