@@ -193,7 +193,7 @@
     .step .spin{animation:spin .8s linear infinite}
 
     /* Tarjetas */
-    .card{position:relative;border-radius:24px;background:#fff;border:1px solid var(--line);overflow:hidden;transition:border-color .5s var(--ease),transform .6s var(--ease),box-shadow .5s var(--ease);transform-style:preserve-3d;box-shadow:0 1px 2px rgba(0,0,0,.04),0 18px 40px -30px rgba(0,0,0,.25)}
+    .card{position:relative;border-radius:24px;background:#fff;border:1px solid var(--line);overflow:hidden;transition:border-color .5s var(--ease),box-shadow .5s var(--ease);transform-style:preserve-3d;box-shadow:0 1px 2px rgba(0,0,0,.04),0 18px 40px -30px rgba(0,0,0,.25)}
     .card:before{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .4s;background:radial-gradient(420px circle at var(--mx,50%) var(--my,0%),rgba(214,243,69,.28),transparent 45%);z-index:1}
     .card:hover{border-color:rgba(0,0,0,.25);box-shadow:0 1px 2px rgba(0,0,0,.05),0 26px 50px -30px rgba(0,0,0,.35)}
     .card:hover:before{opacity:1}
@@ -1581,7 +1581,10 @@
         navigation: { prevEl: '#prevBtn', nextEl: '#nextBtn' },
         breakpoints: { 768: { spaceBetween: 20 } }
       });
-      gsap.from('#cards .card', { y: 60, autoAlpha: 0, rotate: 2, duration: 1, ease: 'expo.out', stagger: .09, onComplete: () => $$('#cards .ring-score .val').forEach(c => c.style.strokeDashoffset = c.dataset.off) });
+      const cardEls = $$('#cards .card');
+      gsap.fromTo(cardEls, { y: 60, autoAlpha: 0, rotate: 2 }, { y: 0, autoAlpha: 1, rotate: 0, duration: 1, ease: 'expo.out', stagger: .09, overwrite: 'auto', onComplete: () => $$('#cards .ring-score .val').forEach(c => c.style.strokeDashoffset = c.dataset.off) });
+      // Red de seguridad: si la animación se corta a mitad, las tarjetas quedan derechas igual
+      setTimeout(() => cardEls.forEach(c => c.isConnected && gsap.set(c, { y: 0, rotate: 0, autoAlpha: 1 })), 2200);
     }
     $$('#cards [data-act]').forEach(b => b.addEventListener('click', () => openModal(b.dataset.act, S.results[+b.dataset.i])));
     $$('#cards [data-gal-go]').forEach(b => b.addEventListener('click', e => {
