@@ -498,7 +498,7 @@
     </section>
 
     <!-- ============ FERIA DE USADOS ONLINE (solo si hay una en curso o próxima) ============ -->
-    <section id="feria" class="relative hidden scroll-mt-20 py-10 md:py-14">
+    <section id="feria" class="relative hidden scroll-mt-32 py-10 md:py-14">
       <div class="mx-auto max-w-7xl px-5 md:px-8">
         <div class="feria-box relative overflow-hidden rounded-[32px] bg-pr p-6 text-white md:p-10">
           <div class="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full bg-hl/25 blur-3xl"></div>
@@ -1843,7 +1843,7 @@
   function pintar(texto) {
     const res = $f('#feRes');
     if (!FE.autos.length) {
-      res.innerHTML = `<div class="col-span-full rounded-[24px] border border-line bg-bg2 p-8 text-center"><p class="font-display text-xl font-bold text-zinc-950">${texto ? 'No hay unidades de feria para esa búsqueda.' : 'Todavía no hay autos cargados en la feria.'}</p><p class="mt-2 text-sm text-ink">Probá con otra búsqueda, o usá el buscador general de arriba para ver todo el stock de la red.</p></div>`;
+      res.innerHTML = `<div class="col-span-full rounded-[24px] border border-line bg-bg2 p-8 text-center"><p class="font-display text-xl font-bold text-zinc-950">${texto ? 'No hay unidades de feria para esa búsqueda.' : 'Las agencias están cargando sus unidades de feria.'}</p><p class="mt-2 text-sm text-ink">${texto ? 'Probá con otra búsqueda, o usá el buscador general de arriba para ver todo el stock de la red.' : 'Volvé en un rato: van a aparecer acá con su precio de feria. Mientras tanto podés buscar en todo el stock de la red con el buscador de arriba.'}</p></div>`;
       return;
     }
     res.innerHTML = FE.autos.map((v, i) => {
@@ -1895,5 +1895,6 @@
   iniciar();
 })();
 </script>
+<script src="feria-bar.js" defer></script>
 </body>
 </html>
