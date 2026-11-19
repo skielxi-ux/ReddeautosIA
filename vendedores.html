@@ -133,6 +133,24 @@
   function toast(m) { const t = $('#toast'); t.textContent = m; t.classList.remove('hidden'); clearTimeout(t._t); t._t = setTimeout(() => t.classList.add('hidden'), 3500); }
   const S = { todos: [], marca: '', q: '', sel: null };
 
+  /* ---------- Vista de ejemplo (?demo=1): vendedores ficticios, solo para ver el diseño ---------- */
+  const DEMO = new URLSearchParams(location.search).has('demo');
+  const avatarDemo = (bg, piel, pelo, ropa) => 'data:image/svg+xml;utf8,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${bg}"/><stop offset="1" stop-color="#f5f5f2"/></linearGradient></defs><rect width="300" height="300" fill="url(#g)"/><path d="M40 300c6-62 52-96 110-96s104 34 110 96z" fill="${ropa}"/><path d="M128 196h44v26c0 12-44 12-44 0z" fill="${piel}"/><ellipse cx="150" cy="140" rx="50" ry="58" fill="${piel}"/><path d="M98 132c0-40 24-62 54-62s52 22 50 60c-10-20-30-30-52-30s-40 12-52 32z" fill="${pelo}"/></svg>`);
+  const DEMO_VEND = [
+    { id: 'demo-1', nombre: 'Martín Gómez', trabaja_en: 'Norte Automotores', ciudad: 'San Miguel de Tucumán', anios_experiencia: 12, oficial_verificado: true, marca_oficial: 'Toyota', autos: 3, bio: 'Vendo 0 km y usados seleccionados. Te asesoro con la financiación y tomo tu usado. Respondo rápido por WhatsApp.', foto_url: avatarDemo('#d6f345', '#e0b48f', '#2b2118', '#0b0b0c'),
+      demo_autos: [['Toyota', 'Etios XLS', 2019, 62000, 15800000], ['Toyota', 'Corolla XEi', 2018, 88000, 22500000], ['Toyota', 'Hilux SRV', 2017, 120000, 29900000]] },
+    { id: 'demo-2', nombre: 'Luciana Paz', trabaja_en: 'Concesionaria del Parque', ciudad: 'Yerba Buena', anios_experiencia: 7, oficial_verificado: true, marca_oficial: 'Volkswagen', autos: 2, bio: 'Especialista en utilitarios y autos para trabajar. Te armo la mejor propuesta con tu usado en parte de pago.', foto_url: avatarDemo('#c7d2fe', '#c99a74', '#5b3a24', '#27272a'),
+      demo_autos: [['Volkswagen', 'Gol Trend', 2016, 98000, 10900000], ['Volkswagen', 'Amarok Highline', 2019, 95000, 34000000]] },
+    { id: 'demo-3', nombre: 'Diego Ferreyra', trabaja_en: 'Aconquija Motors', ciudad: 'Tafí Viejo', anios_experiencia: 4, oficial_verificado: false, marca_oficial: null, autos: 2, bio: 'Usados con papeles al día y garantía mecánica. Si no lo tengo, te lo consigo en la red.', foto_url: avatarDemo('#fde68a', '#f1c7a3', '#111111', '#3f3f46'),
+      demo_autos: [['Fiat', 'Cronos Drive', 2021, 41000, 17500000], ['Renault', 'Sandero Stepway', 2018, 76000, 13200000]] },
+    { id: 'demo-4', nombre: 'Carolina Ruiz', trabaja_en: 'Autos del Jardín', ciudad: 'San Miguel de Tucumán', anios_experiencia: 15, oficial_verificado: true, marca_oficial: 'Chevrolet', autos: 3, bio: '15 años en el rubro. Planes de ahorro, 0 km y usados. Atención personalizada también los sábados.', foto_url: avatarDemo('#bbf7d0', '#d8a47f', '#7c2d12', '#0b0b0c'),
+      demo_autos: [['Chevrolet', 'Onix LT', 2020, 54000, 16200000], ['Chevrolet', 'Cruze LTZ', 2018, 81000, 21000000], ['Chevrolet', 'Tracker Premier', 2021, 39000, 27800000]] },
+    { id: 'demo-5', nombre: 'Federico Juárez', trabaja_en: 'Lules Automotores', ciudad: 'Concepción', anios_experiencia: 9, oficial_verificado: true, marca_oficial: 'Ford', autos: 1, bio: 'Camionetas y SUV. Te muestro el auto cuando quieras y te ayudo con la transferencia.', foto_url: avatarDemo('#fecaca', '#b98563', '#1f1a17', '#1e3a8a'),
+      demo_autos: [['Ford', 'Ranger XLT', 2019, 110000, 31500000]] },
+    { id: 'demo-6', nombre: 'Sofía Medina', trabaja_en: 'Yerba Buena Autos', ciudad: 'Yerba Buena', anios_experiencia: 2, oficial_verificado: false, marca_oficial: null, autos: 2, bio: 'Primer auto, cambio de auto o el auto de la familia: contame qué necesitás y lo buscamos juntos.', foto_url: avatarDemo('#e9d5ff', '#eab894', '#3b2416', '#52525b'),
+      demo_autos: [['Peugeot', '208 Allure', 2020, 47000, 16900000], ['Citroën', 'C3 Feel', 2017, 89000, 11800000]] },
+  ];
+
   const sellos = (v) => `${v.oficial_verificado ? `<span class="sello s-of">✓ Oficial ${esc(v.marca_oficial)}</span>` : ''}<span class="sello s-ver"><svg viewBox="0 0 24 24" class="h-3 w-3" fill="currentColor"><path d="M12 1.6l2.2 1.5 2.6-.2 1 2.4 2.4 1-.2 2.6 1.5 2.2-1.5 2.2.2 2.6-2.4 1-1 2.4-2.6-.2L12 22.4l-2.2-1.5-2.6.2-1-2.4-2.4-1 .2-2.6L2.6 12.9l1.5-2.2-.2-2.6 2.4-1 1-2.4 2.6.2z"/></svg>Verificado</span>`;
   function pintar() {
     const q = S.q.toLowerCase();
@@ -142,7 +160,7 @@
       <button class="vcard reveal" data-v="${v.id}">
         <div class="foto">${v.foto_url ? `<img src="${esc(v.foto_url)}" alt="Foto de ${esc(v.nombre)}" loading="lazy" />` : `<span class="ini">${esc(iniciales(v.nombre))}</span>`}</div>
         <div class="p-4">
-          <div class="flex flex-wrap gap-1">${sellos(v)}</div>
+          <div class="flex flex-wrap gap-1">${v.demo_autos ? '<span class="sello" style="background:#0b0b0c;color:#d6f345">Ejemplo</span>' : ''}${sellos(v)}</div>
           <p class="mt-2 font-display text-lg font-bold leading-tight text-zinc-950">${esc(v.nombre)}</p>
           <p class="text-sm text-ink">${esc(v.trabaja_en || '')}${v.ciudad ? ` · ${esc(v.ciudad)}` : ''}</p>
           ${v.bio ? `<p class="line-clamp-3 mt-2 text-sm text-zinc-700">${esc(v.bio)}</p>` : ''}
@@ -179,7 +197,7 @@
     $('#modal').classList.add('on'); document.body.style.overflow = 'hidden';
     history.replaceState(null, '', '#' + id); icons();
     try {
-      const autos = await rpc('vendedor_autos', { p_id: id });
+      const autos = v.demo_autos ? v.demo_autos.map(([marca, modelo, anio, km, precio]) => ({ marca, modelo, anio, km, precio, moneda: 'ARS', fotos: [] })) : await rpc('vendedor_autos', { p_id: id });
       $('#pAutos').innerHTML = autos.length ? autos.map((a) => `<a href="./" class="block overflow-hidden rounded-[18px] border border-line">
         <div class="aspect-[4/3] bg-bg2">${a.fotos?.[0] ? `<img src="${esc(a.fotos[0])}" class="h-full w-full object-cover" loading="lazy" alt="" />` : ''}</div>
         <div class="p-3"><p class="font-semibold text-zinc-950">${esc(a.marca)} ${esc(a.modelo)}</p><p class="text-xs text-ink">${[a.anio, a.km != null ? nf.format(a.km) + ' km' : null].filter(Boolean).join(' · ')}</p><p class="mt-1 font-display font-bold text-zinc-950">${money(a.precio, a.moneda)}</p></div></a>`).join('')
@@ -189,7 +207,9 @@
   function cerrar() { $('#modal').classList.remove('on'); document.body.style.overflow = ''; history.replaceState(null, '', location.pathname); }
 
   $('#fC').addEventListener('submit', async (e) => {
-    e.preventDefault(); const f = e.target, b = $('#btnC'); b.disabled = true; b.textContent = 'Enviando…';
+    e.preventDefault(); const f = e.target, b = $('#btnC');
+    if (S.sel?.demo_autos) { toast('Es un vendedor de ejemplo: no se envía nada.'); return; }
+    b.disabled = true; b.textContent = 'Enviando…';
     try {
       const r = await fetch(`${CONFIG.SUPABASE_URL}/functions/v1/vendedores`, { method: 'POST', headers: H, body: JSON.stringify({ accion: 'contactar', vendedor_id: S.sel.id, nombre: f.nombre.value, whatsapp: f.whatsapp.value, mensaje: f.mensaje.value, web: f.web.value }) });
       const j = await r.json().catch(() => ({})); if (!r.ok) throw new Error(j.error || 'No pudimos enviar tu pedido.');
@@ -202,6 +222,13 @@
   (async () => {
     icons();
     try { S.todos = await rpc('vendedores_publicos'); } catch { S.todos = []; }
+    if (DEMO) {
+      S.todos = [...S.todos, ...DEMO_VEND];
+      const aviso = document.createElement('div');
+      aviso.className = 'mb-6 flex items-center gap-2 rounded-2xl border border-zinc-950 bg-hl px-4 py-3 text-sm font-semibold text-zinc-950';
+      aviso.textContent = 'Vista de ejemplo: los vendedores marcados como “Ejemplo” son ficticios y solo se ven con este link.';
+      $('#grid').before(aviso);
+    }
     filtrosMarca(); pintar(); icons();
     const id = location.hash.slice(1); if (id) abrir(id);
   })();
