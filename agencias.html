@@ -69,6 +69,24 @@
     @keyframes sp{to{transform:rotate(360deg)}}
     .fade{animation:fade .45s var(--ease) both}
     @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+    /* Asistente interno */
+    #asisBtn{position:fixed;right:1.25rem;bottom:1.25rem;z-index:60;height:56px;padding:0 1.1rem 0 .9rem;border-radius:999px;background:#0b0b0c;color:#fff;display:flex;align-items:center;gap:.55rem;font-weight:600;font-size:.9rem;box-shadow:0 14px 32px -12px rgba(0,0,0,.5);transition:transform .2s}
+    #asisBtn:hover{transform:translateY(-2px)}#asisBtn .dot{width:30px;height:30px;border-radius:50%;background:#d6f345;color:#0b0b0c;display:grid;place-items:center}
+    #asisBox{position:fixed;right:1.25rem;bottom:1.25rem;z-index:61;width:390px;height:min(620px,calc(100vh - 2.5rem));background:#fff;border:1px solid rgba(0,0,0,.1);border-radius:24px;box-shadow:0 30px 60px -20px rgba(0,0,0,.35);display:flex;flex-direction:column;overflow:hidden}
+    @media (max-width:640px){#asisBox{inset:0;width:auto;height:auto;border-radius:0;border:0}#asisBtn{right:1rem;bottom:1rem}#asisBtn .lbl{display:none}#asisBtn{padding:0 .8rem}}
+    #asisMsgs{flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:.6rem;background:#fafaf8}
+    .am{max-width:86%;padding:.65rem .85rem;border-radius:18px;font-size:.92rem;line-height:1.4;white-space:pre-line;word-wrap:break-word}
+    .am.bot{background:#fff;border:1px solid rgba(0,0,0,.08);color:#27272a;border-bottom-left-radius:6px;align-self:flex-start}
+    .am.yo{background:#0b0b0c;color:#fff;border-bottom-right-radius:6px;align-self:flex-end}
+    .am.ok{background:#f1fbc9;border-color:#d6f345}
+    .acard{align-self:flex-start;max-width:92%;background:#fff;border:1px solid #0b0b0c;border-radius:18px;padding:.75rem .85rem;font-size:.92rem}
+    .acard .bts{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.6rem}
+    .abtn{border-radius:999px;padding:.45rem .9rem;font-size:.85rem;font-weight:600;border:1px solid rgba(0,0,0,.15);background:#fff;color:#0b0b0c;transition:.15s;text-align:left}
+    .abtn:hover{border-color:#0b0b0c}.abtn.pr{background:#0b0b0c;color:#fff;border-color:#0b0b0c}.abtn.pr:hover{background:#d6f345;color:#0b0b0c;border-color:#d6f345}
+    .abtn:disabled{opacity:.45;pointer-events:none}
+    .asug{display:flex;gap:.4rem;overflow-x:auto;padding:.6rem 1rem 0}.asug button{flex:none;border:1px solid rgba(0,0,0,.12);border-radius:999px;padding:.35rem .75rem;font-size:.8rem;color:#3f3f46;background:#fff}.asug button:hover{border-color:#0b0b0c}
+    .typing span{display:inline-block;width:6px;height:6px;margin:0 1px;border-radius:50%;background:#a1a1aa;animation:tp 1s infinite}.typing span:nth-child(2){animation-delay:.15s}.typing span:nth-child(3){animation-delay:.3s}
+    @keyframes tp{0%,60%,100%{opacity:.3;transform:none}30%{opacity:1;transform:translateY(-3px)}}
     .toast{position:fixed;left:50%;bottom:1.5rem;transform:translateX(-50%) translateY(calc(100% + 2rem));visibility:hidden;pointer-events:none;z-index:80;background:#0b0b0c;color:#fff;padding:.75rem 1.1rem;border-radius:999px;font-weight:600;font-size:.88rem;display:flex;gap:.5rem;align-items:center;transition:transform .45s var(--ease);max-width:92vw}
     .toast.show{transform:translateX(-50%) translateY(0);visibility:visible;pointer-events:auto}
     .toast{transition:transform .45s var(--ease),visibility 0s linear .45s}
@@ -460,6 +478,25 @@
     </form>
   </div>
 
+  <!-- Asistente interno -->
+  <div id="asis" hidden>
+    <button id="asisBtn" aria-label="Abrir asistente"><span class="dot"><i data-lucide="sparkles" class="h-4 w-4"></i></span><span class="lbl">Asistente</span></button>
+    <section id="asisBox" hidden role="dialog" aria-label="Asistente de Red de Autos">
+      <header class="flex items-center gap-3 border-b border-line px-4 py-3">
+        <span class="grid h-9 w-9 place-items-center rounded-full bg-hl text-zinc-950"><i data-lucide="sparkles" class="h-4 w-4"></i></span>
+        <div class="flex-1"><p class="font-display font-bold leading-tight text-zinc-950">Asistente</p><p class="text-xs text-ink/70">Te ayudo con tu stock y el panel</p></div>
+        <button id="asisLimpiar" class="grid h-9 w-9 place-items-center rounded-full text-ink hover:bg-bg2" title="Empezar de nuevo" aria-label="Empezar de nuevo"><i data-lucide="rotate-ccw" class="h-4 w-4"></i></button>
+        <button id="asisCerrar" class="grid h-9 w-9 place-items-center rounded-full text-ink hover:bg-bg2" aria-label="Cerrar"><i data-lucide="x" class="h-5 w-5"></i></button>
+      </header>
+      <div id="asisMsgs" aria-live="polite"></div>
+      <div class="asug" id="asisSug"></div>
+      <form id="asisForm" class="flex items-end gap-2 p-3">
+        <textarea id="asisIn" rows="1" maxlength="600" class="inp max-h-32 flex-1 resize-none !rounded-2xl" placeholder="Escribí lo que necesitás…" aria-label="Mensaje"></textarea>
+        <button class="grid h-11 w-11 flex-none place-items-center rounded-full bg-pr text-white transition hover:bg-hl hover:text-zinc-950" aria-label="Enviar"><i data-lucide="arrow-up" class="h-5 w-5"></i></button>
+      </form>
+    </section>
+  </div>
+
   <div id="toast" class="toast"><i data-lucide="check" class="h-4 w-4"></i><span></span></div>
   <input id="fotCarFile" type="file" accept="image/*" multiple class="hidden" />
 
@@ -504,6 +541,7 @@
   function mostrar(v) {
     ['vLogin', 'vPerfil', 'vPanel', 'vCarga'].forEach((id) => $('#' + id).hidden = id !== 'v' + v[0].toUpperCase() + v.slice(1));
     $('#hdrUser').hidden = v === 'login' || v === 'carga';
+    $('#asis').hidden = v !== 'panel'; if (v !== 'panel') $('#asisBox').hidden = true;
     icons(); window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -552,7 +590,7 @@
     } catch (e) { err.textContent = e.message; err.hidden = false; }
     finally { b.disabled = false; b.innerHTML = '<i data-lucide="log-in" class="h-4 w-4"></i>Ingresar'; icons(); }
   }
-  $('#btnSalir').addEventListener('click', async () => { await sb.auth.signOut(); S.yo = null; mostrar('login'); });
+  $('#btnSalir').addEventListener('click', async () => { await sb.auth.signOut(); S.yo = null; AS.iniciado = false; mostrar('login'); });
 
   // ===================== ARRANQUE =====================
   async function arrancar() {
@@ -700,6 +738,97 @@
     }
   }
   $('#mercRefresh').addEventListener('click', () => cargarMercado(true));
+
+  // ===================== ASISTENTE INTERNO =====================
+  const AS = { hist: [], ocupado: false, iniciado: false };
+  const asisKey = () => 'rda-asis-' + (S.yo?.agencia?.id || '');
+  const fmt = (t) => esc(t).replace(/\*([^*\n]+)\*/g, '<b>$1</b>');
+  function asisGuardar() { try { sessionStorage.setItem(asisKey(), JSON.stringify(AS.hist.slice(-30))); } catch {} }
+  function asisScroll() { const m = $('#asisMsgs'); m.scrollTop = m.scrollHeight; }
+  function asisBurbuja(rol, texto, extra = '') {
+    const d = document.createElement('div'); d.className = `am ${rol === 'usuario' ? 'yo' : 'bot'} ${extra}`; d.innerHTML = fmt(texto);
+    $('#asisMsgs').appendChild(d); asisScroll(); return d;
+  }
+  function asisAgregar(rol, texto, extra) { AS.hist.push({ rol, texto }); asisGuardar(); return asisBurbuja(rol, texto, extra); }
+  function asisCard(html) { const d = document.createElement('div'); d.className = 'acard'; d.innerHTML = html; $('#asisMsgs').appendChild(d); asisScroll(); icons(); return d; }
+  function asisSugerencias() {
+    const esV = S.yo?.agencia?.tipo === 'vendedor';
+    const sug = ['¿Cuántos compradores me contactaron?', '¿Por qué un auto no aparece en la web?', 'Bajale el precio a un auto', 'Tengo un cliente que busca algo que no tengo', esV ? '¿Cómo armo mi perfil público?' : '¿Qué autos se buscan y no hay?'];
+    $('#asisSug').innerHTML = sug.map((t) => `<button type="button">${esc(t)}</button>`).join('');
+  }
+  function asisIniciar() {
+    if (AS.iniciado) return; AS.iniciado = true;
+    $('#asisMsgs').innerHTML = '';
+    try { AS.hist = JSON.parse(sessionStorage.getItem(asisKey()) || '[]'); } catch { AS.hist = []; }
+    if (!AS.hist.length) {
+      const n = (S.yo?.agencia?.nombre || '').split(' ')[0];
+      asisAgregar('asistente', `¡Hola${n ? ' ' + n : ''}! Soy el asistente de Red de Autos. Puedo cambiar precios, marcar vendidos o reservados, pausar o publicar autos, y responderte cualquier duda del panel. ¿En qué te ayudo?`);
+    } else AS.hist.forEach((h) => asisBurbuja(h.rol, h.texto));
+    asisSugerencias();
+  }
+  async function apiAsis(datos) {
+    const { data: { session } } = await sb.auth.getSession();
+    const r = await fetch(`${CONFIG.SUPABASE_URL}/functions/v1/asistente`, { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: CONFIG.SUPABASE_ANON_KEY, ...(session ? { Authorization: `Bearer ${session.access_token}` } : {}) }, body: JSON.stringify(datos) });
+    const j = await r.json().catch(() => ({}));
+    if (r.status === 401) { await sb.auth.signOut(); mostrar('login'); }
+    if (!r.ok) throw new Error(j.error || 'Se me trabó algo. Probá de nuevo.');
+    return j;
+  }
+  function asisPintarRespuesta(r) {
+    if (r.texto) asisAgregar('asistente', r.texto);
+    if (r.confirmar) {
+      const c = asisCard(`<p>${fmt(r.confirmar.texto)}</p><div class="bts"><button class="abtn pr" data-si>Sí, confirmar</button><button class="abtn" data-no>No</button></div>`);
+      c._plan = r.confirmar.plan;
+    }
+    if (r.opciones?.length) {
+      const c = asisCard(`<div class="bts !mt-0 flex-col items-stretch">${r.opciones.map((o, i) => `<button class="abtn" data-op="${i}">${esc(o.etiqueta)}</button>`).join('')}<button class="abtn text-ink" data-no>Ninguno</button></div>`);
+      c._ops = r.opciones;
+    }
+    if (r.ir_a) {
+      const c = asisCard(`<div class="bts !mt-0"><button class="abtn pr" data-ir>${esc(r.ir_a.etiqueta)} <i data-lucide="arrow-right" class="ml-1 inline h-3.5 w-3.5"></i></button></div>`);
+      c._ir = r.ir_a;
+    }
+  }
+  async function asisEnviar(texto) {
+    texto = texto.trim(); if (!texto || AS.ocupado) return;
+    AS.ocupado = true; $('#asisSug').hidden = true;
+    const historial = AS.hist.slice(-8);
+    asisAgregar('usuario', texto);
+    const t = asisBurbuja('asistente', ''); t.innerHTML = '<span class="typing"><span></span><span></span><span></span></span>';
+    try { const r = await apiAsis({ accion: 'mensaje', texto, historial }); t.remove(); asisPintarRespuesta(r); }
+    catch (x) { t.remove(); asisBurbuja('asistente', x.message); }
+    finally { AS.ocupado = false; }
+  }
+  async function asisConfirmar(card, plan, textoConfirm) {
+    $$('button', card).forEach((b) => b.disabled = true);
+    if (textoConfirm) { card.innerHTML = `<p>${fmt(textoConfirm)}</p><div class="bts"><button class="abtn pr" data-si>Sí, confirmar</button><button class="abtn" data-no>No</button></div>`; card._plan = plan; card._ops = null; return; }
+    try {
+      const r = await apiAsis({ accion: 'confirmar', plan });
+      card.querySelector('.bts')?.remove();
+      asisAgregar('asistente', r.texto, r.ok ? 'ok' : '');
+      if (r.ok) cargarStock().catch(() => {});
+    } catch (x) { asisBurbuja('asistente', x.message); $$('button', card).forEach((b) => b.disabled = false); }
+  }
+  $('#asisMsgs').addEventListener('click', (e) => {
+    const card = e.target.closest('.acard'); if (!card) return;
+    if (e.target.closest('[data-si]')) return asisConfirmar(card, card._plan);
+    if (e.target.closest('[data-no]')) { card.querySelector('.bts')?.remove(); asisAgregar('asistente', 'Listo, no toco nada. ¿Algo más?'); return; }
+    const op = e.target.closest('[data-op]'); if (op) { const o = card._ops[+op.dataset.op]; return asisConfirmar(card, o.plan, o.texto); }
+    if (e.target.closest('[data-ir]')) {
+      const ir = card._ir; irTab(ir.pestania);
+      if (ir.pestania === 'red' && ir.busqueda && $('#redQ')) { $('#redQ').value = ir.busqueda; $('#redBtn')?.click(); }
+      if (window.matchMedia('(max-width:640px)').matches) $('#asisBox').hidden = true;
+      setTimeout(() => $('#t' + ir.pestania[0].toUpperCase() + ir.pestania.slice(1))?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150);
+    }
+  });
+  $('#asisBtn').addEventListener('click', () => { asisIniciar(); $('#asisBox').hidden = false; $('#asisBtn').hidden = true; setTimeout(() => { asisScroll(); $('#asisIn').focus(); }, 50); icons(); });
+  $('#asisCerrar').addEventListener('click', () => { $('#asisBox').hidden = true; $('#asisBtn').hidden = false; });
+  $('#asisLimpiar').addEventListener('click', () => { AS.hist = []; asisGuardar(); AS.iniciado = false; asisIniciar(); $('#asisSug').hidden = false; });
+  $('#asisSug').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) asisEnviar(b.textContent); });
+  $('#asisForm').addEventListener('submit', (e) => { e.preventDefault(); const v = $('#asisIn').value; $('#asisIn').value = ''; $('#asisIn').style.height = ''; asisEnviar(v); });
+  $('#asisIn').addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); $('#asisForm').requestSubmit(); } });
+  $('#asisIn').addEventListener('input', (e) => { e.target.style.height = ''; e.target.style.height = Math.min(e.target.scrollHeight, 128) + 'px'; });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !$('#asisBox').hidden) $('#asisCerrar').click(); });
 
   // ===================== PERFIL PÚBLICO (vendedores) =====================
   const PUB = { perfil: null, foto: null, quitar: false };
