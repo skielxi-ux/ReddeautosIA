@@ -285,8 +285,51 @@
         ${k('Leads landing', nf.format(m.leads_agencias))}
         ${k('WhatsApp', nf.format(m.wa_enviados), `${nf.format(m.wa_fallidos)} fallidos`)}
       </div>
-      <div class="box mt-5 max-w-md p-5"><h3 class="font-semibold text-zinc-950">Más buscados</h3><ol class="mt-3 space-y-1.5">${top}</ol></div>`;
+      <div class="mt-5 grid gap-5 lg:grid-cols-2">
+        <div class="box p-5"><h3 class="font-semibold text-zinc-950">Más buscados</h3><ol class="mt-3 space-y-1.5">${top}</ol></div>
+        <div class="box p-5" id="botBox"><h3 class="font-semibold text-zinc-950">Canal del bot</h3><div class="grid place-items-center py-6"><span class="spin"></span></div></div>
+      </div>`;
+    cargarBot().catch((x) => { $('#botBox').innerHTML = `<h3 class="font-semibold text-zinc-950">Canal del bot</h3><p class="mt-2 text-sm text-ink/70">${esc(x.message)}</p>`; });
   }
+
+  // ---------- Canal del bot (WhatsApp / Telegram) ----------
+  async function cargarBot() {
+    const [e, yo] = await Promise.all([call('telegram', 'admin_estado'), call('telegram', 'estado')]);
+    const tg = e.canal === 'telegram';
+    const paso = (ok, txt) => `<li class="flex items-start gap-2 text-sm"><span class="chip ${ok ? 'c-ok' : 'c-mute'}">${ok ? '✓' : '·'}</span><span>${txt}</span></li>`;
+    $('#botBox').innerHTML = `
+      <div class="flex flex-wrap items-center justify-between gap-2"><h3 class="font-semibold text-zinc-950">Canal del bot</h3>
+        <span class="chip ${tg ? 'c-blue' : 'c-ok'}">Ahora: ${tg ? 'Telegram' : 'WhatsApp'}</span></div>
+      <p class="mt-1 text-xs text-ink/70">Con Telegram, agencias y vendedores que conectaron su cuenta reciben todo por Telegram. Los compradores siguen por WhatsApp.</p>
+      <ol class="mt-4 space-y-2">
+        ${paso(e.token_cargado, e.token_cargado ? 'Token del bot cargado en Supabase' : 'Cargá el token del bot en Supabase → Edge Functions → Secrets, con el nombre <b>TELEGRAM_BOT_TOKEN</b>')}
+        ${paso(!!e.bot && e.webhook_ok, e.bot ? `Bot <b>@${esc(e.bot)}</b> ${e.webhook_ok ? 'conectado' : 'sin conectar'}` : (e.bot_error ? 'Telegram dice: ' + esc(e.bot_error) : 'Bot sin conectar'))}
+        ${paso(yo.vinculado, yo.vinculado ? `Tu Telegram conectado (${esc(yo.como || '')})` : 'Conectá tu propio Telegram para probar')}
+        ${paso(tg, tg ? 'Canal Telegram activo' : 'Activá el canal Telegram')}
+      </ol>
+      ${e.webhook_error ? `<p class="mt-3 text-xs text-red-700">Último error de Telegram: ${esc(e.webhook_error)}</p>` : ''}
+      <div class="mt-4 flex flex-wrap gap-2">
+        ${e.token_cargado ? `<button class="btn ${e.webhook_ok ? 'btn-gh' : 'btn-pr'}" data-bot="conectar">${e.webhook_ok ? 'Reconectar bot' : 'Conectar bot'}</button>` : ''}
+        ${e.bot ? `<button class="btn ${yo.vinculado ? 'btn-gh' : 'btn-pr'}" data-bot="vincular">${yo.vinculado ? 'Reconectar mi Telegram' : 'Conectar mi Telegram'}</button>` : ''}
+        ${yo.vinculado ? '<button class="btn btn-gh" data-bot="probar">Enviarme una prueba</button>' : ''}
+        ${e.bot ? `<button class="btn ${tg ? 'btn-gh' : 'btn-pr'}" data-bot="canal" data-canal="${tg ? 'whatsapp' : 'telegram'}">${tg ? 'Volver a WhatsApp' : 'Usar Telegram'}</button>` : ''}
+      </div>
+      <p class="mt-3 text-xs text-ink/60">${e.conectados} cuenta${e.conectados === 1 ? '' : 's'} con Telegram conectado.</p>`;
+  }
+  document.addEventListener('click', async (ev) => {
+    const b = ev.target.closest('[data-bot]'); if (!b) return;
+    const a = b.dataset.bot; b.disabled = true;
+    try {
+      if (a === 'conectar') { const r = await call('telegram', 'admin_conectar'); toast(`Bot @${r.bot} conectado ✓`); }
+      if (a === 'vincular') { const r = await call('telegram', 'vincular'); window.open(r.url, '_blank', 'noopener'); toast('Tocá "Iniciar" en Telegram y volvé acá'); }
+      if (a === 'probar') { await call('telegram', 'admin_probar'); toast('Te mandamos una prueba por Telegram'); }
+      if (a === 'canal') {
+        if (b.dataset.canal === 'telegram' && !confirm('¿Pasar el bot a Telegram? Las agencias sin Telegram conectado siguen recibiendo por WhatsApp.')) return;
+        const r = await call('telegram', 'admin_canal', { canal: b.dataset.canal }); toast(r.canal === 'telegram' ? 'Bot en Telegram ✓' : 'Bot en WhatsApp ✓');
+      }
+      await cargarBot();
+    } catch (x) { toast(x.message, true); } finally { b.disabled = false; }
+  });
   document.addEventListener('click', (e) => { const g = e.target.closest('[data-go]'); if (g) irTab(g.dataset.go); });
 
   // ---------- Cuentas ----------
