@@ -285,12 +285,33 @@
         ${k('Leads landing', nf.format(m.leads_agencias))}
         ${k('WhatsApp', nf.format(m.wa_enviados), `${nf.format(m.wa_fallidos)} fallidos`)}
       </div>
-      <div class="mt-5 grid gap-5 lg:grid-cols-2">
+      <div class="mt-5 grid gap-5 lg:grid-cols-3">
         <div class="box p-5"><h3 class="font-semibold text-zinc-950">Más buscados</h3><ol class="mt-3 space-y-1.5">${top}</ol></div>
         <div class="box p-5" id="botBox"><h3 class="font-semibold text-zinc-950">Canal del bot</h3><div class="grid place-items-center py-6"><span class="spin"></span></div></div>
+        <div class="box p-5"><h3 class="font-semibold text-zinc-950">Comprador que olvidó su PIN</h3>
+          <p class="mt-1 text-xs text-ink/70">Solo si te escribió y estás seguro de que es la persona. Al reiniciarlo, entra a "Mi cuenta" → "Crear mi cuenta" con el mismo celular y elige un PIN nuevo; sus pedidos siguen ahí.</p>
+          <form id="fComp" class="mt-3 flex gap-2"><input id="compTel" class="inp" inputmode="tel" placeholder="381 555-1234" required /><button class="btn btn-gh">Buscar</button></form>
+          <div id="compRes" class="mt-3 text-sm"></div></div>
       </div>`;
     cargarBot().catch((x) => { $('#botBox').innerHTML = `<h3 class="font-semibold text-zinc-950">Canal del bot</h3><p class="mt-2 text-sm text-ink/70">${esc(x.message)}</p>`; });
   }
+
+  // ---------- Compradores: reiniciar PIN ----------
+  document.addEventListener('submit', async (ev) => {
+    if (ev.target.id !== 'fComp') return; ev.preventDefault();
+    try {
+      const c = await call('comprador', 'admin_buscar', { telefono: $('#compTel').value });
+      $('#compRes').innerHTML = `<p><b class="text-zinc-950">${esc(c.nombre || 'Sin nombre')}</b> · +${esc(c.telefono)} · ${c.pedidos} pedido${c.pedidos === 1 ? '' : 's'} · cuenta del ${new Date(c.creada).toLocaleDateString('es-AR')}</p>
+        ${c.tiene_pin ? `<button class="btn btn-pr mt-2" id="compReset" data-tel="${esc(c.telefono)}">Reiniciar PIN</button>` : '<p class="mt-1 text-ink/70">El PIN ya está reiniciado: que cree uno nuevo con "Crear mi cuenta".</p>'}`;
+    } catch (x) { $('#compRes').textContent = x.message; }
+  });
+  document.addEventListener('click', async (ev) => {
+    const b = ev.target.closest('#compReset'); if (!b) return;
+    if (!confirm('¿Reiniciar el PIN de este comprador? Va a poder crear uno nuevo con su celular.')) return;
+    b.disabled = true;
+    try { await call('comprador', 'admin_reset', { telefono: b.dataset.tel }); $('#compRes').innerHTML = '<p class="text-zinc-950">✓ PIN reiniciado. Decile que entre a "Mi cuenta" → "Crear mi cuenta" con su celular y elija uno nuevo.</p>'; }
+    catch (x) { toast(x.message, true); b.disabled = false; }
+  });
 
   // ---------- Canal del bot (WhatsApp / Telegram) ----------
   async function cargarBot() {

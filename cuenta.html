@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Mi cuenta · Red de Autos Tucumán</title>
+  <meta name="robots" content="noindex" />
+  <meta name="theme-color" content="#0b0b0c" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icono-192.png" />
+  <link rel="apple-touch-icon" href="icono-192.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&family=Mona+Sans:wght@400..900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { bg: '#ffffff', bg2: '#f5f5f2', pr: '#0b0b0c', hl: '#d6f345', ink: '#52525b', line: 'rgba(0,0,0,.1)' },
+      fontFamily: { display: ['"Mona Sans"', 'Inter', 'sans-serif'], sans: ['Inter', 'sans-serif'] },
+    } } };
+  </script>
+  <style>
+    body{background:#fff;color:#3f3f46;font-family:Inter,sans-serif;-webkit-font-smoothing:antialiased}
+    [hidden]{display:none!important}
+    .box{border:1px solid rgba(0,0,0,.1);border-radius:24px;background:#fff}
+    .inp{width:100%;border-radius:14px;border:1px solid rgba(0,0,0,.14);padding:.75rem .95rem;font-size:16px;color:#0b0b0c;outline:none;background:#fff}
+    .inp:focus{border-color:#0b0b0c;box-shadow:0 0 0 3px rgba(214,243,69,.7)}
+    .pin{letter-spacing:.6em;text-align:center;font-weight:700;font-size:1.25rem}
+    .lbl{display:block;font-size:.8rem;font-weight:600;color:#3f3f46;margin-bottom:.35rem}
+    .chip{display:inline-flex;align-items:center;gap:.3rem;border-radius:999px;font-size:.72rem;font-weight:700;padding:.22rem .55rem;white-space:nowrap}
+    .c-esp{background:#fef3c7;color:#92400e}.c-ok{background:#d6f345;color:#0b0b0c}.c-acc{background:#dbeafe;color:#1e40af}.c-no{background:#f4f4f5;color:#52525b}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;border-radius:999px;font-weight:600;padding:.75rem 1.15rem;transition:.2s}
+    .btn-pr{background:#0b0b0c;color:#fff}.btn-pr:hover{background:#d6f345;color:#0b0b0c}
+    .btn-gh{border:1px solid rgba(0,0,0,.16);color:#0b0b0c;background:#fff}.btn-gh:hover{border-color:#0b0b0c}
+    .btn:disabled{opacity:.5;pointer-events:none}
+    .tab{border-radius:999px;padding:.55rem 1rem;font-weight:600;font-size:.9rem;color:#52525b;white-space:nowrap}
+    .tab.on{background:#0b0b0c;color:#fff}
+    .spin{width:28px;height:28px;border-radius:50%;border:3px solid #e4e4e7;border-top-color:#0b0b0c;animation:g 1s linear infinite}@keyframes g{to{transform:rotate(360deg)}}
+    #toast{position:fixed;left:50%;bottom:1.25rem;transform:translateX(-50%);z-index:80;background:#0b0b0c;color:#fff;padding:.7rem 1.1rem;border-radius:999px;font-size:.88rem;max-width:92vw}
+    #toast.err{background:#b91c1c}
+  </style>
+</head>
+<body>
+  <header class="border-b border-line">
+    <div class="mx-auto flex max-w-3xl items-center justify-between gap-4 px-5 py-3.5">
+      <a href="./" class="flex items-center gap-2.5"><img src="icono-192.png" alt="" class="h-9 w-9 rounded-xl" /><span class="whitespace-nowrap font-display text-lg font-bold text-zinc-950">Red de Autos</span></a>
+      <div class="flex items-center gap-2"><a href="./" class="btn btn-gh hidden whitespace-nowrap !py-2 text-sm sm:inline-flex">Buscar un auto</a><button id="salir" class="btn btn-gh !py-2 text-sm" hidden>Salir</button></div>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-3xl px-5 pb-20 pt-8">
+    <div id="carga" class="grid place-items-center py-20"><span class="spin"></span></div>
+
+    <!-- Ingreso -->
+    <section id="vLogin" hidden>
+      <div class="mx-auto max-w-md">
+        <h1 class="font-display text-3xl font-extrabold text-zinc-950" id="lTit">Mi cuenta</h1>
+        <p class="mt-2 text-ink" id="lSub">Entrá con tu celular y tu PIN para ver todos tus pedidos y alertas, desde cualquier celular.</p>
+        <div class="mt-6 flex gap-1 rounded-full bg-bg2 p-1" role="tablist">
+          <button class="tab flex-1 on" data-modo="ingresar">Ingresar</button>
+          <button class="tab flex-1" data-modo="registrar">Crear mi cuenta</button>
+        </div>
+        <form id="fLogin" class="box mt-4 space-y-4 p-5">
+          <div data-solo="registrar" hidden><label class="lbl" for="lNombre">Tu nombre</label><input id="lNombre" class="inp" autocomplete="given-name" placeholder="Juan" /></div>
+          <div><label class="lbl" for="lTel">Tu celular</label><input id="lTel" class="inp" inputmode="tel" autocomplete="tel" placeholder="381 555-1234" required /></div>
+          <div><label class="lbl" for="lPin" id="lPinLbl">Tu PIN (6 números)</label><input id="lPin" class="inp pin" inputmode="numeric" maxlength="6" autocomplete="current-password" placeholder="••••••" required /></div>
+          <div data-solo="registrar" hidden><label class="lbl" for="lPin2">Repetí el PIN</label><input id="lPin2" class="inp pin" inputmode="numeric" maxlength="6" autocomplete="new-password" placeholder="••••••" /></div>
+          <p class="text-xs text-ink/80" data-solo="registrar" hidden>Elegí 6 números que te acuerdes y que no sean fáciles (nada de 123456). No se lo pases a nadie.</p>
+          <button class="btn btn-pr w-full" id="lBtn">Ingresar</button>
+          <button type="button" class="block w-full text-center text-sm text-ink underline" id="aOlvide" data-solo="ingresar">Olvidé mi PIN</button>
+        </form>
+        <div id="olvideBox" class="box mt-4 p-5" hidden>
+          <p class="font-semibold text-zinc-950">Crear un PIN nuevo</p>
+          <p class="mt-1 text-sm text-ink">Por seguridad, solo se puede hacer desde el celular donde hiciste algún pedido.</p>
+          <form id="fOlvide" class="mt-4 space-y-3">
+            <input id="oTel" class="inp" inputmode="tel" placeholder="Tu celular (381 555-1234)" required />
+            <input id="oPin" class="inp pin" inputmode="numeric" maxlength="6" placeholder="PIN nuevo" autocomplete="new-password" required />
+            <input id="oPin2" class="inp pin" inputmode="numeric" maxlength="6" placeholder="Repetí el PIN" autocomplete="new-password" required />
+            <button class="btn btn-pr w-full">Guardar PIN nuevo</button>
+          </form>
+          <div id="olvideAyuda" class="mt-3 rounded-2xl bg-bg2 p-3 text-sm" hidden>Desde este celular no podemos verificar que la cuenta es tuya. <a id="aSoporte" target="_blank" rel="noopener" class="font-semibold underline">Escribinos por WhatsApp</a> y te ayudamos.</div>
+        </div>
+        <div id="enCelu" class="mt-8" hidden>
+          <p class="text-sm font-semibold text-zinc-950">Pedidos guardados en este celular</p>
+          <div id="enCeluList" class="mt-3 space-y-2"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Perfil -->
+    <section id="vPerfil" hidden>
+      <p class="text-sm font-semibold text-ink" id="pTel"></p>
+      <h1 class="mt-1 font-display text-3xl font-extrabold text-zinc-950" id="pHola">Hola</h1>
+      <div class="mt-6 flex gap-1 overflow-x-auto rounded-full bg-bg2 p-1">
+        <button class="tab on" data-t="pedidos">Mis pedidos</button>
+        <button class="tab" data-t="alertas">Mis alertas</button>
+        <button class="tab" data-t="datos">Mis datos</button>
+      </div>
+
+      <div id="tPedidos" class="mt-5 space-y-3"></div>
+      <div id="tAlertas" class="mt-5 space-y-3" hidden></div>
+      <div id="tDatos" class="mt-5" hidden>
+        <form id="fDatos" class="box space-y-4 p-5">
+          <div><label class="lbl" for="dNombre">Tu nombre</label><input id="dNombre" class="inp" required /></div>
+          <div><label class="lbl">Tu celular</label><p id="dTel" class="text-zinc-950"></p><p class="text-xs text-ink/70">Es tu usuario. Se usa para que la agencia te escriba cuando acepta.</p></div>
+          <button class="btn btn-pr">Guardar</button>
+        </form>
+        <div class="box mt-4 flex flex-col gap-3 p-5 sm:flex-row sm:items-center">
+          <span class="grid h-11 w-11 flex-none place-items-center rounded-2xl bg-hl text-xl">🔔</span>
+          <div class="flex-1"><p class="font-semibold text-zinc-950" id="avTit">Avisos en este celular</p><p class="text-sm text-ink" id="avTxt">Te llega una notificación cuando una agencia responda cualquiera de tus pedidos.</p></div>
+          <button class="btn btn-pr flex-none" id="avBtn">Activar avisos</button>
+        </div>
+      </div>
+    </section>
+  </main>
+  <div id="toast" hidden></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+  <script src="avisos.js"></script>
+  <script>
+  const CONFIG = {
+    SUPABASE_URL: 'https://ytuecptdgtmrbiddyzht.supabase.co',
+    SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl0dWVjcHRkZ3RtcmJpZGR5emh0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ0MTMxNTMsImV4cCI6MjEwOTk4OTE1M30.H-Yi5dwDW8TvZfFWvP3dquHnCeQNtHTf8MO6i5v02VA',
+    WHATSAPP_SOPORTE: '5493816335234',
+  };
+  const $ = (s) => document.querySelector(s), $$ = (s) => [...document.querySelectorAll(s)];
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const dia = (iso) => iso ? new Date(iso).toLocaleDateString('es-AR', { day: 'numeric', month: 'long' }) : '';
+  const telLindo = (t) => String(t || '').replace(/^549(\d{3})(\d{3})(\d{4})$/, '$1 $2-$3');
+  function toast(m, err = false) { const t = $('#toast'); t.textContent = m; t.classList.toggle('err', err); t.hidden = false; clearTimeout(t._t); t._t = setTimeout(() => t.hidden = true, 3800); }
+  const A = window.RDAvisos;
+  const sb = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY, { auth: { persistSession: true, storageKey: 'rda-comprador' } });
+  const tokens = () => A.lista().map((x) => x.t);
+  let MODO = 'ingresar', P = null;
+
+  async function api(accion, datos = {}, auth = true) {
+    const h = { 'Content-Type': 'application/json', apikey: CONFIG.SUPABASE_ANON_KEY };
+    if (auth) { const { data: { session } } = await sb.auth.getSession(); if (session) h.Authorization = `Bearer ${session.access_token}`; }
+    const r = await fetch(`${CONFIG.SUPABASE_URL}/functions/v1/comprador`, { method: 'POST', headers: h, body: JSON.stringify({ accion, ...datos }) });
+    const j = await r.json().catch(() => ({}));
+    if (r.status === 401 && auth && !['ingresar', 'registrar', 'olvide'].includes(accion)) { await sb.auth.signOut(); mostrarLogin(); }
+    if (!r.ok) { const e = new Error(j.error || 'Algo salió mal. Probá de nuevo.'); e.status = r.status; throw e; }
+    return j;
+  }
+  async function entrar(r) {
+    let v = await sb.auth.verifyOtp({ email: r.email, token: r.otp, type: 'email' });
+    if (v.error) v = await sb.auth.verifyOtp({ email: r.email, token: r.otp, type: 'magiclink' });
+    if (v.error) throw new Error('No pudimos iniciar la sesión. Probá de nuevo.');
+    if (r.pedidos_sumados) toast(`¡Listo! Sumamos ${r.pedidos_sumados} pedido${r.pedidos_sumados > 1 ? 's' : ''} de este celular a tu cuenta.`);
+    await cargarPerfil();
+  }
+
+  // ---------- Ingreso ----------
+  function modo(m) {
+    MODO = m;
+    $$('[data-modo]').forEach((b) => b.classList.toggle('on', b.dataset.modo === m));
+    $$('[data-solo]').forEach((el) => el.hidden = el.dataset.solo !== m);
+    $('#lBtn').textContent = m === 'registrar' ? 'Crear mi cuenta' : 'Ingresar';
+    $('#lPinLbl').textContent = m === 'registrar' ? 'Elegí tu PIN (6 números)' : 'Tu PIN (6 números)';
+    $('#lPin').autocomplete = m === 'registrar' ? 'new-password' : 'current-password';
+    $('#olvideBox').hidden = true;
+  }
+  $$('[data-modo]').forEach((b) => b.addEventListener('click', () => modo(b.dataset.modo)));
+  $$('.pin').forEach((i) => i.addEventListener('input', () => { i.value = i.value.replace(/\D/g, '').slice(0, 6); }));
+  $('#fLogin').addEventListener('submit', async (e) => {
+    e.preventDefault(); const b = $('#lBtn'); b.disabled = true;
+    try {
+      if (MODO === 'registrar' && $('#lPin').value !== $('#lPin2').value) throw new Error('Los dos PIN no coinciden.');
+      const r = await api(MODO, { telefono: $('#lTel').value, pin: $('#lPin').value, nombre: $('#lNombre').value, tokens: tokens() }, false);
+      await entrar(r);
+    } catch (x) { toast(x.message, true); if (x.status === 409) modo('ingresar'); }
+    finally { b.disabled = false; }
+  });
+  $('#aOlvide').addEventListener('click', () => { $('#olvideBox').hidden = false; $('#oTel').value = $('#lTel').value; $('#olvideAyuda').hidden = true; $('#oPin').focus(); });
+  $('#fOlvide').addEventListener('submit', async (e) => {
+    e.preventDefault(); const b = e.target.querySelector('button'); b.disabled = true;
+    try {
+      if ($('#oPin').value !== $('#oPin2').value) throw new Error('Los dos PIN no coinciden.');
+      const r = await api('olvide', { telefono: $('#oTel').value, pin: $('#oPin').value, tokens: tokens() }, false);
+      toast('PIN nuevo guardado ✓'); await entrar(r);
+    } catch (x) {
+      if (x.status === 403) { $('#olvideAyuda').hidden = false; $('#aSoporte').href = `https://wa.me/${CONFIG.WHATSAPP_SOPORTE}?text=${encodeURIComponent('Hola! Olvidé el PIN de mi cuenta de comprador en Red de Autos. Mi celular es ' + $('#oTel').value)}`; }
+      else toast(x.message, true);
+    } finally { b.disabled = false; }
+  });
+  function mostrarLogin() {
+    $('#carga').hidden = true; $('#vPerfil').hidden = true; $('#vLogin').hidden = false; $('#salir').hidden = true;
+    const l = A.lista();
+    $('#enCelu').hidden = !l.length;
+    $('#enCeluList').innerHTML = l.map((x) => `<a href="pedido.html#${esc(x.t)}" class="box flex items-center justify-between gap-3 p-3 text-sm transition hover:border-pr"><span><b class="text-zinc-950">${esc(x.txt)}</b> · ${new Date(x.at).toLocaleDateString('es-AR', { day: 'numeric', month: 'short' })}</span><span>→</span></a>`).join('');
+    if (l.length) $('#lSub').textContent = 'Creá tu cuenta y guardamos tus pedidos de este celular, para verlos desde cualquier lado aunque pierdas el link.';
+    modo(location.hash === '#registro' ? 'registrar' : MODO);
+  }
+
+  // ---------- Perfil ----------
+  const PEND = { contraofertada: 'Te contraofertaron', pendiente: 'Auto nuevo para vos' };
+  function resumenPedidos(ps) {
+    const chips = [];
+    const n = (f) => ps.filter(f).length;
+    const resp = n((p) => p.estado === 'contraofertada' || p.estado === 'pendiente' || (['notificado', 'visto'].includes(p.estado) && ['stock_nuevo', 'respuesta_alerta'].includes(p.origen)));
+    const ok = n((p) => ['aceptada', 'visita_confirmada', 'interesado'].includes(p.estado));
+    const esp = n((p) => ['oferta_enviada', 'visita_agendada'].includes(p.estado) || (['notificado', 'visto'].includes(p.estado) && !['stock_nuevo', 'respuesta_alerta'].includes(p.origen)));
+    if (resp) chips.push(`<span class="chip c-acc">${resp} para responder</span>`);
+    if (ok) chips.push(`<span class="chip c-ok">${ok} con acuerdo</span>`);
+    if (esp) chips.push(`<span class="chip c-esp">${esp} esperando a la agencia</span>`);
+    if (!ps.length) chips.push('<span class="chip c-no">Sin respuestas todavía</span>');
+    return chips.join(' ');
+  }
+  const alertaActiva = (b) => b.estado === 'alerta_activa' && b.alerta_expira_at && new Date(b.alerta_expira_at) > new Date();
+  function pintar() {
+    $('#pHola').textContent = `Hola ${P.datos.nombre || ''} 👋`;
+    $('#pTel').textContent = telLindo(P.datos.telefono);
+    $('#dNombre').value = P.datos.nombre || ''; $('#dTel').textContent = telLindo(P.datos.telefono);
+    const bs = P.busquedas;
+    $('#tPedidos').innerHTML = bs.length ? bs.map((x) => `<a href="pedido.html#${esc(x.token)}" class="box block p-4 transition hover:border-pr">
+        <div class="flex items-start justify-between gap-3"><div class="min-w-0"><p class="font-semibold text-zinc-950">${esc(x.busqueda.resumen || x.busqueda.texto || 'Mi pedido')}</p>
+        <p class="truncate text-sm text-ink">${x.busqueda.texto ? '“' + esc(x.busqueda.texto) + '” · ' : ''}${dia(x.busqueda.creada)}</p></div><span class="flex-none text-lg">→</span></div>
+        <div class="mt-2 flex flex-wrap gap-1.5">${resumenPedidos(x.pedidos)}${alertaActiva(x.busqueda) ? `<span class="chip c-no">Alerta hasta el ${dia(x.busqueda.alerta_expira_at)}</span>` : ''}</div></a>`).join('')
+      : '<div class="box p-6 text-center"><p class="font-semibold text-zinc-950">Todavía no tenés pedidos</p><p class="mt-1 text-sm text-ink">Buscá tu auto y hacé una oferta: lo vas a ver acá.</p><a href="./" class="btn btn-pr mt-4">Buscar mi auto</a></div>';
+    const al = bs.filter((x) => ['alerta_activa', 'vencida'].includes(x.busqueda.estado));
+    $('#tAlertas').innerHTML = al.length ? al.map((x) => {
+      const act = alertaActiva(x.busqueda);
+      return `<div class="box p-4" data-tok="${esc(x.token)}"><div class="flex flex-wrap items-center justify-between gap-2"><p class="font-semibold text-zinc-950">${esc(x.busqueda.resumen || x.busqueda.texto || 'Mi alerta')}</p>
+        <span class="chip ${act ? 'c-ok' : 'c-no'}">${act ? 'Activa hasta el ' + dia(x.busqueda.alerta_expira_at) : 'Vencida'}</span></div>
+        ${x.busqueda.texto ? `<p class="mt-1 text-sm text-ink">“${esc(x.busqueda.texto)}”</p>` : ''}
+        <div class="mt-3 flex flex-wrap gap-2"><button class="btn btn-pr !py-2 text-sm" data-al="renovar">${act ? 'Sumar 15 días' : 'Reactivar 15 días'}</button>${act ? '<button class="btn btn-gh !py-2 text-sm" data-al="cancelar">Cancelar alerta</button>' : ''}</div></div>`;
+    }).join('') : '<div class="box p-6 text-center text-ink">No tenés alertas. Cuando buscás un auto que no está, activá una alerta y te avisamos cuando aparezca.</div>';
+    pintarAvisos();
+  }
+  function pintarAvisos() {
+    const toks = P.busquedas.map((x) => x.token), s = A.soporte();
+    if (!toks.length) { $('#avTxt').textContent = 'Cuando hagas un pedido, podés activar los avisos acá.'; $('#avBtn').hidden = true; return; }
+    if (toks.every((t) => A.activos(t))) { $('#avTit').textContent = 'Avisos activados en este celular ✓'; $('#avBtn').hidden = true; return; }
+    if (s !== 'ok') { $('#avTxt').textContent = A.MSG[s]; $('#avBtn').hidden = true; return; }
+    $('#avBtn').hidden = false;
+  }
+  async function cargarPerfil() {
+    P = await api('perfil', { tokens: tokens() });
+    try { localStorage.setItem('rda-comprador-datos', JSON.stringify({ nombre: P.datos.nombre, wa: String(P.datos.telefono).replace(/^549/, '') })); } catch {}
+    P.busquedas.forEach((x) => A.guardar(x.token, x.busqueda.resumen || x.busqueda.texto));
+    $('#carga').hidden = true; $('#vLogin').hidden = true; $('#vPerfil').hidden = false; $('#salir').hidden = false;
+    pintar();
+  }
+  $$('[data-t]').forEach((b) => b.addEventListener('click', () => {
+    $$('[data-t]').forEach((x) => x.classList.toggle('on', x === b));
+    ['pedidos', 'alertas', 'datos'].forEach((t) => $('#t' + t[0].toUpperCase() + t.slice(1)).hidden = t !== b.dataset.t);
+  }));
+  document.addEventListener('click', async (e) => {
+    const b = e.target.closest('[data-al]'); if (!b) return;
+    if (b.dataset.al === 'cancelar' && !confirm('¿Cancelar esta alerta? Las agencias dejan de avisarte por este auto.')) return;
+    b.disabled = true;
+    try { const r = await api('alerta', { token: b.closest('[data-tok]').dataset.tok, op: b.dataset.al }); toast(r.mensaje); await cargarPerfil(); $('[data-t=alertas]').click(); }
+    catch (x) { toast(x.message, true); b.disabled = false; }
+  });
+  $('#fDatos').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    try { await api('guardar_datos', { nombre: $('#dNombre').value }); toast('Guardado ✓'); await cargarPerfil(); $('[data-t=datos]').click(); } catch (x) { toast(x.message, true); }
+  });
+  $('#avBtn').addEventListener('click', async () => {
+    const b = $('#avBtn'); b.disabled = true;
+    try {
+      let res = 'ok';
+      for (const x of P.busquedas.slice(0, 15)) { res = await A.activar(x.token); if (res !== 'ok') break; }
+      toast(res === 'ok' ? '¡Avisos activados! ✓' : A.MSG[res], res !== 'ok');
+    } catch (x) { toast(x.message || 'No pudimos activar los avisos.', true); }
+    finally { b.disabled = false; pintarAvisos(); }
+  });
+  $('#salir').addEventListener('click', async () => { await sb.auth.signOut(); try { localStorage.removeItem('rda-comprador-datos'); } catch {} mostrarLogin(); });
+
+  (async () => {
+    const { data: { session } } = await sb.auth.getSession();
+    if (session) { try { await cargarPerfil(); return; } catch {} }
+    mostrarLogin();
+  })();
+  </script>
+</body>
+</html>
