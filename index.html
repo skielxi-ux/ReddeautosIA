@@ -310,7 +310,11 @@
     .feria-dot{width:.5rem;height:.5rem;border-radius:999px;background:#ef4444;box-shadow:0 0 0 0 rgba(239,68,68,.6);animation:fedot 1.4s infinite}
     @keyframes fedot{70%{box-shadow:0 0 0 8px rgba(239,68,68,0)}100%{box-shadow:0 0 0 0 rgba(239,68,68,0)}}
     .fe-card{transition:transform .25s,box-shadow .25s}.fe-card:hover{transform:translateY(-3px);box-shadow:0 18px 40px -24px rgba(0,0,0,.35)}
+      [hidden]{display:none!important}
   </style>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icono-192.png" />
+  <link rel="apple-touch-icon" href="icono-192.png" />
 </head>
 
 <body class="grain">
@@ -322,6 +326,7 @@
       <nav class="hidden items-center gap-8 text-sm md:flex">
         <a href="#como" class="text-ink transition hover:text-zinc-950">Cómo funciona</a>
         <a href="#red" class="text-ink transition hover:text-zinc-950">Dólar hoy</a>
+        <a href="pedido.html" id="navPedidos" class="font-semibold text-zinc-950 transition hover:text-ink" hidden>Mis pedidos</a>
         <a href="vendedores.html" class="text-ink transition hover:text-zinc-950">Vendedores</a>
         <a href="#agencias" class="text-ink transition hover:text-zinc-950">Para agencias</a>
         <a href="#faq" class="text-ink transition hover:text-zinc-950">Preguntas</a>
@@ -481,11 +486,18 @@
                     <svg class="check-draw h-10 w-10 shrink-0" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="19" stroke="#0b0b0c" stroke-opacity=".2"/><path d="M12 20.5l5.5 5.5L28.5 14" stroke="#0b0b0c" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
                     <div>
                       <p class="font-semibold text-zinc-950">Alerta activa · <span id="okDias">15</span> días</p>
-                      <p class="text-sm text-ink">Avisando a <b id="okCount" class="text-pr">0</b> agencias. Cuando una tenga tu auto, te escribimos al WhatsApp.</p>
+                      <p class="text-sm text-ink">Avisando a <b id="okCount" class="text-pr">0</b> agencias. Cuando una tenga tu auto, lo ves en tu página de seguimiento.</p>
                     </div>
                   </div>
-                  <div class="mt-4"><a id="alertWa" href="#" target="_blank" rel="noopener" class="wa-on mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-3.5 font-semibold text-white transition hover:bg-hl hover:text-zinc-950 sm:w-auto"><svg viewBox="0 0 24 24" class="h-5 w-5" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.5 14.2c-.2.6-1.3 1.2-1.8 1.3-.5.1-1 .1-1.7-.1a15 15 0 0 1-1.6-.6 12.4 12.4 0 0 1-4.7-4.2 5.3 5.3 0 0 1-1.1-2.8 3 3 0 0 1 1-2.3 1 1 0 0 1 .7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.4.6-.4.4c-.1.1-.3.3-.1.6a9 9 0 0 0 1.6 2 8 8 0 0 0 2.4 1.4c.3.2.5.1.6 0l.9-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.1.1.7-.1 1.3z"/></svg>Recibir los avisos por WhatsApp</a>
-                <p class="mt-2 text-xs text-ink/70">Mandale el mensaje que ya te dejamos escrito: así te llegan las respuestas al toque y queda agendado el número de Red de Autos.</p></div>
+                  <div class="mt-4 rounded-2xl border border-line bg-bg2 p-4" id="alertSeg">
+          <p class="text-sm font-semibold text-zinc-950">📍 Seguí tu alerta</p>
+          <div class="mt-3 flex flex-col gap-2">
+            <a data-seg-link href="pedido.html" class="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-pr px-5 py-3.5 font-semibold text-white transition hover:bg-hl hover:text-zinc-950">Ver mi pedido →</a>
+            <button type="button" data-seg-push class="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-pr/20 bg-white px-5 py-3.5 font-semibold text-zinc-950 transition hover:border-pr">🔔 Avisarme en este celular</button>
+          </div>
+          <p data-seg-msg class="mt-2 text-xs text-ink/80">Guardá el link: ahí ves la respuesta de la agencia y su WhatsApp cuando acepte.</p>
+          <a id="alertWa" href="#" target="_blank" rel="noopener" class="mt-3 inline-block text-xs text-ink underline">o recibir los avisos por WhatsApp</a>
+        </div>
                 </div>
               </div>
 
@@ -800,10 +812,14 @@
         <svg class="check-draw mx-auto h-16 w-16" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="19" stroke="#0b0b0c" stroke-opacity=".2"/><path d="M12 20.5l5.5 5.5L28.5 14" stroke="#0b0b0c" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <p class="mt-5 font-display text-2xl font-bold text-zinc-950" id="mOkTitle">¡Listo!</p>
         <p class="mx-auto mt-2 max-w-sm text-ink" id="mOkText"></p>
-        <div class="mx-auto max-w-sm rounded-2xl border border-line bg-bg2 p-4 mt-6">
-          <p class="text-sm font-semibold text-zinc-950">📲 Último paso: activá tus avisos</p>
-          <a id="mOkWa" href="#" target="_blank" rel="noopener" class="wa-on mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-3.5 font-semibold text-white transition hover:bg-hl hover:text-zinc-950 sm:w-auto"><svg viewBox="0 0 24 24" class="h-5 w-5" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.5 14.2c-.2.6-1.3 1.2-1.8 1.3-.5.1-1 .1-1.7-.1a15 15 0 0 1-1.6-.6 12.4 12.4 0 0 1-4.7-4.2 5.3 5.3 0 0 1-1.1-2.8 3 3 0 0 1 1-2.3 1 1 0 0 1 .7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.4.6-.4.4c-.1.1-.3.3-.1.6a9 9 0 0 0 1.6 2 8 8 0 0 0 2.4 1.4c.3.2.5.1.6 0l.9-1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.1.1.7-.1 1.3z"/></svg>Recibir la respuesta por WhatsApp</a>
-                <p class="mt-2 text-xs text-ink/70">Mandale el mensaje que ya te dejamos escrito: así te llegan las respuestas al toque y queda agendado el número de Red de Autos.</p>
+        <div class="mx-auto mt-6 max-w-sm rounded-2xl border border-line bg-bg2 p-4 text-left" id="mOkSeg">
+          <p class="text-sm font-semibold text-zinc-950">📍 Seguí tu pedido</p>
+          <div class="mt-3 flex flex-col gap-2">
+            <a data-seg-link href="pedido.html" class="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-pr px-5 py-3.5 font-semibold text-white transition hover:bg-hl hover:text-zinc-950">Ver mi pedido →</a>
+            <button type="button" data-seg-push class="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-pr/20 bg-white px-5 py-3.5 font-semibold text-zinc-950 transition hover:border-pr">🔔 Avisarme en este celular</button>
+          </div>
+          <p data-seg-msg class="mt-2 text-xs text-ink/80">Guardá el link: ahí ves la respuesta de la agencia y su WhatsApp cuando acepte.</p>
+          <a id="mOkWa" href="#" target="_blank" rel="noopener" class="mt-3 inline-block text-xs text-ink underline">o recibir la respuesta por WhatsApp</a>
         </div>
         <button class="btn-gh mt-6" data-close>Seguir viendo autos</button>
       </div>
@@ -842,6 +858,23 @@
     DEMO_DOLAR: 1420,                 // solo modo demo
     DEMO_AGENCIAS_RED: 12             // solo modo demo
   };
+  /* Link de seguimiento + avisos del navegador para el comprador */
+  async function seguimiento(sel, txt) {
+    const box = document.querySelector(sel); if (!box || !window.RDAvisos || !S.busquedaId) return;
+    const link = box.querySelector('[data-seg-link]'), btn = box.querySelector('[data-seg-push]'), msg = box.querySelector('[data-seg-msg]');
+    try {
+      const r = await RDAvisos.link(S.busquedaId, txt);
+      if (!r) return;
+      link.href = r.url; const nav = document.getElementById('navPedidos'); if (nav) nav.hidden = false;
+      const s = RDAvisos.soporte();
+      if (s !== 'ok') { btn.hidden = true; if (s === 'ios_instalar') msg.textContent = RDAvisos.MSG[s]; return; }
+      btn.onclick = async () => {
+        btn.disabled = true;
+        try { const e = await RDAvisos.activar(r.token); if (e === 'ok') { btn.textContent = '✓ Avisos activados'; msg.textContent = 'Te llega una notificación cuando la agencia responda.'; } else { msg.textContent = RDAvisos.MSG[e]; btn.disabled = false; } }
+        catch (x) { msg.textContent = x.message || 'No pudimos activar los avisos.'; btn.disabled = false; }
+      };
+    } catch (e) { console.warn('seguimiento', e); }
+  }
   function waBot(sel, texto, origen) {
     const a = document.querySelector(sel); if (!a) return;
     a.href = `https://wa.me/${CONFIG.WHATSAPP_BOT}?text=${encodeURIComponent(texto)}`;
@@ -1633,6 +1666,7 @@
       $('#alertForm').classList.add('hidden'); gsap.set('#alertForm', { autoAlpha: 1, y: 0 });
       $('#alertOk').classList.remove('hidden'); $('#okDias').textContent = S.dias;
       waBot('#alertWa', 'Hola Red de Autos! Activé una alerta de compra. Avisame por acá cuando una agencia tenga mi auto 🙌', 'alerta');
+      seguimiento('#alertSeg', S.intent ? [S.intent.marca, S.intent.modelo].filter(Boolean).join(' ') || 'Mi alerta' : 'Mi alerta');
       gsap.from('#alertOk', { y: 16, autoAlpha: 0, duration: .6, ease: 'expo.out' });
       gsap.to('#alertOk .check-draw path', { strokeDashoffset: 0, duration: .8, ease: 'power2.out', delay: .2 });
       const total = r?.agencias_a_notificar ?? CONFIG.DEMO_AGENCIAS_RED, ags = $$('#radar .ag'), o = { v: 0 };
@@ -1752,12 +1786,13 @@
       if (S.mode === 'visita') {
         const d = new Date(fecha);
         $('#mOkTitle').textContent = '¡Visita pedida!';
-        $('#mOkText').textContent = `${S.current?.agencia_nombre || 'La agencia'} recibe tu pedido para el ${d.toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' })} a las ${S.visit.hour}. Cuando la confirme, te pasamos por WhatsApp su contacto y la dirección.`;
+        $('#mOkText').textContent = `${S.current?.agencia_nombre || 'La agencia'} recibe tu pedido para el ${d.toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' })} a las ${S.visit.hour}. Cuando la confirme, te mostramos su WhatsApp y la dirección en tu pedido.`;
       } else {
         $('#mOkTitle').textContent = '¡Oferta enviada!';
-        $('#mOkText').textContent = `Le llevamos tu oferta de ${money(monto, S.offerCur)} a ${S.current?.agencia_nombre || 'la agencia'}. Si la acepta, te pasamos por WhatsApp su contacto para cerrar.`;
+        $('#mOkText').textContent = `Le llevamos tu oferta de ${money(monto, S.offerCur)} a ${S.current?.agencia_nombre || 'la agencia'}. Si la acepta, te mostramos su WhatsApp en tu pedido para cerrar.`;
       }
       const auto = S.current ? [S.current.marca, S.current.modelo, S.current.anio].filter(Boolean).join(' ') : 'el auto';
+      seguimiento('#mOkSeg', (S.mode === 'visita' ? 'Visita: ' : 'Oferta: ') + auto);
       waBot('#mOkWa', S.mode === 'visita' ? `Hola Red de Autos! Pedí una visita para ver el ${auto}. Avisame por acá cuando la confirmen 🙌` : `Hola Red de Autos! Hice una oferta por el ${auto}. Avisame por acá cuando responda la agencia 🙌`, S.mode);
       gsap.from('#mOk > *', { y: 14, autoAlpha: 0, stagger: .08, duration: .6, ease: 'expo.out' });
       gsap.to('#mOk .check-draw path', { strokeDashoffset: 0, duration: .8, ease: 'power2.out', delay: .25 });
@@ -1916,5 +1951,7 @@
 })();
 </script>
 <script src="feria-bar.js" defer></script>
+<script src="avisos.js"></script>
+<script>try { if (JSON.parse(localStorage.getItem('rda-pedidos') || '[]').length) document.getElementById('navPedidos').hidden = false; } catch {}</script>
 </body>
 </html>

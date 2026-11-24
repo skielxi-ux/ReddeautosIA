@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Mi pedido · Red de Autos Tucumán</title>
+  <meta name="robots" content="noindex" />
+  <meta name="theme-color" content="#0b0b0c" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icono-192.png" />
+  <link rel="apple-touch-icon" href="icono-192.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Red de Autos" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..800&family=Mona+Sans:wght@400..900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      colors: { bg: '#ffffff', bg2: '#f5f5f2', pr: '#0b0b0c', hl: '#d6f345', ink: '#52525b', line: 'rgba(0,0,0,.1)' },
+      fontFamily: { display: ['"Mona Sans"', 'Inter', 'sans-serif'], sans: ['Inter', 'sans-serif'] },
+    } } };
+  </script>
+  <style>
+    body{background:#fff;color:#3f3f46;font-family:Inter,sans-serif;-webkit-font-smoothing:antialiased}
+    [hidden]{display:none!important}
+    .box{border:1px solid rgba(0,0,0,.1);border-radius:24px;background:#fff}
+    .chip{display:inline-flex;align-items:center;gap:.3rem;border-radius:999px;font-size:.75rem;font-weight:700;padding:.25rem .6rem;white-space:nowrap}
+    .c-esp{background:#fef3c7;color:#92400e}.c-ok{background:#d6f345;color:#0b0b0c}.c-acc{background:#dbeafe;color:#1e40af}.c-no{background:#f4f4f5;color:#52525b}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;border-radius:999px;font-weight:600;padding:.75rem 1.15rem;transition:.2s}
+    .btn-pr{background:#0b0b0c;color:#fff}.btn-pr:hover{background:#d6f345;color:#0b0b0c}
+    .btn-gh{border:1px solid rgba(0,0,0,.16);color:#0b0b0c;background:#fff}.btn-gh:hover{border-color:#0b0b0c}
+    .btn-wa{background:#25D366;color:#fff}.btn-wa:hover{background:#d6f345;color:#0b0b0c}
+    .btn:disabled{opacity:.5;pointer-events:none}
+    .spin{width:28px;height:28px;border-radius:50%;border:3px solid #e4e4e7;border-top-color:#0b0b0c;animation:g 1s linear infinite}@keyframes g{to{transform:rotate(360deg)}}
+    #toast{position:fixed;left:50%;bottom:1.25rem;transform:translateX(-50%);z-index:80;background:#0b0b0c;color:#fff;padding:.7rem 1.1rem;border-radius:999px;font-size:.88rem;max-width:92vw}
+  </style>
+</head>
+<body>
+  <header class="border-b border-line">
+    <div class="mx-auto flex max-w-3xl items-center justify-between gap-4 px-5 py-3.5">
+      <a href="./" class="flex items-center gap-2.5"><img src="icono-192.png" alt="" class="h-9 w-9 rounded-xl" /><span class="font-display text-lg font-bold text-zinc-950">Red de Autos</span></a>
+      <a href="./" class="btn btn-gh !py-2 text-sm">Buscar otro auto</a>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-3xl px-5 pb-20 pt-8">
+    <div id="carga" class="grid place-items-center py-20"><span class="spin"></span></div>
+
+    <!-- Un pedido -->
+    <section id="vPedido" hidden>
+      <p class="text-sm font-semibold text-ink" id="pHola"></p>
+      <h1 class="mt-1 font-display text-3xl font-extrabold leading-tight text-zinc-950 md:text-4xl" id="pTitulo">Tu pedido</h1>
+      <p class="mt-2 text-ink" id="pSub"></p>
+
+      <div id="avisos" class="box mt-6 flex flex-col gap-3 p-4 sm:flex-row sm:items-center">
+        <span class="grid h-11 w-11 flex-none place-items-center rounded-2xl bg-hl text-xl">🔔</span>
+        <div class="flex-1"><p class="font-semibold text-zinc-950" id="avTit">Avisame en este celular</p><p class="text-sm text-ink" id="avTxt">Te mandamos una notificación cuando la agencia responda, aunque tengas la página cerrada.</p></div>
+        <button class="btn btn-pr flex-none" id="avBtn">Activar avisos</button>
+      </div>
+
+      <div id="pLista" class="mt-6 space-y-4"></div>
+
+      <div class="mt-8 flex flex-wrap items-center gap-3 text-sm text-ink">
+        <button class="btn btn-gh !py-2 text-sm" id="copiar">Copiar el link de mi pedido</button>
+        <span>Guardalo: con este link volvés a ver tu pedido desde cualquier lado.</span>
+      </div>
+    </section>
+
+    <!-- Mis pedidos (sin link) -->
+    <section id="vLista" hidden>
+      <h1 class="font-display text-3xl font-extrabold text-zinc-950">Mis pedidos</h1>
+      <p class="mt-2 text-ink">Los pedidos que hiciste desde este celular.</p>
+      <div id="misPedidos" class="mt-6 space-y-3"></div>
+    </section>
+
+    <section id="vError" class="py-16 text-center" hidden>
+      <p class="font-display text-2xl font-bold text-zinc-950">No encontramos ese pedido</p>
+      <p class="mx-auto mt-2 max-w-md text-ink">Revisá que el link esté completo. Si hiciste el pedido desde este celular, lo vas a ver en <a href="pedido.html" class="underline">Mis pedidos</a>.</p>
+      <a href="./" class="btn btn-pr mt-6">Buscar un auto</a>
+    </section>
+  </main>
+  <div id="toast" hidden></div>
+
+  <script src="avisos.js"></script>
+  <script>
+  const $ = (s) => document.querySelector(s);
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const nf = new Intl.NumberFormat('es-AR');
+  const money = (n, c) => n == null ? 'a consultar' : (c === 'USD' ? 'US$ ' : '$ ') + nf.format(Math.round(n));
+  const fecha = (iso) => iso ? new Date(iso).toLocaleString('es-AR', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit', hour12: false }) + ' hs' : '';
+  const dia = (iso) => iso ? new Date(iso).toLocaleDateString('es-AR', { day: 'numeric', month: 'long' }) : '';
+  function toast(m) { const t = $('#toast'); t.textContent = m; t.hidden = false; clearTimeout(t._t); t._t = setTimeout(() => t.hidden = true, 3500); }
+  const A = window.RDAvisos;
+  let TOKEN = location.hash.slice(1).replace(/[^a-f0-9]/gi, ''), DATA = null, ocupado = false;
+
+  const autoTxt = (a) => [a.marca, a.modelo, a.version, a.anio].filter(Boolean).join(' ');
+  function estado(p) {
+    const ag = esc(p.agencia.nombre), of = money(p.precio_ofrecido, p.moneda), co = money(p.contraoferta_monto, p.contraoferta_moneda);
+    switch (p.estado) {
+      case 'oferta_enviada': case 'notificado': case 'visto':
+        return ['stock_nuevo', 'respuesta_alerta'].includes(p.origen) && p.estado !== 'oferta_enviada'
+          ? { chip: 'c-acc', t: 'Nuevo para vos', d: `Apareció este auto en ${ag} y coincide con tu búsqueda.`, acc: 'interes' }
+          : { chip: 'c-esp', t: 'Esperando respuesta', d: `Le llevamos tu oferta de <b>${of}</b> a ${ag}. Te avisamos apenas responda.` };
+      case 'visita_agendada': return { chip: 'c-esp', t: 'Esperando confirmación', d: `Pediste ver el auto el <b>${fecha(p.visita_fecha)}</b>. ${ag} todavía no confirmó.` };
+      case 'pendiente': return { chip: 'c-acc', t: 'Nuevo para vos', d: `Apareció este auto en ${ag} y coincide con tu búsqueda. ¿Te interesa? Si decís que sí, te pasamos el contacto.`, acc: 'interes' };
+      case 'contraofertada': return { chip: 'c-acc', t: 'Te contraofertaron', d: `${ag} te propone <b>${co}</b> (vos ofreciste ${of}). ¿Aceptás?`, acc: 'contra' };
+      case 'aceptada': return { chip: 'c-ok', t: '¡Listo!', d: `Precio acordado: <b>${p.ultimo_actor === 'comprador' && p.contraoferta_monto ? co : of}</b>. ${ag} te va a escribir en los próximos minutos.`, wa: true };
+      case 'visita_confirmada': return { chip: 'c-ok', t: 'Visita confirmada', d: `Te esperan el <b>${fecha(p.visita_fecha)}</b>. ${ag} te va a escribir para coordinar.`, wa: true };
+      case 'interesado': return { chip: 'c-ok', t: 'Contacto compartido', d: `${ag} te va a escribir para coordinar día y horario.`, wa: true };
+      case 'rechazada': return { chip: 'c-no', t: p.ultimo_actor === 'agencia' ? 'No aceptada' : 'Descartado', d: p.ultimo_actor === 'agencia' ? `${ag} no aceptó esta vez. Tu búsqueda sigue activa.` : 'No te interesó. Seguimos buscando para vos.' };
+      case 'no_disponible': return { chip: 'c-no', t: 'Sin visita', d: `${ag} no tiene disponible ese horario. Tu búsqueda sigue activa.` };
+      case 'expirada': return { chip: 'c-no', t: 'Venció', d: `${ag} no respondió a tiempo. Tu búsqueda sigue activa.` };
+      default: return { chip: 'c-no', t: p.estado, d: '' };
+    }
+  }
+
+  function pintar() {
+    const b = DATA.busqueda, ps = DATA.pedidos;
+    $('#pHola').textContent = b.nombre ? `Hola ${b.nombre} 👋` : '';
+    $('#pTitulo').textContent = b.resumen ? `Tu búsqueda: ${b.resumen}` : 'Tu pedido';
+    const alerta = b.estado === 'alerta_activa' && b.alerta_expira_at && new Date(b.alerta_expira_at) > new Date();
+    $('#pSub').innerHTML = [b.texto ? `“${esc(b.texto)}”` : '', alerta ? `Alerta activa hasta el ${dia(b.alerta_expira_at)}${b.agencias_notificadas ? ` · avisamos a ${b.agencias_notificadas} agencias` : ''}.` : ''].filter(Boolean).join('<br>');
+    $('#pLista').innerHTML = ps.length ? ps.map((p) => {
+      const e = estado(p), a = p.auto, msg = encodeURIComponent(`Hola ${p.agencia.nombre}! Soy ${b.nombre || ''}, de Red de Autos, por el ${autoTxt(a)}.`);
+      return `<article class="box overflow-hidden" data-id="${p.id}">
+        <div class="flex gap-4 p-4">
+          <div class="h-20 w-24 flex-none overflow-hidden rounded-2xl bg-bg2">${a.foto ? `<img src="${esc(a.foto)}" alt="" class="h-full w-full object-cover" loading="lazy" />` : ''}</div>
+          <div class="min-w-0 flex-1">
+            <span class="chip ${e.chip}">${esc(e.t)}</span>
+            <p class="mt-1.5 font-semibold leading-snug text-zinc-950">${esc(autoTxt(a))}</p>
+            <p class="text-sm text-ink">${[a.km != null ? nf.format(a.km) + ' km' : '', money(a.precio, a.moneda), esc(p.agencia.nombre), esc(p.agencia.ciudad || '')].filter(Boolean).join(' · ')}</p>
+          </div>
+        </div>
+        <div class="border-t border-line bg-bg2/60 px-4 py-3">
+          <p class="text-sm text-zinc-800">${e.d}</p>
+          ${e.acc === 'contra' ? `<div class="mt-3 flex flex-wrap gap-2"><button class="btn btn-pr !py-2 text-sm" data-r="aceptar">Acepto ${money(p.contraoferta_monto, p.contraoferta_moneda)}</button><button class="btn btn-gh !py-2 text-sm" data-r="rechazar">No, gracias</button></div>` : ''}
+          ${e.acc === 'interes' ? `<div class="mt-3 flex flex-wrap gap-2"><button class="btn btn-pr !py-2 text-sm" data-r="interesa">Me interesa</button><button class="btn btn-gh !py-2 text-sm" data-r="no">No, gracias</button></div>` : ''}
+          ${e.wa && p.agencia.whatsapp ? `<div class="mt-3 flex flex-wrap items-center gap-3"><a class="btn btn-wa !py-2 text-sm" target="_blank" rel="noopener" href="https://wa.me/${esc(p.agencia.whatsapp)}?text=${msg}">Escribirle por WhatsApp</a>${p.agencia.direccion ? `<span class="text-sm text-ink">📍 ${esc(p.agencia.direccion)}</span>` : ''}</div>` : ''}
+        </div>
+      </article>`;
+    }).join('') : `<div class="box p-6 text-center"><p class="font-semibold text-zinc-950">Todavía no hay novedades</p><p class="mt-1 text-sm text-ink">Apenas una agencia responda o aparezca un auto para vos, lo ves acá${A.activos(TOKEN) ? ' y te llega el aviso' : ''}.</p></div>`;
+  }
+
+  function pintarAvisos() {
+    const s = A.soporte();
+    if (A.activos(TOKEN)) { $('#avTit').textContent = 'Avisos activados en este celular ✓'; $('#avTxt').textContent = 'Te llega una notificación cuando haya novedades.'; $('#avBtn').hidden = true; return; }
+    if (s !== 'ok') { $('#avTit').textContent = s === 'ios_instalar' ? 'Avisos en iPhone' : 'Avisos'; $('#avTxt').textContent = A.MSG[s]; $('#avBtn').hidden = true; return; }
+    $('#avBtn').hidden = false;
+  }
+
+  async function cargar(silencioso) {
+    try {
+      const d = await A.rpc('seguimiento', { p_token: TOKEN });
+      if (!d) throw new Error('no');
+      DATA = d; A.guardar(TOKEN, d.busqueda.resumen || d.busqueda.texto);
+      $('#carga').hidden = true; $('#vPedido').hidden = false; pintar(); if (!silencioso) pintarAvisos();
+    } catch { if (!silencioso) { $('#carga').hidden = true; $('#vError').hidden = false; } }
+  }
+
+  function misPedidos() {
+    const l = A.lista();
+    $('#carga').hidden = true; $('#vLista').hidden = false;
+    $('#misPedidos').innerHTML = l.length ? l.map((x) => `<a href="pedido.html#${esc(x.t)}" class="box flex items-center justify-between gap-3 p-4 transition hover:border-pr"><span><b class="text-zinc-950">${esc(x.txt)}</b><br><span class="text-sm text-ink">${new Date(x.at).toLocaleDateString('es-AR', { day: 'numeric', month: 'long' })}</span></span><span>→</span></a>`).join('')
+      : '<div class="box p-6 text-center text-ink">No hay pedidos guardados en este celular. Cuando hagas una oferta o actives una alerta, aparecen acá.</div>';
+  }
+
+  document.addEventListener('click', async (ev) => {
+    const r = ev.target.closest('[data-r]');
+    if (r && !ocupado) {
+      ocupado = true; const card = r.closest('[data-id]'); card.querySelectorAll('button').forEach((b) => b.disabled = true);
+      try {
+        const res = await A.rpc('seguimiento_responder', { p_token: TOKEN, p_oferta_id: card.dataset.id, p_accion: r.dataset.r });
+        if (!res?.ok) toast(res?.error === 'ya_respondida' ? 'Esto ya estaba respondido.' : 'No pudimos registrar tu respuesta.');
+        else toast(r.dataset.r === 'aceptar' || r.dataset.r === 'interesa' ? '¡Listo! Le avisamos a la agencia.' : 'Listo, le avisamos.');
+        await cargar(true);
+      } catch { toast('No pudimos registrar tu respuesta. Probá de nuevo.'); card.querySelectorAll('button').forEach((b) => b.disabled = false); }
+      finally { ocupado = false; }
+    }
+  });
+  $('#avBtn').addEventListener('click', async () => {
+    const b = $('#avBtn'); b.disabled = true;
+    try { const s = await A.activar(TOKEN); if (s === 'ok') toast('¡Avisos activados! ✓'); else toast(A.MSG[s]); }
+    catch (x) { toast(x.message || 'No pudimos activar los avisos.'); }
+    finally { b.disabled = false; pintarAvisos(); }
+  });
+  $('#copiar').addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(location.href); toast('Link copiado ✓'); } catch { toast(location.href); }
+  });
+  window.addEventListener('hashchange', () => location.reload());
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && TOKEN && DATA) cargar(true); });
+  setInterval(() => { if (!document.hidden && TOKEN && DATA) cargar(true); }, 30000);
+
+  if (TOKEN) cargar(); else misPedidos();
+  </script>
+</body>
+</html>
